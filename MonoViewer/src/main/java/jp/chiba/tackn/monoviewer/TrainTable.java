@@ -1,0 +1,294 @@
+package jp.chiba.tackn.monoviewer;
+
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
+
+/**
+ * SQLiteに格納済みの時刻表データの表示を行う
+ * @author Takumi Ito
+ * @since 2014/05/12.
+ */
+public class TrainTable extends Activity
+        implements LoaderManager.LoaderCallbacks,
+        AdapterView.OnItemSelectedListener,
+        AdapterView.OnItemClickListener {
+
+    /** デバッグフラグ */
+    private static final boolean DEBUG = true;
+    /** デバッグタグ */
+    private static final String TAG = "TrainTable";
+
+    /** プロバイダからのデータとListの仲立ち */
+    private SimpleCursorAdapter mAdapter;
+    /** 時刻表表示用リスト */
+    private ListView itemListView;
+    /** 時刻表(TableNo.)選択用スピナー */
+    private Spinner trainNo;
+
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        findViews();
+
+        //リスト用設定
+        mAdapter = new TrainTblCursorAdapter(
+                this,
+                R.layout.list_item_train_no,
+                null,
+                new String[]{TrainTblContract.UPDOWN,TrainTblContract.HOUR,TrainTblContract.MINUTE,TrainTblContract.STATION},
+                new int[]{R.id.train_no_iconeView,R.id.train_no_hour,R.id.train_no_minute,R.id.train_no_station},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        itemListView.setAdapter(mAdapter);
+        itemListView.setFastScrollEnabled(true);
+        itemListView.setOnItemClickListener(this);
+
+        //スピナー用設定
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        setSpinnerAdapter(spAdapter);
+        trainNo.setAdapter(spAdapter);
+        trainNo.setOnItemSelectedListener(this);
+
+
+        int fromIntent0 = 0;
+        int fromIntent1 = 0;
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null) {
+            fromIntent0 = extras.getInt("TableNo");
+            fromIntent1 = extras.getInt("holiday");
+        }
+        if(DEBUG){
+            Log.d(TAG, "fromIntent trainNo: " + fromIntent0);
+            Log.d(TAG,"fromIntent holiday: " + fromIntent1);
+        }
+        int position =0 ;
+        for(int i=0;i<spAdapter.getCount();i++){
+            String adapter = spAdapter.getItem(i);
+            if(fromIntent1==0 &&  adapter.equals("休日"+fromIntent0) || fromIntent1==1 && adapter.equals("平日"+fromIntent0)){
+                position=i;
+            }
+        }
+        trainNo.setSelection(position);
+    }
+
+    /**
+     *
+     * getLoaderManager().initLoader()で呼び出される
+     * @param id 呼び出しID
+     * @param args 呼び出し引数
+     * @return プロバイダから取得したデータ
+     */
+    public Loader onCreateLoader(int id, Bundle args) {
+        if (DEBUG) {
+            Log.d(TAG, "id: " + id);
+//            Log.d(TAG, "Bundle: " + (args==null));
+        }
+        /** 取得データのソート */
+        String orderBy = "TIMES ASC";
+        //スピナーで選択したデータ毎にプロバイダの呼び出しURIを変更
+        switch (id) {
+            case 0:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H1, null, null, null, orderBy);
+            case 1:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H2, null, null, null, orderBy);
+            case 2:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H3, null, null, null, orderBy);
+            case 3:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H4, null, null, null, orderBy);
+            case 4:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H5, null, null, null, orderBy);
+            case 5:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H6, null, null, null, orderBy);
+            case 6:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H7, null, null, null, orderBy);
+            case 7:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H11, null, null, null, orderBy);
+            case 8:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H12, null, null, null, orderBy);
+            case 9:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H21, null, null, null, orderBy);
+            case 10:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H22, null, null, null, orderBy);
+            case 11:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H25, null, null, null, orderBy);
+            case 12:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H26, null, null, null, orderBy);
+            case 13:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K1, null, null, null, orderBy);
+            case 14:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K2, null, null, null, orderBy);
+            case 15:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K3, null, null, null, orderBy);
+            case 16:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K4, null, null, null, orderBy);
+            case 17:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K5, null, null, null, orderBy);
+            case 18:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K6, null, null, null, orderBy);
+            case 19:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K11, null, null, null, orderBy);
+            case 20:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K12, null, null, null, orderBy);
+            case 21:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K21, null, null, null, orderBy);
+            case 22:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K22, null, null, null, orderBy);
+            case 23:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K25, null, null, null, orderBy);
+            case 24:
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_K26, null, null, null, orderBy);
+            default:
+                if (DEBUG) {
+                    Log.d(TAG, "id:" + id);
+                }
+                return new CursorLoader(this, TrainTblContract.CONTENT_URI_H1, null, null, null, orderBy);
+        }
+    }
+    /**
+     * データ読み込み時の処理
+     * 取得したデータをアダプタに交換する
+     * @param loader 取得したローダ
+     * @param data 表示するCursorデータ
+     */
+    public void onLoadFinished(Loader loader, Object data) {
+        mAdapter.swapCursor((Cursor) data);
+    }
+
+    /**
+     * ロードがリセットされた時の処理
+     * @param loader
+     */
+    public void onLoaderReset(Loader loader) {
+        mAdapter.swapCursor(null);
+    }
+
+    /**
+     * onCreate()時にレイアウト済みオブジェクトの取得
+     */
+    private void findViews() {
+        itemListView = (ListView) findViewById(R.id.listview);
+        trainNo = (Spinner) findViewById(R.id.Spinner);
+    }
+
+    /**
+     * スピナーで選択した際に呼び出し
+     * @param parent アダプタを登録しているView(スピナー)オブジェクト
+     * @param view //TODO:何だろう
+     * @param position 選択した位置
+     * @param id 選択したレコードのID
+     */
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (DEBUG) {
+//            Log.d(TAG,"view:" + (parent==trainNo));
+            Log.d(TAG, "position:" + position);
+        }
+        if (parent == trainNo) {
+            //Listに紐付けていたプロバイダURIの切替
+            getLoaderManager().initLoader(position, null, (LoaderManager.LoaderCallbacks) this);
+        }
+    }
+
+    /**
+     * スピナーで選択が解除された時に呼び出し
+     * @param parent
+     */
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (DEBUG) {
+            Log.d(TAG, "onNothingSelected :");
+        }
+        //初期化
+        getLoaderManager().initLoader(0, null, (LoaderManager.LoaderCallbacks) this);
+    }
+
+    /**
+     * リストで選択された時に呼び出し
+     * @param parent アダプタを登録しているView(リスト)オブジェクト
+     * @param view //TODO:なんだろう
+     * @param position 選択した位置
+     * @param id 選択したレコードのID
+     */
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (DEBUG) {
+            Log.d(TAG, "parent : " + parent.toString());
+        }
+        if (parent == itemListView) {
+            String item = itemListView.getItemAtPosition(position).toString();
+            if (DEBUG) {
+                Log.d(TAG, "「" + position + "」番目が選択されました");
+            }
+            Uri uri = ContentUris.withAppendedId(TrainTblContract.CONTENT_URI, id);
+            if (DEBUG) {
+                Log.d(TAG, "URI: " + uri.toString());
+            }
+            Cursor c = this.getContentResolver().query(uri, new String[]{TrainTblContract.STATION,TrainTblContract.HOLIDAY,TrainTblContract.UPDOWN + " as  " + TrainTblContract.UPDOWN}, null, null, null);
+            if (DEBUG) {
+                Log.d(TAG, "0:" + c.getCount());
+            }
+            if (c.getCount() != 0) {
+                c.moveToFirst();
+                if (DEBUG) {
+                    Log.d(TAG, "0:" + c.getString(0));
+//                    Log.d(TAG, "1:" + c.getInt(1));
+                }
+            }
+
+            Intent intent = new Intent(this,TimeTable.class);
+            intent.putExtra("station",c.getString(0));
+            intent.putExtra("holiday",c.getInt(1));
+            intent.putExtra("updown",c.getInt(2));
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * スピナーに値を登録
+     * @param spAdapter 車両選択用スピナー
+     */
+    private void setSpinnerAdapter(ArrayAdapter<String> spAdapter) {
+        spAdapter.add("平日1");
+        spAdapter.add("平日2");
+        spAdapter.add("平日3");
+        spAdapter.add("平日4");
+        spAdapter.add("平日5");
+        spAdapter.add("平日6");
+        spAdapter.add("平日7");
+        spAdapter.add("平日11");
+        spAdapter.add("平日12");
+        spAdapter.add("平日21");
+        spAdapter.add("平日22");
+        spAdapter.add("平日25");
+        spAdapter.add("平日26");
+        spAdapter.add("休日1");
+        spAdapter.add("休日2");
+        spAdapter.add("休日3");
+        spAdapter.add("休日4");
+        spAdapter.add("休日5");
+        spAdapter.add("休日6");
+        spAdapter.add("休日11");
+        spAdapter.add("休日12");
+        spAdapter.add("休日21");
+        spAdapter.add("休日22");
+        spAdapter.add("休日25");
+        spAdapter.add("休日26");
+    }
+}
