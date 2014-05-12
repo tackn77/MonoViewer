@@ -52,10 +52,10 @@ public class TrainTable extends Activity
         //リスト用設定
         mAdapter = new TrainTblCursorAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.list_item_train_no,
                 null,
                 new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
-                new int[]{android.R.id.text1, android.R.id.text2},
+                new int[]{R.id.train_no_minute, R.id.train_no_station},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         itemListView.setAdapter(mAdapter);
