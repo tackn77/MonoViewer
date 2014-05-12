@@ -24,6 +24,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     }
 
 
+    private int layout;
+    private final LayoutInflater inflater;
     /**
      * コンストラクタ
      * @param context コンテキスト
@@ -35,6 +37,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
      */
     public TrainTblCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, from, to, flags);
+        this.layout = layout;
+        inflater = LayoutInflater.from(context);
     }
 
     /**
@@ -47,19 +51,15 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
-        LayoutInflater inflater = (LayoutInflater) context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View v= inflater.inflate(R.layout.list_item_train_no,null,true);
-
-        ViewHolder holder = new ViewHolder();
-
-        holder.icon = (ImageView) v.findViewById(R.id.train_no_iconeView);
-        holder.hour = (TextView) v.findViewById(R.id.train_no_hour);
-        holder.minute = (TextView) v.findViewById(R.id.train_no_minute);
-        holder.station = (TextView) v.findViewById(R.id.train_no_station);
-
-        v.setTag(holder);
+        View v = super.newView(context,cursor,parent);
+//        ViewHolder holder = new ViewHolder();
+//
+//        holder.icon = (ImageView) v.findViewById(R.id.train_no_iconeView);
+//        holder.hour = (TextView) v.findViewById(R.id.train_no_hour);
+//        holder.minute = (TextView) v.findViewById(R.id.train_no_minute);
+//        holder.station = (TextView) v.findViewById(R.id.train_no_station);
+//
+//        v.setTag(holder);
 
         return v;
     }
@@ -72,21 +72,29 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
+        super.bindView(view,context,cursor);
+        StringBuilder sb = new StringBuilder();
 
         int updown = cursor.getInt(cursor.getColumnIndex(TrainTblContract.UPDOWN));
         if(updown==0){
-            holder.icon.setImageResource(R.drawable.ic_up);
+//            holder.icon.setImageResource(R.drawable.ic_up);
+            sb.append("【上り】");
         }else{
-            holder.icon.setImageResource(R.drawable.ic_down);
+//            holder.icon.setImageResource(R.drawable.ic_down);
+            sb.append("【下り】");
         }
 
         int hour = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOUR));
-        holder.hour.setText(String.format("%1$02d",hour));
+//        holder.hour.setText(String.format("%1$02d",hour));
+        sb.append(String.format("%1$02d",hour)).append(":");
         int minute = cursor.getInt(cursor.getColumnIndex(TrainTblContract.MINUTE));
-        holder.minute.setText(String.format("%1$02d",minute));
+//        holder.minute.setText(String.format("%1$02d",minute));
+        sb.append(String.format("%1$02d",minute)).append("　");
         String station = cursor.getString(cursor.getColumnIndex(TrainTblContract.STATION));
-        holder.station.setText(station);
+//        holder.station.setText(station);
+        sb.append(station);
+
+        ((TextView)view.findViewById(android.R.id.text1)).setText(sb.toString());
 
     }
 }
