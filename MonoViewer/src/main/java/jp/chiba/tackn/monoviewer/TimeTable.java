@@ -49,13 +49,12 @@ public class TimeTable extends Activity
         setContentView(R.layout.train_table);
         findViews();
 
-        //リスト用設定
-        mAdapter = new SimpleCursorAdapter(
+        mAdapter = new TimeTblCursorAdapter(
                 this,
-                android.R.layout.two_line_list_item,
+                R.layout.list_item_train_no,
                 null,
-                new String[]{TrainTblContract.TIME, TrainTblContract.DESTINATION},
-                new int[]{android.R.id.text1, android.R.id.text2},
+                new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
+                new int[]{R.id.train_no_minute, R.id.train_no_station},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         // Bind to our new adapter.
@@ -340,8 +339,6 @@ public class TimeTable extends Activity
             if (DEBUG) {
                 Log.d(TAG, "URI: " + uri.toString());
             }
-//            HashMap mProjectionMap = new HashMap();
-//            mProjectionMap.put(TrainTblContract.TABLE_NO, TrainTblContract.TABLE_NO);
             Cursor c = this.getContentResolver().query(uri, new String[]{TrainTblContract.TABLE_NO,TrainTblContract.HOLIDAY}, null, null, null);
             if (c.getCount() != 0) {
                 c.moveToFirst();
@@ -436,5 +433,4 @@ public class TimeTable extends Activity
         spAdapter.add("休日 市役所前駅 下り");
         spAdapter.add("休日 千葉みなと駅 下り");
     }
-
 }
