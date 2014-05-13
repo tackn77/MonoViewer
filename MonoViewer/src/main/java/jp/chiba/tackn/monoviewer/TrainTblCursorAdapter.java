@@ -1,15 +1,11 @@
 package jp.chiba.tackn.monoviewer;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -33,37 +29,32 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
         public TextView station;
     }
 
-
-    private int layout;
-    private final LayoutInflater inflater;
     /**
      * コンストラクタ
      * @param context コンテキスト
      * @param layout 表示するレイアウトファイルのID
-     * @param c 表示するカーソル //TODO:よく分からん
+     * @param c 表示するカーソル
      * @param from 表示に使うカラム
      * @param to バインド先のレイアウトのID
-     * @param flags フラグ //TODO:よく分からん
+     * @param flags CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER フラグ
      */
     public TrainTblCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
         super(context, layout, c, from, to, flags);
-        this.layout = layout;
-        inflater = LayoutInflater.from(context);
     }
 
     /**
      * 独自にレイアウトファイル読み込み
-     * @param context
-     * @param cursor
-     * @param parent
-     * @return
+     * @param context アプリケーションコンテキスト
+     * @param cursor 紐づけるカーソル
+     * @param parent 上位のリスト
+     * @return 生成したView
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
         View v = super.newView(context,cursor,parent);
-        ViewHolder holder = new ViewHolder();
 
+        ViewHolder holder = new ViewHolder();
         holder.icon = (ImageView) v.findViewById(R.id.train_no_iconeView);
         holder.hour = (TextView) v.findViewById(R.id.train_no_hour);
         holder.minute = (TextView) v.findViewById(R.id.train_no_minute);
@@ -76,12 +67,12 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
     /**
      * 独自にビューへのデータを紐付ける
-     * @param view
-     * @param context
-     * @param cursor
+     * @param view 紐づけ先の対象のView
+     * @param context アプリケーションコンテキスト
+     * @param cursor 紐づけ元のデータ
      */
     @Override
-    public void bindView(View view, final Context context, final Cursor cursor) {
+    public void bindView(View view, final Context context,final Cursor cursor) {
         super.bindView(view,context,cursor);
 
         final ViewHolder holder = (ViewHolder)view.getTag();
@@ -100,6 +91,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
         holder.station.setText(station);
         final int holiday = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOLIDAY));
 
+        final String destination = cursor.getString(cursor.getColumnIndex(TrainTblContract.DESTINATION));
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,8 +102,18 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
                     Log.d(TAG,"updown : " + updown);
                     Log.d(TAG,"holiday: " + holiday);
                 }
+
+
                 Intent intent = new Intent(context,TimeTable.class);
-                intent.putExtra("station", station);
+
+                if(station.equals("千葉駅")&&destination.indexOf("県庁前")>0){
+                    intent.putExtra("station", "千葉駅1号線");
+                }else if(station.equals("千葉駅")&&destination.indexOf("千城台")>0){
+                    intent.putExtra("station", "千葉駅2号線");
+                }else {
+                    intent.putExtra("station", station);
+                }
+
                 intent.putExtra("updown",updown);
                 intent.putExtra("holiday",holiday);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

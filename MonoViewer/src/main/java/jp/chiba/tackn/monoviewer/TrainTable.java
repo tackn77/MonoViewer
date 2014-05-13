@@ -25,8 +25,8 @@ import android.widget.Spinner;
  */
 public class TrainTable extends Activity
         implements LoaderManager.LoaderCallbacks,
-        AdapterView.OnItemSelectedListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemSelectedListener{
+//        ,AdapterView.OnItemClickListener {
 
     /** デバッグフラグ */
     private static final boolean DEBUG = true;
@@ -60,7 +60,7 @@ public class TrainTable extends Activity
 
         itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
-        itemListView.setOnItemClickListener(this);
+//        itemListView.setOnItemClickListener(this);
 
         //スピナー用設定
         ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -219,47 +219,62 @@ public class TrainTable extends Activity
         getLoaderManager().initLoader(0, null, (LoaderManager.LoaderCallbacks) this);
     }
 
-    /**
-     * リストで選択された時に呼び出し
-     * @param parent アダプタを登録しているView(リスト)オブジェクト
-     * @param view 選択されたView
-     * @param position 選択した位置
-     * @param id 選択したレコードのID
-     */
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (DEBUG) {
-            Log.d(TAG, "parent : " + parent.toString());
-            Log.d(TAG, "View : " + view.toString());
-        }
-        if (parent == itemListView) {
-//            String item = itemListView.getItemAtPosition(position).toString();
-            if (DEBUG) {
-                Log.d(TAG, "「" + position + "」番目が選択されました");
-            }
-            Uri uri = ContentUris.withAppendedId(TrainTblContract.CONTENT_URI, id);
-            if (DEBUG) {
-                Log.d(TAG, "URI: " + uri.toString());
-            }
-            Cursor c = this.getContentResolver().query(uri, new String[]{TrainTblContract.STATION,TrainTblContract.HOLIDAY,TrainTblContract.UPDOWN + " as  " + TrainTblContract.UPDOWN}, null, null, null);
-            if (DEBUG) {
-                Log.d(TAG, "0:" + c.getCount());
-            }
-            if (c.getCount() != 0) {
-                c.moveToFirst();
-                if (DEBUG) {
-                    Log.d(TAG, "0:" + c.getString(0));
-//                    Log.d(TAG, "1:" + c.getInt(1));
-                }
-            }
-
-            Intent intent = new Intent(this,TimeTable.class);
-            intent.putExtra("station",c.getString(0));
-            intent.putExtra("holiday",c.getInt(1));
-            intent.putExtra("updown",c.getInt(2));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-    }
+//    /**
+//     * リストで選択された時に呼び出し
+//     * @param parent アダプタを登録しているView(リスト)オブジェクト
+//     * @param view 選択されたView
+//     * @param position 選択した位置
+//     * @param id 選択したレコードのID
+//     */
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        if (DEBUG) {
+//            Log.d(TAG, "parent : " + parent.toString());
+//            Log.d(TAG, "View : " + view.toString());
+//        }
+//        if (parent == itemListView) {
+////            String item = itemListView.getItemAtPosition(position).toString();
+//            if (DEBUG) {
+//                Log.d(TAG, "「" + position + "」番目が選択されました");
+//            }
+//            Uri uri = ContentUris.withAppendedId(TrainTblContract.CONTENT_URI, id);
+//            if (DEBUG) {
+//                Log.d(TAG, "URI: " + uri.toString());
+//            }
+//            Cursor c = this.getContentResolver().query(uri, new String[]{TrainTblContract.STATION,TrainTblContract.HOLIDAY,TrainTblContract.UPDOWN + " as  " + TrainTblContract.UPDOWN,TrainTblContract.DESTINATION}, null, null, null);
+//            if (DEBUG) {
+//                Log.d(TAG, "0:" + c.getCount());
+//            }
+//            if (c.getCount() != 0) {
+//                c.moveToFirst();
+//                if (DEBUG) {
+//                    Log.d(TAG, "0:" + c.getString(0));
+////                    Log.d(TAG, "1:" + c.getInt(1));
+//                }
+//            }
+//
+//            if(DEBUG){
+//                Log.d(TAG,c.getString(0));
+//                Log.d(TAG,c.getString(3));
+//            }
+//
+//            String station;
+//            if(c.getString(0).equals("千葉駅") && c.getString(3).indexOf("県庁前") > 0){
+//                station = "千葉駅1号線";
+//            }else if(c.getString(0).equals("千葉駅") && c.getString(3).indexOf("千城台") > 0){
+//                station = "千葉駅2号線";
+//            }else{
+//                station = c.getString(0);
+//            }
+//
+//
+//            Intent intent = new Intent(this,TimeTable.class);
+//            intent.putExtra("station",station);
+//            intent.putExtra("holiday",c.getInt(1));
+//            intent.putExtra("updown",c.getInt(2));
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//        }
+//    }
 
     /**
      * スピナーに値を登録
