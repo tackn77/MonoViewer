@@ -192,7 +192,7 @@ public class TrainTable extends Activity
     /**
      * スピナーで選択した際に呼び出し
      * @param parent アダプタを登録しているView(スピナー)オブジェクト
-     * @param view //TODO:何だろう
+     * @param view 選択されたView
      * @param position 選択した位置
      * @param id 選択したレコードのID
      */
@@ -222,16 +222,17 @@ public class TrainTable extends Activity
     /**
      * リストで選択された時に呼び出し
      * @param parent アダプタを登録しているView(リスト)オブジェクト
-     * @param view //TODO:なんだろう
+     * @param view 選択されたView
      * @param position 選択した位置
      * @param id 選択したレコードのID
      */
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (DEBUG) {
             Log.d(TAG, "parent : " + parent.toString());
+            Log.d(TAG, "View : " + view.toString());
         }
         if (parent == itemListView) {
-            String item = itemListView.getItemAtPosition(position).toString();
+//            String item = itemListView.getItemAtPosition(position).toString();
             if (DEBUG) {
                 Log.d(TAG, "「" + position + "」番目が選択されました");
             }

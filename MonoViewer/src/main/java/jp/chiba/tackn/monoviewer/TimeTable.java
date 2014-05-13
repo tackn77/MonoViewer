@@ -87,10 +87,13 @@ public class TimeTable extends Activity
 
         int position =0 ;
         for(int i=0;i<spAdapter.getCount();i++){
-            String adapter = spAdapter.getItem(i);
-            if(fromIntent2==0 && adapter.startsWith("休日") || fromIntent2==1 && adapter.startsWith("平日")){
-                if(fromIntent1==1&&adapter.endsWith("下り") || fromIntent1==0&&adapter.endsWith("上り"))  {
-                    if(adapter.indexOf(fromIntent0)>0) position = i;
+            String item = spAdapter.getItem(i);
+            if(fromIntent2==0 && item.startsWith("休日") || fromIntent2==1 && item.startsWith("平日")){
+                if(fromIntent1==1 && item.endsWith("下り") || fromIntent1==0 && item.endsWith("上り"))  {
+                    if(item.indexOf(fromIntent0)>0) {
+                        position = i;
+                        break;
+                    }
                 }
             }
         }
@@ -395,7 +398,7 @@ public class TimeTable extends Activity
         spAdapter.add("平日 千葉駅1号線 下り");
         spAdapter.add("平日 千葉駅2号線 下り");
         spAdapter.add("平日 市役所前駅 下り");
-        spAdapter.add("平日 千葉みなと 下り");
+        spAdapter.add("平日 千葉みなと駅 下り");
 
         spAdapter.add("休日 千城台駅 上り");
         spAdapter.add("休日 千城台北駅 上り");
@@ -431,7 +434,7 @@ public class TimeTable extends Activity
         spAdapter.add("休日 千葉駅1号線 下り");
         spAdapter.add("休日 千葉駅2号線 下り");
         spAdapter.add("休日 市役所前駅 下り");
-        spAdapter.add("休日 千葉みなと 下り");
+        spAdapter.add("休日 千葉みなと駅 下り");
     }
 
 }

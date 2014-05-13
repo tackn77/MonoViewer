@@ -21,6 +21,11 @@ import android.widget.TextView;
  */
 public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
+    /** デバッグフラグ */
+    private static final boolean DEBUG = false;
+    private static final String TAG = "TrainTblCursorAdapter";
+
+
     private class ViewHolder{
         public ImageView icon;
         public TextView hour;
@@ -79,7 +84,7 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, final Context context, final Cursor cursor) {
         super.bindView(view,context,cursor);
 
-        ViewHolder holder = (ViewHolder)view.getTag();
+        final ViewHolder holder = (ViewHolder)view.getTag();
         final int updown = cursor.getInt(cursor.getColumnIndex(TrainTblContract.UPDOWN));
         if(updown==0){
             holder.icon.setImageResource(R.drawable.ic_up);
@@ -93,15 +98,21 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
         holder.minute.setText(String.format("%1$02d",minute));
         final String station = cursor.getString(cursor.getColumnIndex(TrainTblContract.STATION));
         holder.station.setText(station);
+        final int holiday = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOLIDAY));
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Log.d("TAG","ボタンが押されたよ");
+                if(DEBUG){
+                    Log.d(TAG,"ボタンが押されたよ");
+                    Log.d(TAG,"station: " + station );
+                    Log.d(TAG,"updown : " + updown);
+                    Log.d(TAG,"holiday: " + holiday);
+                }
                 Intent intent = new Intent(context,TimeTable.class);
                 intent.putExtra("station", station);
                 intent.putExtra("updown",updown);
-                intent.putExtra("holiday", cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOLIDAY)));
+                intent.putExtra("holiday",holiday);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
 
