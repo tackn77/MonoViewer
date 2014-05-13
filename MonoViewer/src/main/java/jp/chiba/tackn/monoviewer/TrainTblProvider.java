@@ -409,153 +409,153 @@ public class TrainTblProvider extends ContentProvider {
             case STATION_H1U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千城台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H2U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H3U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H4U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H5U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H6U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H7U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H8U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H9U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H10U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H11U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H12U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H13U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='県庁前駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='県庁前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H14U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H15U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H16U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_H17U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
 
             case STATION_H2D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H3D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H4D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H5D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H6D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H7D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H8D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H9D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H10D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H11D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H12D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H14D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H15D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H16D1:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
@@ -565,169 +565,169 @@ public class TrainTblProvider extends ContentProvider {
             case STATION_H16D2:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION='県庁前方面'");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION='県庁前方面' AND NOT DESTINATION=''");
                 break;
             case STATION_H17D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_H18D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉みなと駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=1 AND STATION='千葉みなと駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
 
             case STATION_K1U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千城台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K2U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K3U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K4U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K5U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K6U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K7U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K8U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K9U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K10U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K11U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K12U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K13U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='県庁前駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='県庁前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K14U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K15U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K16U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
             case STATION_K17U:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=0");
+                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
                 break;
 
             case STATION_K2D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K3D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K4D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K5D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K6D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K7D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K8D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K9D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K10D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K11D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K12D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K14D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K15D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K16D1:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
@@ -737,17 +737,17 @@ public class TrainTblProvider extends ContentProvider {
             case STATION_K16D2:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION = '県庁前方面'");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION = '県庁前方面' AND NOT DESTINATION=''");
                 break;
             case STATION_K17D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
             case STATION_K18D:
                 qb.setTables(TrainTblOpenHelper.TBL_NAME);
                 qb.setProjectionMap(mProjectionMap);
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉みなと駅' AND UPDOWN=1");
+                qb.appendWhere("HOLIDAY=0 AND STATION='千葉みなと駅' AND UPDOWN=1 AND NOT DESTINATION=''");
                 break;
 
             case TRAIN_TIMETABLE_ITEM:

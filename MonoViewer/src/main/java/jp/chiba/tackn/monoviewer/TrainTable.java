@@ -2,12 +2,14 @@ package jp.chiba.tackn.monoviewer;
 
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.database.Cursor;
-import android.net.Uri;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,9 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -39,13 +44,15 @@ public class TrainTable extends Activity
     /** 時刻表(TableNo.)選択用スピナー */
     private Spinner trainNo;
 
+    private Bundle savedInstanceState;
+
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.train_table);
         findViews();
 
         //リスト用設定
@@ -86,6 +93,32 @@ public class TrainTable extends Activity
             }
         }
         trainNo.setSelection(position);
+        this.savedInstanceState = savedInstanceState;
+    }
+
+    /**
+     * 画面回転時のActivityの破棄を回避するため
+     * AndroidManifestにて有効化
+     *
+     * @param newConfig 画面回転などのフラグ
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        //画面方向の検出
+        switch(newConfig.orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                // "縦方向";
+                onCreate(savedInstanceState);
+                break;
+            case Configuration.ORIENTATION_LANDSCAPE:
+                // "横方向";
+                onCreate(savedInstanceState);
+                break;
+            default :
+                // "デフォルト";
+        }
     }
 
     /**

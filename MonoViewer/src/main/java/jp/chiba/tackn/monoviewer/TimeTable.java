@@ -46,7 +46,7 @@ public class TimeTable extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.train_table);
         findViews();
 
         //リスト用設定
