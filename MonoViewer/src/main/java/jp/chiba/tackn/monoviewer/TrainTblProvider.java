@@ -132,7 +132,7 @@ public class TrainTblProvider extends ContentProvider {
     private static final int TRAIN_TIMETABLE_ITEM = 95;
 
     /** DBから取得する列一覧 */
-    private static HashMap mProjectionMap;
+    private static HashMap<String,String> mProjectionMap;
 
     static { // UriMatcherの定義
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -239,7 +239,7 @@ public class TrainTblProvider extends ContentProvider {
 
         // ProjectionMapの定義
         // テーブルに_IDがないので、rowidを使う
-        mProjectionMap = new HashMap();
+        mProjectionMap = new HashMap<String,String>();
         mProjectionMap.put(TrainTblContract._ID, "rowid as " + TrainTblContract._ID);
         mProjectionMap.put(TrainTblContract.TIME, TrainTblContract.TIME);
         mProjectionMap.put(TrainTblContract.UPDOWN, TrainTblContract.UPDOWN);
@@ -254,7 +254,7 @@ public class TrainTblProvider extends ContentProvider {
     /**
      * プロバイダの作成時作業 SQLiteの時刻表DBのヘルパーを生成
      *
-     * @return false //TODO 何故falseを返す？
+     * @return false onCreateの再実行の必要なし
      */
     @Override
     public boolean onCreate() {
@@ -803,9 +803,9 @@ public class TrainTblProvider extends ContentProvider {
 
     /**
      * インサート処理（利用しない）
-     * @param uri
-     * @param values
-     * @return
+     * @param uri コンテンツプロバイダのURI
+     * @param values インサートする値
+     * @return 識別子？
      */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -814,10 +814,10 @@ public class TrainTblProvider extends ContentProvider {
 
     /**
      * 削除処理（利用しない）
-     * @param uri
-     * @param selection
-     * @param selectionArgs
-     * @return
+     * @param uri コンテンツプロバイダのURI
+     * @param selection クエリ
+     * @param selectionArgs 引数
+     * @return 件数
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -826,11 +826,11 @@ public class TrainTblProvider extends ContentProvider {
 
     /**
      * アップデート処理（利用しない）
-     * @param uri
-     * @param values
-     * @param selection
-     * @param selectionArgs
-     * @return
+     * @param uri コンテンツプロバイダのURI
+     * @param values アップデート値
+     * @param selection クエリ
+     * @param selectionArgs 引数
+     * @return 件数
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
