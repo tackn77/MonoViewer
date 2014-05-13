@@ -2,21 +2,25 @@ package jp.chiba.tackn.monoviewer;
 
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -24,8 +28,8 @@ import android.widget.Spinner;
  * @author Takumi Ito
  */
 public class TimeTable extends Activity
-        implements LoaderManager.LoaderCallbacks,
-        AdapterView.OnItemSelectedListener{
+        implements AdapterView.OnItemSelectedListener{
+
 
     /** デバッグフラグ*/
     private static final boolean DEBUG = false;
@@ -39,6 +43,8 @@ public class TimeTable extends Activity
     /** 時刻表(STATION)選択用スピナー */
     private Spinner trainNo;
 
+
+    private List<ListItem> listItems = new ArrayList<ListItem>();
     /**
      * Called when the activity is first created.
      */
@@ -48,18 +54,28 @@ public class TimeTable extends Activity
         setContentView(R.layout.train_table);
         findViews();
 
-        mAdapter = new TimeTblCursorAdapter(
-                this,
-                R.layout.list_item_train_no,
-                null,
-                new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
-                new int[]{R.id.train_no_minute, R.id.train_no_station},
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+//        mAdapter = new TimeTblCursorAdapter(
+//                this,
+//                R.layout.list_item_train_no,
+//                null,
+//                new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
+//                new int[]{R.id.train_no_minute, R.id.train_no_station},
+//                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+//
+//        // Bind to our new adapter.
+//        itemListView.setAdapter(mAdapter);
 
-        // Bind to our new adapter.
-        itemListView.setAdapter(mAdapter);
+        for(int j=5;j<25;j++){
+            List<TimeTableItem> items = new ArrayList<TimeTableItem>();
+            for(int i=0;i<13;i++){
+                items.add(new TimeTableItem("05","動","21"));
+            }
+            listItems.add(new ListItem(String.valueOf(j),items));
+
+        }
+
+        itemListView.setAdapter(new TimeTableLIstArrayAdapter(this,listItems));
         itemListView.setFastScrollEnabled(true);
-
 
         String fromIntent0 = "";
         int fromIntent1 = 0;
@@ -260,25 +276,25 @@ public class TimeTable extends Activity
         }
     }
 
-    /**
-     * データ読み込み時の処理 取得したデータをアダプタに交換する
-     *
-     * @param loader 取得したローダ
-     * @param data 表示するCursorデータ
-     */
-    public void onLoadFinished(Loader loader, Object data) {
-        mAdapter.swapCursor((Cursor) data);
-    }
-
-    /**
-     * ロードがリセットされた時の処理
-     *
-     * @param loader ローダー
-     */
-    public void onLoaderReset(Loader loader) {
-        mAdapter.swapCursor(null);
-    }
-
+//    /**
+//     * データ読み込み時の処理 取得したデータをアダプタに交換する
+//     *
+//     * @param loader 取得したローダ
+//     * @param data 表示するCursorデータ
+//     */
+//    public void onLoadFinished(Loader loader, Object data) {
+//        mAdapter.swapCursor((Cursor) data);
+//    }
+//
+//    /**
+//     * ロードがリセットされた時の処理
+//     *
+//     * @param loader ローダー
+//     */
+//    public void onLoaderReset(Loader loader) {
+//        mAdapter.swapCursor(null);
+//    }
+//
     /**
      * onCreate()時にレイアウト済みオブジェクトの取得
      */
@@ -302,7 +318,7 @@ public class TimeTable extends Activity
         }
         if (parent == trainNo) {
             //Listに紐付けていたプロバイダURIの切替
-            getLoaderManager().initLoader(position, null, (LoaderManager.LoaderCallbacks) this);
+//            getLoaderManager().initLoader(position, null, (LoaderManager.LoaderCallbacks) this);
         }
     }
 
@@ -396,5 +412,68 @@ public class TimeTable extends Activity
         spAdapter.add("休日 千葉駅2号線 下り");
         spAdapter.add("休日 市役所前駅 下り");
         spAdapter.add("休日 千葉みなと駅 下り");
+    }
+
+
+    /**
+     * 発車時刻
+     */
+    private class TimeTableItem {
+        public String minute;
+        public String annotation;
+        public String tableno;
+
+        public TimeTableItem(String minute,String annotation,String tableno){
+            this.minute=minute;
+            this.annotation=annotation;
+            this.tableno=tableno;
+        }
+    }
+
+    /**
+     * ListViewにバインドする時間単位の時刻表
+     */
+    private class ListItem {
+        public View view;
+        LayoutInflater inflater = getLayoutInflater();
+
+        public ListItem(String hour,List<TimeTableItem> items){
+            LinearLayout layout = new LinearLayout(getBaseContext());
+            view = layout;
+
+            TextView textView = new TextView(getBaseContext());
+            textView.setText(hour);
+            textView.setTextSize(35f);
+
+            layout.addView(textView);
+
+            for(TimeTableItem item:items){
+                View v = inflater.inflate(R.layout.list_item_time,null);
+                TextView txMinute = (TextView) v.findViewById(R.id.minute);
+                TextView txAnnotation = (TextView) v.findViewById(R.id.annotation);
+                TextView txTrainNo = (TextView) v.findViewById(R.id.tableno);
+
+                txMinute.setText(item.minute);
+                txAnnotation.setText(item.annotation);
+                txTrainNo.setText(item.tableno);
+
+                layout.addView(v);
+            }
+
+        }
+    }
+
+    private class TimeTableLIstArrayAdapter extends ArrayAdapter<ListItem> {
+        private List<ListItem> listItems;
+
+        public TimeTableLIstArrayAdapter(Context context, List<ListItem> items) {
+            super(context, R.layout.list_item_time, items);
+            this.listItems = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return listItems.get(position).view;
+        }
     }
 }
