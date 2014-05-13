@@ -25,8 +25,7 @@ import android.widget.Spinner;
  */
 public class TimeTable extends Activity
         implements LoaderManager.LoaderCallbacks,
-        AdapterView.OnItemSelectedListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemSelectedListener{
 
     /** デバッグフラグ*/
     private static final boolean DEBUG = false;
@@ -46,22 +45,20 @@ public class TimeTable extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.train_table);
         findViews();
 
-        //リスト用設定
-        mAdapter = new SimpleCursorAdapter(
+        mAdapter = new TimeTblCursorAdapter(
                 this,
-                android.R.layout.two_line_list_item,
+                R.layout.list_item_train_no,
                 null,
-                new String[]{TrainTblContract.TIME, TrainTblContract.DESTINATION},
-                new int[]{android.R.id.text1, android.R.id.text2},
+                new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
+                new int[]{R.id.train_no_minute, R.id.train_no_station},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         // Bind to our new adapter.
         itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
-        itemListView.setOnItemClickListener(this);
 
 
         String fromIntent0 = "";
@@ -323,42 +320,6 @@ public class TimeTable extends Activity
     }
 
     /**
-     * リストで選択された時に呼び出し
-     *
-     * @param parent アダプタを登録しているView(リスト)オブジェクト
-     * @param view 選択されたview
-     * @param position 選択した位置
-     * @param id 選択したID
-     */
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (parent == itemListView) {
-            String item = itemListView.getItemAtPosition(position).toString();
-            if (DEBUG) {
-                Log.d(TAG, "「" + position + "」番目が選択されました");
-            }
-            Uri uri = ContentUris.withAppendedId(TrainTblContract.CONTENT_URI, id);
-            if (DEBUG) {
-                Log.d(TAG, "URI: " + uri.toString());
-            }
-//            HashMap mProjectionMap = new HashMap();
-//            mProjectionMap.put(TrainTblContract.TABLE_NO, TrainTblContract.TABLE_NO);
-            Cursor c = this.getContentResolver().query(uri, new String[]{TrainTblContract.TABLE_NO,TrainTblContract.HOLIDAY}, null, null, null);
-            if (c.getCount() != 0) {
-                c.moveToFirst();
-                if (DEBUG) {
-                    Log.d(TAG, "0:" + c.getInt(0));
-//                    Log.d(TAG, "1:" + c.getInt(1));
-                }
-            }
-            Intent intent = new Intent(this, TrainTable.class);
-            intent.putExtra("TableNo", c.getInt(0));
-            intent.putExtra("holiday", c.getInt(1));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-    }
-
-    /**
      * スピナーに値を登録
      *
      * @param spAdapter
@@ -436,5 +397,4 @@ public class TimeTable extends Activity
         spAdapter.add("休日 市役所前駅 下り");
         spAdapter.add("休日 千葉みなと駅 下り");
     }
-
 }
