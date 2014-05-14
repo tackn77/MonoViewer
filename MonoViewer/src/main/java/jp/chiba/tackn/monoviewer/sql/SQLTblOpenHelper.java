@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer;
+package jp.chiba.tackn.monoviewer.sql;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,34 +17,53 @@ import java.io.OutputStream;
  * @author Takumi Ito
  * @since 2014/05/12.
  */
-public class TrainTblOpenHelper extends SQLiteOpenHelper {
-    /** デバッグフラグ */
+public class SQLTblOpenHelper extends SQLiteOpenHelper {
+    /**
+     * デバッグフラグ
+     */
     private static final boolean DEBUG = false;
-    /** デバッグタグ */
+    /**
+     * デバッグタグ
+     */
     private static final String TAG = "TrainTblOpenHelper";
 
-    /** assetsフォルダにあるdbのファイル名 */
+    /**
+     * assetsフォルダにあるdbのファイル名
+     */
     private static final String SRC_DATABASE_NAME = "sampletest.sqlite3";
-    /** コピー先のDB名 */
+    /**
+     * コピー先のDB名
+     */
     static final String DATABASE_NAME = "TimeTable";
 
-    /** アプリケーションコンテキスト */
+    /**
+     * アプリケーションコンテキスト
+     */
     private final Context context;
-    /** 書き換え先のデータベースパス */
+    /**
+     * 書き換え先のデータベースパス
+     */
     private final File databasePath;
-    /** データベースコピーフラグ */
+    /**
+     * データベースコピーフラグ
+     */
     private boolean createDatabase = false;
 
-    /** SQLiteのDBバージョン */
-    private static final int DB_VERSION = 1;
-    /** SQLiteのテーブル名 */
+    /**
+     * SQLiteのDBバージョン
+     */
+    private static final int DB_VERSION = 7;
+    /**
+     * SQLiteのテーブル名
+     */
     static String TBL_NAME = "TimeTable";
 
     /**
      * コンストラクタ
+     *
      * @param context アプリケーションコンテキスト
      */
-    TrainTblOpenHelper(Context context) {
+    SQLTblOpenHelper(Context context) {
         super(context, TBL_NAME, null, DB_VERSION);
 
         this.context = context;
@@ -58,14 +77,23 @@ public class TrainTblOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
-        SQLiteDatabase database = super.getWritableDatabase();
-        if (DEBUG) Log.d(TAG, "getWritableDatabase");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    /**
+     * DBオブジェクトの取得
+     * assertフォルダからコピーを行う
+     * @return assetsフォルダからコピーしたDB
+     */
+    @Override
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        SQLiteDatabase db = super.getReadableDatabase();
+        if (DEBUG) Log.d(TAG, "ReadableDatabase");
         if (DEBUG) Log.d(TAG, "createDatabase: " + createDatabase);
 
         if (createDatabase) {
             try {
                 if (DEBUG) Log.d(TAG, "copyDatabase before");
-                database = copyDatabase(database);
+                db = copyDatabase(db);
                 if (DEBUG)Log.d(TAG, "copyDatabase after");
             } catch (IOException e) {
                 //Log.wtf(TAG, e);
@@ -73,18 +101,18 @@ public class TrainTblOpenHelper extends SQLiteOpenHelper {
             }
         }
 
-        return database;
+        return db;
     }
 
     /**
      * データベースのコピーを行う
-     * @param database コピー先DB
+     * @param db コピー先DB
      * @return コピー済みのDBを開いたオブジェクト
      * @throws IOException ファイルコピー時の例外
      */
-    private SQLiteDatabase copyDatabase(SQLiteDatabase database) throws IOException {
+    private SQLiteDatabase copyDatabase(SQLiteDatabase db) throws IOException {
         // 開いていいるDBをいったん閉じる
-        database.close();
+        db.close();
 
         // assetsフォルダからコピー
         InputStream input = context.getAssets().open(SRC_DATABASE_NAME);
@@ -111,14 +139,20 @@ public class TrainTblOpenHelper extends SQLiteOpenHelper {
 
     /**
      * DBバージョンが上がった際の作業
-     * //TODO 未対応
      * @param db アプリで利用するDB
      * @param oldVersion 古いバージョン
      * @param newVersion 新しいバージョン
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(oldVersion!=newVersion) {
+            // 開いていいるDBをいったん閉じる
+            if (db.isOpen()) db.close();
+            //DBファイルを削除
+            databasePath.delete();
+            //初回コピー時と同じ手順を行う
+            onCreate(db);
+        }
     }
 
     /**
