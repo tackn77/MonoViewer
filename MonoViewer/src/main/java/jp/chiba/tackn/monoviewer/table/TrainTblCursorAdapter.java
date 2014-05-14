@@ -11,7 +11,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.sql.SQLTblContract;
+import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
 /**
  * TrainNoのリスト表示時にViewを提供する

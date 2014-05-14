@@ -2,31 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.chiba.tackn.monoviewer" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
-        <activity android:name=".table.TrainTable"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name="jp.chiba.tackn.monoviewer.table.TrainTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
         </activity>
-
-        <activity android:name=".table.TimeTable"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize">
+        <activity
+            android:name="jp.chiba.tackn.monoviewer.table.TimeTable"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
         </activity>
 
         <provider
-            android:name=".sql.SQLTblProvider"
-            android:authorities="jp.chiba.tackn.monoviewer.sql"
-            android:exported="false">
+            android:name="jp.chiba.tackn.monoviewer.data.SQLTblProvider"
+            android:authorities="jp.chiba.tackn.monoviewer.data"
+            android:exported="false" >
         </provider>
+
+        <activity
+            android:name="jp.chiba.tackn.monoviewer.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

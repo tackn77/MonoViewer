@@ -17,7 +17,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.sql.SQLTblContract;
+import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う

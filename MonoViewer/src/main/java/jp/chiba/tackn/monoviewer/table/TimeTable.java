@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.sql.SQLTblContract;
+import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -525,6 +525,7 @@ public class TimeTable extends Activity
                             intent.putExtra("holiday", horiday);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
+
                         }
                     });
                 }
