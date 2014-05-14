@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="35sp"
+    android:layout_height="36sp"
     android:layout_width="wrap_content"
     android:id="@+id/time_table_Item"
-    android:orientation="horizontal"
-    android:background="#ff00ff00">
+    android:orientation="horizontal">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" "
         android:id="@+id/start"
-        android:textSize="35sp"
+        android:textSize="36sp"
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
@@ -35,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="05"
             android:id="@+id/minute"
-            android:textSize="22sp"
+            android:textSize="23sp"
             android:gravity="center" />
 
     </LinearLayout>
@@ -47,6 +46,5 @@
         android:id="@+id/tableno"
         android:layout_gravity="bottom"
         android:password="false"
-        android:textSize="8sp" />
-
+        android:textSize="10sp" />
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +54,7 @@ public class TimeTable extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.train_table);
+        setContentView(R.layout.time_table);
         findViews();
 
 //        mAdapter = new TimeTblCursorAdapter(
@@ -65,10 +68,27 @@ public class TimeTable extends Activity
 //        // Bind to our new adapter.
 //        itemListView.setAdapter(mAdapter);
 
+        List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
+        for(int k=0;k<26;k++)damySpace.add(new TimeTableItem("　","　","　"));
+        listItems.add(new ListItem("　",damySpace));
         for(int j=5;j<25;j++){
             List<TimeTableItem> items = new ArrayList<TimeTableItem>();
-            for(int i=0;i<13;i++){
+            for(int i=0;i<5;i++){
                 items.add(new TimeTableItem("05","動","21"));
+                if(j==13){
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+
+                }
             }
             listItems.add(new ListItem(String.valueOf(j),items));
 
@@ -438,12 +458,14 @@ public class TimeTable extends Activity
         LayoutInflater inflater = getLayoutInflater();
 
         public ListItem(String hour,List<TimeTableItem> items){
+            HorizontalScrollView horizontalScrollView = new HorizontalScrollView(getBaseContext());
             LinearLayout layout = new LinearLayout(getBaseContext());
             view = layout;
+//            horizontalScrollView.addView(layout);
 
             TextView textView = new TextView(getBaseContext());
             textView.setText(hour);
-            textView.setTextSize(35f);
+            textView.setTextSize(36f);
 
             layout.addView(textView);
 
@@ -473,7 +495,13 @@ public class TimeTable extends Activity
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return listItems.get(position).view;
+            View v = listItems.get(position).view;
+//            if(position%2 ==0){
+//                v.setBackgroundColor(Color.argb(0,10,10,10));
+//            }else{
+//                v.setBackgroundColor(Color.WHITE);
+//            }
+            return v;
         }
     }
 }
