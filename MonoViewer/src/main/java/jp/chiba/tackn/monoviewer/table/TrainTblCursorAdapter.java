@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer;
+package jp.chiba.tackn.monoviewer.table;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.sql.SQLTblContract;
+
 /**
  * TrainNoのリスト表示時にViewを提供する
  * @author Takumi Ito
@@ -19,9 +22,12 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
     /** デバッグフラグ */
     private static final boolean DEBUG = false;
+    /** デバッグタグ */
     private static final String TAG = "TrainTblCursorAdapter";
 
-
+    /**
+     * ListViewのカラムの要素を保存するクラス
+     */
     private class ViewHolder{
         public ImageView icon;
         public TextView hour;
@@ -52,14 +58,17 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
+        //カラムのView取得
         View v = super.newView(context,cursor,parent);
 
+        //bindView で紐付する要素取得
         ViewHolder holder = new ViewHolder();
         holder.icon = (ImageView) v.findViewById(R.id.train_no_iconeView);
         holder.hour = (TextView) v.findViewById(R.id.train_no_hour);
         holder.minute = (TextView) v.findViewById(R.id.train_no_minute);
         holder.station = (TextView) v.findViewById(R.id.train_no_station);
 
+        //bindView へ送る
         v.setTag(holder);
 
         return v;
@@ -75,24 +84,33 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, final Context context,final Cursor cursor) {
         super.bindView(view,context,cursor);
 
+        //newView から受取
         final ViewHolder holder = (ViewHolder)view.getTag();
-        final int updown = cursor.getInt(cursor.getColumnIndex(TrainTblContract.UPDOWN));
+
+        //上り・下り
+        final int updown = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN));
         if(updown==0){
             holder.icon.setImageResource(R.drawable.ic_up);
         }else{
             holder.icon.setImageResource(R.drawable.ic_down);
         }
 
-        int hour = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOUR));
+        //時間（時）
+        int hour = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_HOUR));
         holder.hour.setText(String.format("%1$02d",hour));
-        int minute = cursor.getInt(cursor.getColumnIndex(TrainTblContract.MINUTE));
+        //時間（分)
+        int minute = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_MINUTE));
         holder.minute.setText(String.format("%1$02d",minute));
-        final String station = cursor.getString(cursor.getColumnIndex(TrainTblContract.STATION));
+        //駅名
+        final String station = cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_STATION));
         holder.station.setText(station);
-        final int holiday = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOLIDAY));
 
-        final String destination = cursor.getString(cursor.getColumnIndex(TrainTblContract.DESTINATION));
+        //平日・休日
+        final int holiday = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_HOLIDAY));
+        //行き先
+        final String destination = cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_DESTINATION));
 
+        //カラムがクリックされたら駅の時刻表を起動
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
