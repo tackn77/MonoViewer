@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,7 +21,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +30,20 @@ import java.util.List;
  * @author Takumi Ito
  */
 public class TimeTable extends Activity
-        implements AdapterView.OnItemSelectedListener{
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        AdapterView.OnItemSelectedListener{
 
 
     /** デバッグフラグ*/
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     /** デバッグタグ */
     private static final String TAG = "TimeTable";
 
     /** プロバイダからのデータとListの仲立ち */
     private SimpleCursorAdapter mAdapter;
+
+    private ArrayAdapter mAdapter2;
+
     /** 時刻表表示用リスト */
     private ListView itemListView;
     /** 時刻表(STATION)選択用スピナー */
@@ -57,6 +60,9 @@ public class TimeTable extends Activity
         setContentView(R.layout.time_table);
         findViews();
 
+        // Loaderの初期化
+        getLoaderManager().initLoader(0, null, this);
+
 //        mAdapter = new TimeTblCursorAdapter(
 //                this,
 //                R.layout.list_item_train_no,
@@ -68,9 +74,9 @@ public class TimeTable extends Activity
 //        // Bind to our new adapter.
 //        itemListView.setAdapter(mAdapter);
 
-        createArrayList();
+        mAdapter2 = new TimeTableLIstArrayAdapter(this,listItems);
 
-        itemListView.setAdapter(new TimeTableLIstArrayAdapter(this,listItems));
+        itemListView.setAdapter(mAdapter2);
         itemListView.setFastScrollEnabled(true);
 
         String fromIntent0 = "";
@@ -110,37 +116,6 @@ public class TimeTable extends Activity
         trainNo.setSelection(position);
 //        //クエリーハンドラ
 //        mQueryHandler = new MyAsyncQueryHandler(this.getContentResolver());
-    }
-
-    private void createArrayList() {
-        //ListViewの上位にHorizontalScrollViewを入れることに
-        //但し1行目の幅になってしまうので最大幅分に合わせるための1行目ダミーデータを入れる
-        //いくつかパターン試したけれど現段階ではこの方式に落ち着く
-        List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
-        for(int k=0;k<26;k++)damySpace.add(new TimeTableItem("　","　","　"));
-        listItems.add(new ListItem("　",damySpace));
-
-        for(int j=5;j<25;j++){
-            List<TimeTableItem> items = new ArrayList<TimeTableItem>();
-            for(int i=0;i<5;i++){
-                items.add(new TimeTableItem("05","動","21"));
-                if(j==13){
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-
-                }
-            }
-            listItems.add(new ListItem(String.valueOf(j),items));
-        }
     }
 
     /**
@@ -303,25 +278,50 @@ public class TimeTable extends Activity
         }
     }
 
-//    /**
-//     * データ読み込み時の処理 取得したデータをアダプタに交換する
-//     *
-//     * @param loader 取得したローダ
-//     * @param data 表示するCursorデータ
-//     */
-//    public void onLoadFinished(Loader loader, Object data) {
-//        mAdapter.swapCursor((Cursor) data);
-//    }
-//
-//    /**
-//     * ロードがリセットされた時の処理
-//     *
-//     * @param loader ローダー
-//     */
-//    public void onLoaderReset(Loader loader) {
-//        mAdapter.swapCursor(null);
-//    }
-//
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if(DEBUG)Log.d(TAG,"onLoadFinished");
+
+        listItems.clear();
+        //ListViewの上位にHorizontalScrollViewを入れることに
+        //但し1行目の幅になってしまうので最大幅分に合わせるための1行目ダミーデータを入れる
+        //いくつかパターン試したけれど現段階ではこの方式に落ち着く
+        List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
+        for(int k=0;k<14;k++)damySpace.add(new TimeTableItem("　","　","　",2));
+        listItems.add(new ListItem("　",damySpace));
+
+        int hour=5;
+        List<TimeTableItem> items = new ArrayList<TimeTableItem>();
+        if (cursor.moveToFirst()) {
+            do {
+                int newHour = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOUR));
+                if(hour!=newHour){
+                    if(DEBUG)Log.d(TAG,"hour change : " + hour +"->" + newHour);
+                    listItems.add(new ListItem(String.format("%1$02d", hour),items));
+                    hour=newHour;
+                    items = new ArrayList<TimeTableItem>();
+                }else{
+
+                    int minutes = cursor.getInt(cursor.getColumnIndex(TrainTblContract.MINUTE));
+                    String annotation = cursor.getString(cursor.getColumnIndex(TrainTblContract.ANNOTATION));
+                    int table_no = cursor.getInt(cursor.getColumnIndex(TrainTblContract.TABLE_NO));
+                    int isHoliday = cursor.getInt(cursor.getColumnIndex(TrainTblContract.HOLIDAY));
+
+                    items.add(new TimeTableItem(String.format("%1$02d",minutes),annotation,String.valueOf(table_no),isHoliday));
+                }
+            } while (cursor.moveToNext());
+        }
+        mAdapter2.notifyDataSetChanged();
+    }
+
+    /**
+     * ロードがリセットされた時の処理
+     *
+     * @param loader ローダー
+     */
+    public void onLoaderReset(Loader loader) {
+    }
+
     /**
      * onCreate()時にレイアウト済みオブジェクトの取得
      */
@@ -345,7 +345,7 @@ public class TimeTable extends Activity
         }
         if (parent == trainNo) {
             //Listに紐付けていたプロバイダURIの切替
-//            getLoaderManager().initLoader(position, null, (LoaderManager.LoaderCallbacks) this);
+            getLoaderManager().initLoader(position, null, (LoaderManager.LoaderCallbacks) this);
         }
     }
 
@@ -449,11 +449,13 @@ public class TimeTable extends Activity
         public String minute;
         public String annotation;
         public String tableno;
+        public int isHoliday;
 
-        public TimeTableItem(String minute,String annotation,String tableno){
+        public TimeTableItem(String minute,String annotation,String tableno,int isHoliday){
             this.minute=minute;
             this.annotation=annotation;
             this.tableno=tableno;
+            this.isHoliday=isHoliday;
         }
     }
 
@@ -465,10 +467,8 @@ public class TimeTable extends Activity
         LayoutInflater inflater = getLayoutInflater();
 
         public ListItem(String hour,List<TimeTableItem> items){
-            HorizontalScrollView horizontalScrollView = new HorizontalScrollView(getBaseContext());
             LinearLayout layout = new LinearLayout(getBaseContext());
             view = layout;
-//            horizontalScrollView.addView(layout);
 
             TextView textView = new TextView(getBaseContext());
             textView.setText(hour);
@@ -484,7 +484,14 @@ public class TimeTable extends Activity
 
                 txMinute.setText(item.minute);
                 txAnnotation.setText(item.annotation);
-                txTrainNo.setText(item.tableno);
+
+                if(item.isHoliday==0){
+                    txTrainNo.setText("KA\n" + item.tableno);
+                }else if (item.isHoliday==1){
+                    txTrainNo.setText("HA\n" + item.tableno);
+                }else{
+                    txTrainNo.setText(item.tableno);
+                }
 
                 layout.addView(v);
             }

@@ -249,4 +249,6 @@ public class TrainTblContract implements BaseColumns {
     public static final String HOUR ="HOURS";
 
     public static final String MINUTE = "MINUTES";
+
+    public static final String ANNOTATION = "ANNOTATION";
 }

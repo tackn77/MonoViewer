@@ -249,6 +249,7 @@ public class TrainTblProvider extends ContentProvider {
         mProjectionMap.put(TrainTblContract.STATION, TrainTblContract.STATION);
         mProjectionMap.put(TrainTblContract.DESTINATION, TrainTblContract.DESTINATION);
         mProjectionMap.put(TrainTblContract.TABLE_NO, TrainTblContract.TABLE_NO);
+        mProjectionMap.put(TrainTblContract.ANNOTATION, TrainTblContract.ANNOTATION);
     }
 
     /**
