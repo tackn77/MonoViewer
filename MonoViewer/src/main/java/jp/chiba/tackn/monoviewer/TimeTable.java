@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -40,9 +39,7 @@ public class TimeTable extends Activity
     private static final String TAG = "TimeTable";
 
     /** プロバイダからのデータとListの仲立ち */
-    private SimpleCursorAdapter mAdapter;
-
-    private ArrayAdapter mAdapter2;
+    private ArrayAdapter mAdapter;
 
     /** 時刻表表示用リスト */
     private ListView itemListView;
@@ -63,20 +60,9 @@ public class TimeTable extends Activity
         // Loaderの初期化
         getLoaderManager().initLoader(0, null, this);
 
-//        mAdapter = new TimeTblCursorAdapter(
-//                this,
-//                R.layout.list_item_train_no,
-//                null,
-//                new String[]{TrainTblContract.TIME, TrainTblContract.STATION},
-//                new int[]{R.id.train_no_minute, R.id.train_no_station},
-//                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-//
-//        // Bind to our new adapter.
-//        itemListView.setAdapter(mAdapter);
+        mAdapter = new TimeTableLIstArrayAdapter(this,listItems);
 
-        mAdapter2 = new TimeTableLIstArrayAdapter(this,listItems);
-
-        itemListView.setAdapter(mAdapter2);
+        itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
 
         String fromIntent0 = "";
@@ -114,8 +100,6 @@ public class TimeTable extends Activity
         }
 
         trainNo.setSelection(position);
-//        //クエリーハンドラ
-//        mQueryHandler = new MyAsyncQueryHandler(this.getContentResolver());
     }
 
     /**
@@ -311,7 +295,7 @@ public class TimeTable extends Activity
                 }
             } while (cursor.moveToNext());
         }
-        mAdapter2.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -443,7 +427,7 @@ public class TimeTable extends Activity
 
 
     /**
-     * 発車時刻
+     * 発車時刻を保持するクラス
      */
     private class TimeTableItem {
         public String minute;
@@ -494,11 +478,34 @@ public class TimeTable extends Activity
                 }
 
                 layout.addView(v);
+
+                if(item.minute!="　") {
+                    final Context context = getBaseContext();
+                    final Intent intent = new Intent(context, TrainTable.class);
+
+                    final int horiday = item.isHoliday;
+                    final int tableNo = Integer.valueOf(item.tableno);
+
+
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            intent.putExtra("TableNo", tableNo);
+                            intent.putExtra("holiday", horiday);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    });
+                }
+
             }
 
         }
     }
 
+    /**
+     * ListViewにバインド作業を行う
+     */
     private class TimeTableLIstArrayAdapter extends ArrayAdapter<ListItem> {
         private List<ListItem> listItems;
 
@@ -510,11 +517,6 @@ public class TimeTable extends Activity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = listItems.get(position).view;
-//            if(position%2 ==0){
-//                v.setBackgroundColor(Color.argb(0,10,10,10));
-//            }else{
-//                v.setBackgroundColor(Color.WHITE);
-//            }
             return v;
         }
     }
