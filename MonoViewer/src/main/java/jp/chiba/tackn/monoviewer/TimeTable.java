@@ -68,31 +68,7 @@ public class TimeTable extends Activity
 //        // Bind to our new adapter.
 //        itemListView.setAdapter(mAdapter);
 
-        List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
-        for(int k=0;k<26;k++)damySpace.add(new TimeTableItem("　","　","　"));
-        listItems.add(new ListItem("　",damySpace));
-        for(int j=5;j<25;j++){
-            List<TimeTableItem> items = new ArrayList<TimeTableItem>();
-            for(int i=0;i<5;i++){
-                items.add(new TimeTableItem("05","動","21"));
-                if(j==13){
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-                    items.add(new TimeTableItem("05","動","21"));
-
-                }
-            }
-            listItems.add(new ListItem(String.valueOf(j),items));
-
-        }
+        createArrayList();
 
         itemListView.setAdapter(new TimeTableLIstArrayAdapter(this,listItems));
         itemListView.setFastScrollEnabled(true);
@@ -134,6 +110,37 @@ public class TimeTable extends Activity
         trainNo.setSelection(position);
 //        //クエリーハンドラ
 //        mQueryHandler = new MyAsyncQueryHandler(this.getContentResolver());
+    }
+
+    private void createArrayList() {
+        //ListViewの上位にHorizontalScrollViewを入れることに
+        //但し1行目の幅になってしまうので最大幅分に合わせるための1行目ダミーデータを入れる
+        //いくつかパターン試したけれど現段階ではこの方式に落ち着く
+        List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
+        for(int k=0;k<26;k++)damySpace.add(new TimeTableItem("　","　","　"));
+        listItems.add(new ListItem("　",damySpace));
+
+        for(int j=5;j<25;j++){
+            List<TimeTableItem> items = new ArrayList<TimeTableItem>();
+            for(int i=0;i<5;i++){
+                items.add(new TimeTableItem("05","動","21"));
+                if(j==13){
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+                    items.add(new TimeTableItem("05","動","21"));
+
+                }
+            }
+            listItems.add(new ListItem(String.valueOf(j),items));
+        }
     }
 
     /**
