@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.sql;
+package jp.chiba.tackn.monoviewer.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

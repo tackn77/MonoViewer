@@ -4,5 +4,6 @@
     <string name="app_name">千葉都市モノレール時刻表びゅーわ</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

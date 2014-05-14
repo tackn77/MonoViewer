@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.sql;
+package jp.chiba.tackn.monoviewer.data;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -13,7 +13,7 @@ import android.provider.BaseColumns;
 public class SQLTblContract implements BaseColumns {
 
     /** パッケージ名 */
-    public static final String AUTHORITY = "jp.chiba.tackn.monoviewer.sql";
+    public static final String AUTHORITY = "jp.chiba.tackn.monoviewer.data";
     /** プロバイダの提供するコマンド*/
     /** 休日 列車ダイヤ1 */
     public static final String PATH_HOLIDAY_TRAIN_1 = "KA1";
