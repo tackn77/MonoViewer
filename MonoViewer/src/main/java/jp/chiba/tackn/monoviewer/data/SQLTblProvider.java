@@ -234,6 +234,11 @@ public class SQLTblProvider extends ContentProvider {
     /** DBから取得する列一覧 */
     private static HashMap<String,String> mProjectionMap;
 
+    /** 現在時刻クエリ用セット用Date */
+    Date Date = new Date();
+    /** 時刻取得用カレンダ */
+    Calendar calendar = Calendar.getInstance();
+
     static {
         // UriMatcherの定義
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -382,8 +387,6 @@ public class SQLTblProvider extends ContentProvider {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
         //現在時刻と5分前の取得
-        Date Date = new Date();
-        Calendar calendar = Calendar.getInstance();
         long nowLong = System.currentTimeMillis();
         long beforeLong = nowLong - (5 * 60 * 1000);
 
@@ -729,6 +732,12 @@ public class SQLTblProvider extends ContentProvider {
         return c;
     }
 
+    /**
+     * 現在時刻クエリ用変数作成用
+     * @param hour 時刻(時)
+     * @param minutes 時刻(分)
+     * return 整形したint値
+     */
     private int getQueryTimes(int hour,int minutes){
         if(hour==0)hour=24;
         return Integer.valueOf(String.format("%1$02d", hour) + String.format("%1$02d", minutes));

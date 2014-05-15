@@ -1,6 +1,7 @@
 package jp.chiba.tackn.monoviewer.map;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Context;
@@ -11,7 +12,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -31,6 +32,8 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,10 +42,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import jp.chiba.tackn.monoviewer.AsyncHttpRequest;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 import jp.chiba.tackn.monoviewer.table.TimeTable;
+import jp.chiba.tackn.monoviewer.table.TrainTable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,7 +56,7 @@ import jp.chiba.tackn.monoviewer.table.TimeTable;
  * create an instance of this fragment.
  */
 public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
-        , LoaderManager.LoaderCallbacks<Cursor>{
+        , LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,6 +76,8 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private Context context;
     private TrainHandler trainHandler;
     private LoaderManager.LoaderCallbacks callbacks;
+    private int intHoliday;
+    private int updown;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -108,8 +113,9 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         AsyncHttpRequest task = new AsyncHttpRequest(context);
         task.execute(builder);
 
-        callbacks = (LoaderManager.LoaderCallbacks)this;
+        callbacks = (LoaderManager.LoaderCallbacks) this;
         setUpMapIfNeeded();
+        setUpHandler();
     }
 
     @Override
@@ -124,9 +130,15 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onResume() {
         super.onResume();
-        trainHandler=new TrainHandler();
-        trainHandler.sleep(0);
         setUpMapIfNeeded();
+        setUpHandler();
+    }
+
+    private void setUpHandler() {
+        if (trainHandler == null) {
+            trainHandler = new TrainHandler();
+            trainHandler.sleep(0);
+        }
     }
 
     /**
@@ -182,24 +194,24 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.setMyLocationEnabled(true);
 
         //駅に時刻表のリンクしたマーカーを設置
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").alpha(0.3f));
-//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").alpha(0.3f));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").alpha(0.3f));
 
     }
 
@@ -227,28 +239,41 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mListener = null;
     }
 
+    Pattern patternStation = Pattern.compile("^[^駅]+駅$");
+    Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)$");
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Intent intent = new Intent(context, TimeTable.class);
+        Matcher matcherStation = patternStation.matcher(marker.getTitle());
+        Matcher matcherTrain = patternTrain.matcher(marker.getTitle());
 
-        if(marker.getTitle().equals("千葉みなと駅")){
-            intent.putExtra("updown", 1);
-        }else{
-            intent.putExtra("updown", 0);
+        if(matcherStation.find()) {
+            Intent intent = new Intent(context, TimeTable.class);
+            if (marker.getTitle().equals("千葉みなと駅")) {
+                intent.putExtra("updown", 1);
+            } else {
+                intent.putExtra("updown", 0);
+            }
+            intent.putExtra("station", marker.getTitle());
+            intent.putExtra("holiday", intHoliday);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else if(matcherTrain.find()){
+            int tableNo = Integer.parseInt(matcherTrain.group(4));
+
+            Intent intent = new Intent(context, TrainTable.class);
+            intent.putExtra("TableNo", tableNo);
+            intent.putExtra("holiday", intHoliday);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
-        intent.putExtra("station", marker.getTitle());
-        intent.putExtra("holiday", intHoliday);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
-    private int intHoliday;
-    private int updown;
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         /** 取得データのソート */
-        String orderBy = " TABLE_NO ASC";
+        String orderBy = " TABLE_NO ASC,TIMES ASC";
 
         switch (i) {
             case 0:
@@ -263,14 +288,14 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
-    private class NowTrainData{
+    private class NowTrainData {
         public String Station;
         public int UpDown;
         public int Table_No;
         public int Hour;
         public int Minute;
 
-        public NowTrainData(String Station,int UpDown,int Hour,int Minute,int Table_No){
+        public NowTrainData(String Station, int UpDown, int Hour, int Minute, int Table_No) {
             this.Station = Station;
             this.UpDown = UpDown;
             this.Table_No = Table_No;
@@ -280,71 +305,72 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     }
 
     private List<Marker> trainMakers = new ArrayList<Marker>();
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        int table_no=0;
-        int new_table_no=0;
+        int table_no = 0;
+        int new_table_no = 0;
         List<NowTrainData> group = new ArrayList<NowTrainData>();
         NowTrainData old = null;
 
-        for(Marker marker:trainMakers)marker.remove();
+        for (Marker marker : trainMakers) marker.remove();
         trainMakers.clear();
 
+        if(DEBUG)Log.d(TAG,"cursor.getCount() " + cursor.getCount());
         if (cursor.moveToFirst()) {
-            table_no=cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+            table_no = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
             do {
-                new_table_no=cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
-                if(table_no!=new_table_no){
+                new_table_no = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+                if (table_no != new_table_no) {
                     group.add(old);
-                    table_no=new_table_no;
+                    table_no = new_table_no;
                 }
-                old=new NowTrainData(
+                old = new NowTrainData(
                         cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_STATION))
-                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN))
-                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_HOUR))
-                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_MINUTE))
-                        ,table_no
-                        );
+                        , cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN))
+                        , cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_HOUR))
+                        , cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_MINUTE))
+                        , table_no
+                );
+                if(DEBUG)Log.d(TAG,old.UpDown + " " + old.Table_No + "/" + old.Hour + ":" + old.Minute + " " + old.Station);
             } while (cursor.moveToNext());
             group.add(old);
         }
 
-        if(group.size()>0) {
+        if(DEBUG)Log.d(TAG,"group.size() " + group.size());
+        if (group.size() > 0) {
             for (NowTrainData cur : group) {
                 if (mMap != null) {
+                    if(DEBUG)Log.d(TAG,cur.UpDown + " " + cur.Table_No +  "/" + cur.Hour + ":" + cur.Minute + " " + cur.Station);
                     String station = cur.Station;
                     int updonw = cur.UpDown;
                     MarkerOptions markerOptions = new MarkerOptions();
                     if (updonw == 0) {
-                        markerOptions.title("上り " + station + " " + cur.Hour + ":" + cur.Minute + "発 " + cur.Table_No);
+                        markerOptions.title("上り " + station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No);
+                        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_up));
                     } else {
-                        markerOptions.title("下り " + station + " " + cur.Hour + ":" + cur.Minute + "発 " + cur.Table_No);
+                        markerOptions.title("下り " + station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No);
+                        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_down));
                     }
 
                     if (station.equals("千城台駅")) markerOptions.position(Station.STATION_TISHIRODAI);
-                    if (station.equals("千城台北駅"))
-                        markerOptions.position(Station.STATION_TISHIRODAIKITA);
+                    if (station.equals("千城台北駅"))markerOptions.position(Station.STATION_TISHIRODAIKITA);
                     if (station.equals("小倉台駅")) markerOptions.position(Station.STATION_OGURADAI);
                     if (station.equals("桜木駅")) markerOptions.position(Station.STATION_SAKURAGI);
                     if (station.equals("都賀駅")) markerOptions.position(Station.STATION_TUGA);
                     if (station.equals("みつわ台駅")) markerOptions.position(Station.STATION_MITUWADAI);
-                    if (station.equals("動物公園駅"))
-                        markerOptions.position(Station.STATION_DOUBUTUKOUEN);
-                    if (station.equals("スポーツセンター駅"))
-                        markerOptions.position(Station.STATION_SPORTSCENTER);
+                    if (station.equals("動物公園駅"))markerOptions.position(Station.STATION_DOUBUTUKOUEN);
+                    if (station.equals("スポーツセンター駅"))markerOptions.position(Station.STATION_SPORTSCENTER);
                     if (station.equals("穴川駅")) markerOptions.position(Station.STATION_ANAGAWA);
                     if (station.equals("天台駅")) markerOptions.position(Station.STATION_TENDAI);
                     if (station.equals("作草部駅")) markerOptions.position(Station.STATION_SAKUSABE);
                     if (station.equals("千葉公園駅")) markerOptions.position(Station.STATION_CHIBAKOUEN);
                     if (station.equals("県庁前駅")) markerOptions.position(Station.STATION_KENTYOMAE);
-                    if (station.equals("葭川公園駅"))
-                        markerOptions.position(Station.STATION_YOSHIKAWAKOUEN);
+                    if (station.equals("葭川公園駅"))markerOptions.position(Station.STATION_YOSHIKAWAKOUEN);
                     if (station.equals("栄町駅")) markerOptions.position(Station.STATION_SAKAETYOU);
                     if (station.equals("千葉駅")) markerOptions.position(Station.STATION_CHIBA);
-                    if (station.equals("市役所前駅"))
-                        markerOptions.position(Station.STATION_SHIYAKUSYOMAE);
-                    if (station.equals("千葉みなと駅"))
-                        markerOptions.position(Station.STATION_CHIBAMINATO);
+                    if (station.equals("市役所前駅"))markerOptions.position(Station.STATION_SHIYAKUSYOMAE);
+                    if (station.equals("千葉みなと駅"))markerOptions.position(Station.STATION_CHIBAMINATO);
 
                     trainMakers.add(mMap.addMarker(markerOptions));
                 }
@@ -456,15 +482,15 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private class TrainHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            getLoaderManager().initLoader(intHoliday, null, callbacks);
-            if (trainHandler!=null) trainHandler.sleep(10 * 1000);  //3.
+            getLoaderManager().restartLoader(intHoliday, null, callbacks);
+            if (trainHandler != null) trainHandler.sleep(10 * 1000);  //3.
         }
 
         //スリープメソッド
         public void sleep(long delayMills) {
             //使用済みメッセージの削除
             removeMessages(0);
-            sendMessageDelayed(obtainMessage(0),delayMills);  //4.
+            sendMessageDelayed(obtainMessage(0), delayMills);  //4.
         }
     }
 
