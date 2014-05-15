@@ -10,8 +10,6 @@ import jp.chiba.tackn.monoviewer.R;
 
 public class MapsActivity extends Activity implements monoviewFragment.OnFragmentInteractionListener {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
