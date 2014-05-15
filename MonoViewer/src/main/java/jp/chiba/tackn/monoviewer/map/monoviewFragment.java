@@ -175,6 +175,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅"));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅"));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅"));
+        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅"));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅"));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅"));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅"));
