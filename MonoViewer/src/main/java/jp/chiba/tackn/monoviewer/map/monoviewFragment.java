@@ -2,12 +2,18 @@ package jp.chiba.tackn.monoviewer.map;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +29,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +41,7 @@ import javax.xml.xpath.XPathFactory;
 
 import jp.chiba.tackn.monoviewer.AsyncHttpRequest;
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 import jp.chiba.tackn.monoviewer.table.TimeTable;
 
 /**
@@ -43,7 +52,8 @@ import jp.chiba.tackn.monoviewer.table.TimeTable;
  * Use the {@link monoviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
+public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
+        , LoaderManager.LoaderCallbacks<Cursor>{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -61,7 +71,8 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private MapFragment mapFragment;
     private Context context;
-
+    private TrainHandler trainHandler;
+    private LoaderManager.LoaderCallbacks callbacks;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -97,6 +108,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         AsyncHttpRequest task = new AsyncHttpRequest(context);
         task.execute(builder);
 
+        callbacks = (LoaderManager.LoaderCallbacks)this;
         setUpMapIfNeeded();
     }
 
@@ -112,6 +124,8 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onResume() {
         super.onResume();
+        trainHandler=new TrainHandler();
+        trainHandler.sleep(0);
         setUpMapIfNeeded();
     }
 
@@ -168,24 +182,24 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.setMyLocationEnabled(true);
 
         //駅に時刻表のリンクしたマーカーを設置
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅"));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅"));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").alpha(0.3f));
+//        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").alpha(0.3f));
 
     }
 
@@ -230,6 +244,118 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
     private int intHoliday;
     private int updown;
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        /** 取得データのソート */
+        String orderBy = " TABLE_NO ASC";
+
+        switch (i) {
+            case 0:
+                return new CursorLoader(context, SQLTblContract.CONTENT_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY, null, null, null, orderBy);
+            case 1:
+                return new CursorLoader(context, SQLTblContract.CONTENT_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND, null, null, null, orderBy);
+            default:
+                if (DEBUG) {
+                    Log.d(TAG, "id:" + i);
+                }
+                return new CursorLoader(context, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
+        }
+    }
+
+    private class NowTrainData{
+        public String Station;
+        public int UpDown;
+        public int Table_No;
+        public int Hour;
+        public int Minute;
+
+        public NowTrainData(String Station,int UpDown,int Hour,int Minute,int Table_No){
+            this.Station = Station;
+            this.UpDown = UpDown;
+            this.Table_No = Table_No;
+            this.Hour = Hour;
+            this.Minute = Minute;
+        }
+    }
+
+    private List<Marker> trainMakers = new ArrayList<Marker>();
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        int table_no=0;
+        int new_table_no=0;
+        List<NowTrainData> group = new ArrayList<NowTrainData>();
+        NowTrainData old = null;
+
+        for(Marker marker:trainMakers)marker.remove();
+        trainMakers.clear();
+
+        if (cursor.moveToFirst()) {
+            table_no=cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+            do {
+                new_table_no=cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+                if(table_no!=new_table_no){
+                    group.add(old);
+                    table_no=new_table_no;
+                }
+                old=new NowTrainData(
+                        cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_STATION))
+                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN))
+                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_HOUR))
+                        ,cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_MINUTE))
+                        ,table_no
+                        );
+            } while (cursor.moveToNext());
+            group.add(old);
+        }
+
+        if(group.size()>0) {
+            for (NowTrainData cur : group) {
+                if (mMap != null) {
+                    String station = cur.Station;
+                    int updonw = cur.UpDown;
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    if (updonw == 0) {
+                        markerOptions.title("上り " + station + " " + cur.Hour + ":" + cur.Minute + "発 " + cur.Table_No);
+                    } else {
+                        markerOptions.title("下り " + station + " " + cur.Hour + ":" + cur.Minute + "発 " + cur.Table_No);
+                    }
+
+                    if (station.equals("千城台駅")) markerOptions.position(Station.STATION_TISHIRODAI);
+                    if (station.equals("千城台北駅"))
+                        markerOptions.position(Station.STATION_TISHIRODAIKITA);
+                    if (station.equals("小倉台駅")) markerOptions.position(Station.STATION_OGURADAI);
+                    if (station.equals("桜木駅")) markerOptions.position(Station.STATION_SAKURAGI);
+                    if (station.equals("都賀駅")) markerOptions.position(Station.STATION_TUGA);
+                    if (station.equals("みつわ台駅")) markerOptions.position(Station.STATION_MITUWADAI);
+                    if (station.equals("動物公園駅"))
+                        markerOptions.position(Station.STATION_DOUBUTUKOUEN);
+                    if (station.equals("スポーツセンター駅"))
+                        markerOptions.position(Station.STATION_SPORTSCENTER);
+                    if (station.equals("穴川駅")) markerOptions.position(Station.STATION_ANAGAWA);
+                    if (station.equals("天台駅")) markerOptions.position(Station.STATION_TENDAI);
+                    if (station.equals("作草部駅")) markerOptions.position(Station.STATION_SAKUSABE);
+                    if (station.equals("千葉公園駅")) markerOptions.position(Station.STATION_CHIBAKOUEN);
+                    if (station.equals("県庁前駅")) markerOptions.position(Station.STATION_KENTYOMAE);
+                    if (station.equals("葭川公園駅"))
+                        markerOptions.position(Station.STATION_YOSHIKAWAKOUEN);
+                    if (station.equals("栄町駅")) markerOptions.position(Station.STATION_SAKAETYOU);
+                    if (station.equals("千葉駅")) markerOptions.position(Station.STATION_CHIBA);
+                    if (station.equals("市役所前駅"))
+                        markerOptions.position(Station.STATION_SHIYAKUSYOMAE);
+                    if (station.equals("千葉みなと駅"))
+                        markerOptions.position(Station.STATION_CHIBAMINATO);
+
+                    trainMakers.add(mMap.addMarker(markerOptions));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -326,4 +452,21 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             }
         }
     }
+
+    private class TrainHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            getLoaderManager().initLoader(intHoliday, null, callbacks);
+            if (trainHandler!=null) trainHandler.sleep(10 * 1000);  //3.
+        }
+
+        //スリープメソッド
+        public void sleep(long delayMills) {
+            //使用済みメッセージの削除
+            removeMessages(0);
+            sendMessageDelayed(obtainMessage(0),delayMills);  //4.
+        }
+    }
+
+
 }

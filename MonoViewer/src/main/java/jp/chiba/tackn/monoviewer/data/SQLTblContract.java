@@ -207,6 +207,10 @@ public class SQLTblContract implements BaseColumns {
     /** 休日 千葉みなと駅 下り */
     public static final String PATH_HOLIDAY_STATION_18D = "KS18D";
 
+    /** 現在走行中の列車一覧 */
+    public static final String PATH_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND ="NOW_INFO_WEEKEND";
+    /** 現在走行中の列車一覧 */
+    public static final String PATH_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY ="NOW_INFO_HOLIDAY";
 
     /** コンテンツプロバイダが提供するデータベースを示すURI */
 
@@ -404,6 +408,10 @@ public class SQLTblContract implements BaseColumns {
 
     /** 時刻表のアイテム詳細 */
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/Item");
+    /** 現在走行中の列車一覧 */
+    public static final Uri CONTENT_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND = Uri.parse("content://" + AUTHORITY + "/" + PATH_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND);
+    /** 現在走行中の列車一覧 */
+    public static final Uri CONTENT_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY = Uri.parse("content://" + AUTHORITY + "/" + PATH_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY);
 
     /** プロバイダ仕様での名前 */
     private static final String PROVIDER_SPECIFIC_NAME = AUTHORITY;
