@@ -386,19 +386,25 @@ public class SQLTblProvider extends ContentProvider {
         /** SQLクエリ作成用 */
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        //現在時刻と5分前の取得
+        //現在時刻を挟んで前後5分間取得
         long nowLong = System.currentTimeMillis();
         long beforeLong = nowLong - (5 * 60 * 1000);
+        long afterLong  = nowLong + (5 * 60 * 1000);
 
         Date.setTime(nowLong);
         calendar.setTime(Date);
-        int nowHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int nowHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
         int nowMinute = calendar.get(Calendar.MINUTE);
 
         Date.setTime(beforeLong);
         calendar.setTime(Date);
-        int beforeHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int beforeHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
         int beforeMinute = calendar.get(Calendar.MINUTE);
+
+        Date.setTime(afterLong);
+        calendar.setTime(Date);
+        int afterHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
+        int afterMinute = calendar.get(Calendar.MINUTE);
 
 
         if(DEBUG) Log.d(TAG, "mUriMatcher.match(uri): " + mUriMatcher.match(uri));
@@ -699,13 +705,13 @@ public class SQLTblProvider extends ContentProvider {
 
             case NOW_INFOMATION_WEEKEND:
                 qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
-                        + " AND " + getQueryTimes(nowHour,nowMinute)
+                        + " AND " + getQueryTimes(afterHour,afterMinute)
                         + " AND HOLIDAY = " + 1);
                 break;
 
             case NOW_INFOMATION_HOLIDAY:
                 qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
-                        + " AND " + getQueryTimes(nowHour,nowMinute)
+                        + " AND " + getQueryTimes(afterHour,afterMinute)
                         + " AND HOLIDAY = " + 0);
                 break;
 
