@@ -61,7 +61,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final String ARG_PARAM2 = "param2";
 
     private static final String TAG = "monoviewFragment";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG =false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,13 +69,18 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
     private OnFragmentInteractionListener mListener;
 
+    /** Mapオブジェクト */
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    /** MapFragment */
     private MapFragment mapFragment;
+    /** 呼び出し元Activityのcontext */
     private Context context;
+    /** 定期実行用ハンドラ */
     private TrainHandler trainHandler;
+    /** CursorLoader用コールバック */
     private LoaderManager.LoaderCallbacks callbacks;
+    /** 非同期処理で取得した休日フラグ */
     private int intHoliday;
-    private int updown;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
