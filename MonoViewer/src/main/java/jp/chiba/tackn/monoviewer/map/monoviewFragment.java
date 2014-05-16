@@ -269,6 +269,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        trainHandler = null;
     }
 
     /** 駅マーカー判定用正規表現 */
@@ -554,8 +555,10 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private class TrainHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            getLoaderManager().restartLoader(intHoliday, null, callbacks);
-            if (trainHandler != null) trainHandler.sleep(10 * 1000);
+            if (trainHandler != null){
+                getLoaderManager().restartLoader(intHoliday, null, callbacks);
+                trainHandler.sleep(10 * 1000);
+            }
         }
 
         //スリープメソッド
