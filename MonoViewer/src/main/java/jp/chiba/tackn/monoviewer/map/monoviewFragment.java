@@ -48,12 +48,10 @@ import jp.chiba.tackn.monoviewer.table.TimeTable;
 import jp.chiba.tackn.monoviewer.table.TrainTable;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link monoviewFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link monoviewFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 列車の運行状況を見るためのMapFragment
+ * GoogleMapのMapFragmnetを内包したFragmnet
+ * @author Takumi Ito
+ * @since 2014/05/16
  */
 public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
         , LoaderManager.LoaderCallbacks<Cursor> {
@@ -100,6 +98,12 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         // Required empty public constructor
     }
 
+    /**
+     * 作成時
+     * パラメータの受け処理
+     * 初期化処理
+     * @param savedInstanceState 環境保存
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +122,13 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         setUpHandler();
     }
 
+    /**
+     * Viewの作成
+     * @param inflater レイアウト読み込みオブジェクト
+     * @param container viewを配置するコンテナ
+     * @param savedInstanceState 引数
+     * @return 整形したFragmentのView
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,6 +138,10 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         return view;
     }
 
+    /**
+     * リジューム時
+     * Mapとハンドラの作成
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -134,10 +149,13 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         setUpHandler();
     }
 
+    /**
+     * 定期実行用のハンドラのセットアップ
+     */
     private void setUpHandler() {
         if (trainHandler == null) {
             trainHandler = new TrainHandler();
-            trainHandler.sleep(0);
+            trainHandler.sleep(1 * 1000);
         }
     }
 
@@ -222,6 +240,11 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
+    /**
+     * アタッチ時
+     * リスナの登録
+     * @param activity 呼び出し元アクティビティ
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -233,20 +256,35 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
+    /**
+     * デタッチ時
+     * リスナの解除
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    Pattern patternStation = Pattern.compile("^[^駅]+駅$");
-    Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)$");
+    /** 駅マーカー判定用正規表現 */
+    private static final Pattern patternStation = Pattern.compile("^[^駅]+駅$");
+    /** 列車マーカー判定用正規表現 */
+    private static final Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)$");
 
+    /**
+     * マーカークリック時の動作
+     * 駅時刻表と列車時刻表を開く
+     * @param marker クリックしたマーカー
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
+        //判定用正規表現の結果
+        /** 駅マーカー用判定結果 */
         Matcher matcherStation = patternStation.matcher(marker.getTitle());
+        /** 列車マーカー用判定結果 */
         Matcher matcherTrain = patternTrain.matcher(marker.getTitle());
 
+        //駅マーカーだった場合
         if(matcherStation.find()) {
             Intent intent = new Intent(context, TimeTable.class);
             if (marker.getTitle().equals("千葉みなと駅")) {
@@ -258,6 +296,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             intent.putExtra("holiday", intHoliday);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+        //列車マーカーだった場合
         }else if(matcherTrain.find()){
             int tableNo = Integer.parseInt(matcherTrain.group(4));
 
@@ -269,7 +308,13 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
-
+    /**
+     * CursorLoaderの切り替え処理
+     * getLoaderManager().restartLoaderで呼ばれる
+     * @param i ID
+     * @param bundle 引数
+     * @return ローダー
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         /** 取得データのソート */
@@ -288,6 +333,10 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
+    /**
+     * CursorLoaderの結果取得後の処理で配列として利用
+     * 現在時刻の列車についての情報
+     */
     private class NowTrainData {
         public String Station;
         public int UpDown;
@@ -306,25 +355,40 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
     private List<Marker> trainMakers = new ArrayList<Marker>();
 
+    /**
+     * CursorLoaderの結果取得後の処理
+     * 列車ダイヤ(tableNo)単位で最新の物を取得する
+     * @param cursorLoader ローダー
+     * @param cursor 結果のカーソル
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        /** 作業変数 tableNoの一時保持用 */
         int table_no = 0;
+        /** 作業変数 tableNoの比較用 */
         int new_table_no = 0;
+        /** 取得結果のデータ配列保持用 */
         List<NowTrainData> group = new ArrayList<NowTrainData>();
+        /** 作業変数 列車データの一時保存用 */
         NowTrainData old = null;
 
+        //マーカーのクリア
         for (Marker marker : trainMakers) marker.remove();
         trainMakers.clear();
 
         if(DEBUG)Log.d(TAG,"cursor.getCount() " + cursor.getCount());
+        //取得データの名寄せ作業
         if (cursor.moveToFirst()) {
+            //初期化
             table_no = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
             do {
                 new_table_no = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+                //table_noが変化したときの値を取得
                 if (table_no != new_table_no) {
                     group.add(old);
                     table_no = new_table_no;
                 }
+                //一時保持
                 old = new NowTrainData(
                         cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_STATION))
                         , cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN))
@@ -334,10 +398,12 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
                 );
                 if(DEBUG)Log.d(TAG,old.UpDown + " " + old.Table_No + "/" + old.Hour + ":" + old.Minute + " " + old.Station);
             } while (cursor.moveToNext());
+            //最後のデータ
             group.add(old);
         }
 
         if(DEBUG)Log.d(TAG,"group.size() " + group.size());
+        //マーカー作成
         if (group.size() > 0) {
             for (NowTrainData cur : group) {
                 if (mMap != null) {
@@ -398,44 +464,38 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         public void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * herokuで公開している運行情報を取得するための非同期タスク
+     */
     private class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
 
-        /**
-         * デバッグ用タグ
-         */
+        /** デバッグ用タグ */
         private static final String TAG = "AsyncHttpRequest";
-        /**
-         * デバッグ用フラグ
-         */
+        /** デバッグ用フラグ */
         private static final boolean DEBUG = false;
 
-        /**
-         * 呼び出し元コンテキスト
-         */
+        /** 呼び出し元コンテキスト */
         private Context context;
-        /**
-         * 呼び出し元Activity
-         */
+        /** 呼び出し元Activity */
         private Activity mainActivity;
 
-        /**
-         * XML 扱うためのファクトリ
-         */
+        /** XML 扱うためのファクトリ */
         private DocumentBuilderFactory dbFactory;
-        /**
-         * XML 扱うためのビルダー
-         */
+        /** XML 扱うためのビルダー */
         private DocumentBuilder xmlbuilder;
 
-        /**
-         * 休日・平日フラグ
-         */
+        /** 休日・平日フラグ */
         private String holiday;
 
         public AsyncHttpRequest(Context context) {
 
         }
 
+        /**
+         * 非同期処理本体
+         * @param builders ハンドラ
+         * @return onPostExecuteへ伝える引数
+         */
         @Override
         protected String doInBackground(Uri.Builder... builders) {
             try {
@@ -464,6 +524,10 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
         }
 
+        /**
+         * 非同期処理の結果を処理
+         * @param result 非同期処理の結果の引数　成否判定
+         */
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("false")) intHoliday = 0;
@@ -474,23 +538,26 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
                 intHoliday = 1;
             } else {
                 //取得失敗
-                intHoliday = 0;
+                intHoliday = 1;
             }
         }
     }
 
+    /**
+     * マップ画面に定期的[10s]に画面更新をするためのハンドラ
+     */
     private class TrainHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             getLoaderManager().restartLoader(intHoliday, null, callbacks);
-            if (trainHandler != null) trainHandler.sleep(10 * 1000);  //3.
+            if (trainHandler != null) trainHandler.sleep(10 * 1000);
         }
 
         //スリープメソッド
         public void sleep(long delayMills) {
             //使用済みメッセージの削除
             removeMessages(0);
-            sendMessageDelayed(obtainMessage(0), delayMills);  //4.
+            sendMessageDelayed(obtainMessage(0), delayMills);
         }
     }
 
