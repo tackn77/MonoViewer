@@ -310,6 +310,7 @@ public class TimeTable extends Activity
                 items.add(new TimeTableItem(String.format("%1$02d",minutes),annotation,String.valueOf(table_no),isHoliday));
 
             } while (cursor.moveToNext());
+            if(items.size()>0)listItems.add(new ListItem(String.format("%1$02d", hour),items));
         }
         //更新完了通知
         mAdapter.notifyDataSetChanged();

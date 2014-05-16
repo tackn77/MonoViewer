@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -223,8 +225,19 @@ public class SQLTblProvider extends ContentProvider {
     /** 時刻表ノード詳細 */
     private static final int TRAIN_TIMETABLE_ITEM = 95;
 
+    /** 現在走行中の列車一覧 */
+    private static final int NOW_INFOMATION_WEEKEND =96;
+
+    /** 現在走行中の列車一覧 */
+    private static final int NOW_INFOMATION_HOLIDAY =97;
+
     /** DBから取得する列一覧 */
     private static HashMap<String,String> mProjectionMap;
+
+    /** 現在時刻クエリ用セット用Date */
+    Date Date = new Date();
+    /** 時刻取得用カレンダ */
+    Calendar calendar = Calendar.getInstance();
 
     static {
         // UriMatcherの定義
@@ -329,6 +342,8 @@ public class SQLTblProvider extends ContentProvider {
         mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_HOLIDAY_STATION_18D,STATION_K18D);
 
         mUriMatcher.addURI(SQLTblContract.AUTHORITY,  "Item/#", TRAIN_TIMETABLE_ITEM);
+        mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND, NOW_INFOMATION_WEEKEND);
+        mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY, NOW_INFOMATION_HOLIDAY);
 
         // ProjectionMapの定義
         // テーブルに_IDがないので、rowidを使う
@@ -370,6 +385,21 @@ public class SQLTblProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         /** SQLクエリ作成用 */
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+        //現在時刻と5分前の取得
+        long nowLong = System.currentTimeMillis();
+        long beforeLong = nowLong - (5 * 60 * 1000);
+
+        Date.setTime(nowLong);
+        calendar.setTime(Date);
+        int nowHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int nowMinute = calendar.get(Calendar.MINUTE);
+
+        Date.setTime(beforeLong);
+        calendar.setTime(Date);
+        int beforeHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int beforeMinute = calendar.get(Calendar.MINUTE);
+
 
         if(DEBUG) Log.d(TAG, "mUriMatcher.match(uri): " + mUriMatcher.match(uri));
         //呼び出しURIで検索条件を変更
@@ -666,6 +696,19 @@ public class SQLTblProvider extends ContentProvider {
 //                qb.appendWhere(TrainTblContract._ID + "=" + uri.getPathSegments().get(1));
                 if(DEBUG)Log.d(TAG,"uri.getPathSegments().get(1)" + uri.getPathSegments().get(1));
                 break;
+
+            case NOW_INFOMATION_WEEKEND:
+                qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
+                        + " AND " + getQueryTimes(nowHour,nowMinute)
+                        + " AND HOLIDAY = " + 1);
+                break;
+
+            case NOW_INFOMATION_HOLIDAY:
+                qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
+                        + " AND " + getQueryTimes(nowHour,nowMinute)
+                        + " AND HOLIDAY = " + 0);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI" + uri);
         }
@@ -688,6 +731,18 @@ public class SQLTblProvider extends ContentProvider {
 
         return c;
     }
+
+    /**
+     * 現在時刻クエリ用変数作成用
+     * @param hour 時刻(時)
+     * @param minutes 時刻(分)
+     * return 整形したint値
+     */
+    private int getQueryTimes(int hour,int minutes){
+        if(hour==0)hour=24;
+        return Integer.valueOf(String.format("%1$02d", hour) + String.format("%1$02d", minutes));
+    }
+
 
     /**
      * MIME Typeの取得 戻り値が単一行か複数行かを取得
