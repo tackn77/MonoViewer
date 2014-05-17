@@ -3,11 +3,14 @@ package jp.chiba.tackn.monoviewer.table;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +21,7 @@ import android.widget.Spinner;
 
 import java.util.Calendar;
 
+import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
@@ -150,7 +154,7 @@ public class TrainTable extends Activity
         }
         count = (count==0)?0:count-1;
         //開始位置指定 1行目の空白行の次の行から表示
-        itemListView.setSelectionFromTop(count,0);
+        itemListView.setSelectionFromTop(count, 0);
     }
 
     /**
@@ -302,6 +306,25 @@ public class TrainTable extends Activity
                 }
                 return new CursorLoader(this, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_back_home:
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                return true;
+        }
+        return false;
     }
 
 }
