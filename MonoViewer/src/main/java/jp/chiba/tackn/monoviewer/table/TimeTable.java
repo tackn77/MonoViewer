@@ -10,6 +10,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
@@ -452,6 +456,25 @@ public class TimeTable extends Activity
         spAdapter.add("休日 千葉みなと駅 下り");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_back_home:
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                return true;
+        }
+        return false;
+    }
 
     /**
      * 発車時刻を保持するクラス
