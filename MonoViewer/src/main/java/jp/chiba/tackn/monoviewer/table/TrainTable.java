@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import java.util.Calendar;
+
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
@@ -128,7 +130,27 @@ public class TrainTable extends Activity
      * @param cursor 表示するCursorデータ
      */
     public void onLoadFinished(Loader loader, Cursor cursor) {
+
         mAdapter.swapCursor(cursor);
+
+        int count = 0;
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        hour = (hour==0)?24:hour;
+        int now = Integer.valueOf(String.format("%1$02d",hour) + String.format("%1$02d",minute));
+
+        if(cursor.moveToFirst()){
+            do{
+                int time = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TIME));
+                if(now <= time)break;
+                count++;
+            }while (cursor.moveToNext());
+
+        }
+        count = (count==0)?0:count-1;
+        //開始位置指定 1行目の空白行の次の行から表示
+        itemListView.setSelectionFromTop(count,0);
     }
 
     /**
