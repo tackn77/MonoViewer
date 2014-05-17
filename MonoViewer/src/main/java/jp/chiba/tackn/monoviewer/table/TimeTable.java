@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import jp.chiba.tackn.monoviewer.R;
@@ -314,8 +315,13 @@ public class TimeTable extends Activity
         }
         //更新完了通知
         mAdapter.notifyDataSetChanged();
+
+        Calendar calendar = Calendar.getInstance();
+        int hourIndex = calendar.get(Calendar.HOUR_OF_DAY);
+        hourIndex = (hourIndex==0)?24:hourIndex;
+        hourIndex = (hourIndex<5)?1:hourIndex - 5 + 1; //5時からだから-5で1行目がいらないから+1
         //開始位置指定 1行目の空白行の次の行から表示
-        itemListView.setSelectionFromTop(1,0);
+        itemListView.setSelectionFromTop(hourIndex,0);
 
     }
 
