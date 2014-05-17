@@ -68,7 +68,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final String ARG_PARAM2 = "param2";
 
     private static final String TAG = "monoviewFragment";
-    private static final boolean DEBUG =false;
+    private static final boolean DEBUG =true;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -445,14 +445,19 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         /** 作業変数 列車データの一時保存用 */
         NowTrainData old = null;
 
-        //現在時刻と5分前の取得
+        /** 現在時刻 */
         long nowLong = System.currentTimeMillis();
 
+        //現在時刻の取得
         Date.setTime(nowLong);
         calendar.setTime(Date);
+        /** 24時表記の現在時刻 */
         int nowHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
+        /** 現在の分 */
         int nowMinute = calendar.get(Calendar.MINUTE);
+        /** 頭ゼロで連結してint値とした現在時刻 */
         int nowTIME = Integer.valueOf(String.format("%1$02d",nowHour) + String.format("%1$02d",nowMinute));
+        /** カーソルの時刻 */
         int workTIME;
 
         if(DEBUG)Log.d(TAG,"cursor.getCount() " + cursor.getCount());
@@ -471,7 +476,11 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
                 //table_noが変化したときの値を取得
                 if (table_no != new_table_no) {
-                    if(work!=null)group.add(work);
+                    if(work!=null){
+                        group.add(work);
+                    }else{
+                        if(DEBUG)Log.d(TAG,"work==null at table_no != new_table_no " + table_no + " " + new_table_no);
+                    }
                     table_no = new_table_no;
                     work=null;
                 }
@@ -493,6 +502,12 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
 //                if(DEBUG)Log.d(TAG,old.UpDown + " " + old.Table_No + "/" + old.Hour + ":" + old.Minute + " " + old.Station);
             } while (cursor.moveToNext());
+            //最後の１つ
+            if(work!=null){
+                group.add(work);
+            }else{
+                if(DEBUG)Log.d(TAG,"最後の一つ " + table_no);
+            }
         }
 
 //        });
@@ -507,7 +522,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 //        if(DEBUG)Log.d(TAG,"group.size() " + group.size());
 
         // 既に検索対象から外れたマーカーを削除する
-        if(DEBUG)Log.d(TAG,"size :" + trainMakers.size());
+        if(DEBUG)Log.d(TAG,"trainMakers.size() :" + trainMakers.size());
         Set<NowTrainData> removeableKeys = new HashSet<NowTrainData>();
         for(NowTrainData item:trainMakers.keySet()){
             removeableKeys.add(item);
@@ -516,13 +531,14 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             removeableKeys.remove(temp);
             if (DEBUG) Log.d(TAG, "removeableKeys.remove :" + temp.Station);
         }
-        if(DEBUG)Log.d(TAG,"size :" + trainMakers.size());
+        if(DEBUG)Log.d(TAG,"trainMakers.size():" + trainMakers.size());
         if (DEBUG) Log.d(TAG, "removeableKeys.size() :" + removeableKeys.size());
         for (NowTrainData remove : removeableKeys) {
             trainMakers.get(remove).remove();
             trainMakers.remove(remove);
             if (DEBUG) Log.d(TAG, "remove :" + remove.Station);
         }
+        if(DEBUG)Log.d(TAG,"trainMakers.size():" + trainMakers.size());
 
         //マーカーの描写
         if(DEBUG)Log.d(TAG,"size :" + trainMakers.size());
@@ -690,6 +706,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             }
 
         }
+        if(DEBUG)Log.d(TAG,"getPositon : " + Train.Station);
         return null;
     }
 
