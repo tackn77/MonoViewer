@@ -68,7 +68,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final String ARG_PARAM2 = "param2";
 
     private static final String TAG = "monoviewFragment";
-    private static final boolean DEBUG =false;
+    private static final boolean DEBUG =true;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -729,24 +729,18 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         toDate.setSeconds(0);
 
         Long fromLong = fromDate.getTime();
-        Long toLong = toDate.getTime();
+        Long toLong = toDate.getTime() - 20 * 1000; //乗降のために20s早めに付くと仮定
 
         //現時点でKML線路長のどの割合かを計算
         int index = (int) ((((double)System.currentTimeMillis() - (double)fromLong) / ((double)toLong - (double)fromLong)) * (double)(array.size()-1));
+        //到着時刻を早めた分インデックスを超えることがないようにリミット
+        index = (index > array.size()-1)?array.size()-1:index;
 
         //上り下りで配列の順序を切替
         if(train.UpDown==1) {
-//            if (index > 0) {
-                return array.get(index);
-//            } else {
-//                return array.get(0);
-//            }
+            return array.get(index);
         }else{
-//            if (index > 0) {
-                return array.get(array.size()-1 - index);
-//            } else {
-//                return array.get(array.size() - 1);
-//            }
+            return array.get(array.size()-1 - index);
         }
     }
 
@@ -879,7 +873,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         public void handleMessage(Message msg) {
             if (trainHandler != null){
                 getLoaderManager().restartLoader(intHoliday, null, callbacks);
-                trainHandler.sleep(10 * 1000); //10s
+                trainHandler.sleep(500); //0.5s
             }
         }
 
