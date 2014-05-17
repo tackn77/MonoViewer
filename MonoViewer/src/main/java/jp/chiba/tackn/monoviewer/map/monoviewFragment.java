@@ -68,7 +68,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final String ARG_PARAM2 = "param2";
 
     private static final String TAG = "monoviewFragment";
-    private static final boolean DEBUG =true;
+    private static final boolean DEBUG =false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -184,7 +184,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private void setUpHandler() {
         if (trainHandler == null) {
             trainHandler = new TrainHandler();
-            trainHandler.sleep(1 * 1000);
+            trainHandler.sleep(500); //0.5s
         }
     }
 
@@ -318,7 +318,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         if(matcherStation.find()) {
             Intent intent = new Intent(context, TimeTable.class);
             if (marker.getTitle().equals("千葉みなと駅")) {
-                intent.putExtra("updown", 1);
+                intent.putExtra("updown", 1); //千葉みなとは上りがないので下り
             } else {
                 intent.putExtra("updown", 0);
             }
@@ -453,15 +453,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         int nowHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
         int nowMinute = calendar.get(Calendar.MINUTE);
         int nowTIME = Integer.valueOf(String.format("%1$02d",nowHour) + String.format("%1$02d",nowMinute));
-
         int workTIME;
-
-        Set<NowTrainData> workKeys = new HashSet<NowTrainData>();
-
-//        //マーカーのクリア
-//        Set<NowTrainData> keys=trainMakers.keySet();
-//        for (NowTrainData key : keys) trainMakers.get(key).remove();
-//        trainMakers.clear();
 
         if(DEBUG)Log.d(TAG,"cursor.getCount() " + cursor.getCount());
 
@@ -532,6 +524,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             if (DEBUG) Log.d(TAG, "remove :" + remove.Station);
         }
 
+        //マーカーの描写
         if(DEBUG)Log.d(TAG,"size :" + trainMakers.size());
         if (group.size() > 0) {
             for (NowTrainData cur:group) {
@@ -567,6 +560,9 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }
     }
 
+    /**
+     * NaowTrainData情報によって駅座標系を取得する
+     */
     private LatLng getPositon(NowTrainData Train){
         if(Train.after!=null){
             if(Train.Station.equals(Train.after.Station)){
