@@ -39,12 +39,26 @@
 
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="11"
-        android:id="@+id/tableno"
-        android:layout_gravity="bottom"
-        android:password="false"
-        android:textSize="10sp" />
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/train_no_iconeView"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@drawable/blank"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HA\n11"
+            android:id="@+id/tableno"
+            android:layout_gravity="bottom"
+            android:password="false"
+            android:textSize="8sp" />
+    </LinearLayout>
 </LinearLayout>
