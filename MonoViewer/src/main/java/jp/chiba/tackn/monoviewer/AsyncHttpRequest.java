@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import jp.chiba.tackn.monoviewer.map.InformationHolder;
 import jp.chiba.tackn.monoviewer.table.TrainTable;
 
@@ -33,11 +30,6 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
     private Context context;
     /** 呼び出し元Activity */
     private Activity mainActivity;
-
-    /** XML 扱うためのファクトリ */
-    private DocumentBuilderFactory dbFactory;
-    /** XML 扱うためのビルダー */
-    private DocumentBuilder xmlbuilder;
 
     /** 休日・平日フラグ */
     private String holiday;
