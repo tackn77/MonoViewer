@@ -28,6 +28,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import jp.chiba.tackn.monoviewer.map.InformationHolder;
 import jp.chiba.tackn.monoviewer.table.TrainTable;
 
 /**
@@ -68,6 +69,10 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
 
     /** 休日・平日フラグ */
     static int intHoliday;
+
+    /** 運行情報管理クラス */
+    InformationHolder informationHolder = InformationHolder.getInstance();
+
     /**
      * コンストラクタ
      * @param activity 呼び出し元
@@ -86,35 +91,25 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
      */
     @Override
     protected String doInBackground(Uri.Builder... builder) {
-
+        int n =0;
+        while (!informationHolder.isReady()){
         try {
-            dbFactory = DocumentBuilderFactory.newInstance();
-            xmlbuilder = dbFactory.newDocumentBuilder();
-            Document document = xmlbuilder.parse("http://monoview.herokuapp.com/today.xml");
-
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-
-            holiday = xpath.evaluate("//holiday[1]/text()", document);
-            Service0 = xpath.evaluate("/tables/table[train ='0']/table/text()", document);
-            Service1 = xpath.evaluate("/tables/table[train ='1']/table/text()", document);
-            Service2 = xpath.evaluate("/tables/table[train ='2']/table/text()", document);
-            Service3 = xpath.evaluate("/tables/table[train ='3']/table/text()", document);
-            Service4 = xpath.evaluate("/tables/table[train ='4']/table/text()", document);
-
-        } catch (SAXException e) {
-            return "false";
-        } catch (IOException e) {
-            return "false";
-        } catch (ParserConfigurationException e) {
-            return "false";
-        } catch (XPathExpressionException e) {
-            return "false";
+                Thread.sleep(1000);
+                n++;
+                if(n==60)break;
+            } catch (InterruptedException e) {
+                Log.e(TAG,e.toString());
+                return "false";
+            }
         }
+        holiday = informationHolder.getHoliday();
+        Service0 = informationHolder.getService0();
+        Service1 = informationHolder.getService1();
+        Service2 = informationHolder.getService2();
+        Service3 = informationHolder.getService3();
+        Service4 = informationHolder.getService4();
 
-        if(DEBUG)Log.d(TAG, "result: " + holiday );
-
-        return "true";
+        return informationHolder.isReady()?"ture":"false";
     }
 
 
