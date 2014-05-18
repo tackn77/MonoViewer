@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
+import jp.chiba.tackn.monoviewer.map.InformationHolder;
 
 /**
  * TrainNoのリスト表示時にViewを提供する
@@ -24,6 +25,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     private static final boolean DEBUG = false;
     /** デバッグタグ */
     private static final String TAG = "TrainTblCursorAdapter";
+    /** 運行情報管理クラス */
+    InformationHolder informationHolder = InformationHolder.getInstance();
 
     /**
      * ListViewのカラムの要素を保存するクラス
@@ -84,15 +87,35 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     public void bindView(View view, final Context context,final Cursor cursor) {
         super.bindView(view,context,cursor);
 
-        //newView から受取
+        /** newView から受取 */
         final ViewHolder holder = (ViewHolder)view.getTag();
 
-        //上り・下り
+        /** 表示するテーブルNo */
+        final int tableNo = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TABLE_NO));
+
+        /** 上り・下り */
         final int updown = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN));
+
+        int Service0 = (informationHolder.getService0().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService0()):0;
+        int Service1 = (informationHolder.getService1().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService1()):0;
+        int Service2 = (informationHolder.getService2().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService2()):0;
+        int Service3 = (informationHolder.getService3().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService3()):0;
+        int Service4 = (informationHolder.getService4().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService4()):0;
+
         if(updown==0){
-            holder.icon.setImageResource(R.drawable.ic_up);
+            if(Service0==tableNo){holder.icon.setImageResource(R.drawable.monochan_up);}
+            else if(Service1==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_up);}
+            else if(Service2==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_up);}
+            else if(Service3==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_up);}
+            else if(Service4==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_up);}
+            else{holder.icon.setImageResource(R.drawable.mono_up);}
         }else{
-            holder.icon.setImageResource(R.drawable.ic_down);
+            if(Service0==tableNo){holder.icon.setImageResource(R.drawable.monochan_down);}
+            else if(Service1==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_down);}
+            else if(Service2==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_down);}
+            else if(Service3==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_down);}
+            else if(Service4==tableNo){holder.icon.setImageResource(R.drawable.urbanflyer_down);}
+            else{holder.icon.setImageResource(R.drawable.mono_down);}
         }
 
         //時間（時）
