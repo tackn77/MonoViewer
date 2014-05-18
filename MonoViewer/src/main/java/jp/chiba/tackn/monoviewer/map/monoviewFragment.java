@@ -559,20 +559,20 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
                         if (cur.Table_No == intService4) Train = " アーバンフライ0型 007-008号";
                         if (cur.UpDown == 0) {
                             markerOptions.title("上り " + cur.Station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No + Train);
-                            if (cur.Table_No == intService0){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_up));}
-                            else if (cur.Table_No == intService1){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService2){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService3){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService4){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else {markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_up));}
+                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_up));}
+                            else if (cur.Table_No == intService1){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
+                            else if (cur.Table_No == intService2){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
+                            else if (cur.Table_No == intService3){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
+                            else if (cur.Table_No == intService4){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
+                            else {markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_up));}
                         } else {
                             markerOptions.title("下り " + cur.Station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No + Train);
-                            if (cur.Table_No == intService0){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_down));}
-                            else if (cur.Table_No == intService1){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService2){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService3){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService4){markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else {markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_down));}
+                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_down));}
+                            else if (cur.Table_No == intService1){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
+                            else if (cur.Table_No == intService2){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
+                            else if (cur.Table_No == intService3){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
+                            else if (cur.Table_No == intService4){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
+                            else {markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_down));}
                         }
                         if (getPositon(cur) != null) {
                             markerOptions.position(getPositon(cur));
