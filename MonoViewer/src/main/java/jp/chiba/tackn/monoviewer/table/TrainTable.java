@@ -24,24 +24,19 @@ import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
  * @since 2014/05/12.
  */
 public class TrainTable extends Activity
-        implements AdapterView.OnItemSelectedListener,TrainTableFragment.OnFragmentInteractionListener {
+        implements AdapterView.OnItemSelectedListener{
 
     /** デバッグフラグ */
     private static final boolean DEBUG = false;
     /** デバッグタグ */
     private static final String TAG = "TrainTable";
 
-//    /** プロバイダからのデータとListの仲立ち */
-//    private SimpleCursorAdapter mAdapter;
-//    /** 時刻表表示用リスト */
-//    private ListView itemListView;
     /** 時刻表(TableNo.)選択用スピナー */
     private Spinner trainNo;
-    /** 画面回転時にonCreateを起動させるための引数一時保存 */
-    private Bundle savedInstanceState;
-
+    /** FragmentのLoadManagerに通知 */
     private LoaderManager.LoaderCallbacks callbacks;
-
+    /** LoaderManager.LoaderCallbacksの為 */
+    public TrainTableFragment train_table;
     /**
      * Called when the activity is first created.
      */
@@ -51,18 +46,6 @@ public class TrainTable extends Activity
         setContentView(R.layout.train_table);
         //ビューの取得
         findViews();
-
-//        //リスト用設定
-//        mAdapter = new TrainTblCursorAdapter(
-//                this,
-//                R.layout.list_item_train_no,
-//                null,
-//                new String[]{SQLTblContract.COLUMN_TIME, SQLTblContract.COLUMN_STATION},
-//                new int[]{R.id.train_no_minute, R.id.train_no_station},
-//                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-//
-//        itemListView.setAdapter(mAdapter);
-//        itemListView.setFastScrollEnabled(true);
 
         //スピナー用設定
         ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -91,8 +74,6 @@ public class TrainTable extends Activity
             }
         }
         trainNo.setSelection(position);
-
-        this.savedInstanceState = savedInstanceState;
     }
 
 
@@ -110,69 +91,25 @@ public class TrainTable extends Activity
         switch(newConfig.orientation) {
             case Configuration.ORIENTATION_PORTRAIT:
                 // "縦方向";
-                onCreate(savedInstanceState);
                 break;
             case Configuration.ORIENTATION_LANDSCAPE:
                 // "横方向";
-                onCreate(savedInstanceState);
                 break;
             default :
                 // "デフォルト";
         }
     }
 
-//    /**
-//     * データ読み込み時の処理
-//     * 取得したデータをアダプタに交換する
-//     * @param loader 取得したローダ
-//     * @param cursor 表示するCursorデータ
-//     */
-//    public void onLoadFinished(Loader loader, Cursor cursor) {
-//
-//        mAdapter.swapCursor(cursor);
-//
-//        int count = 0;
-//        Calendar calendar = Calendar.getInstance();
-//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//        int minute = calendar.get(Calendar.MINUTE);
-//        hour = (hour==0)?24:hour;
-//        int now = Integer.valueOf(String.format("%1$02d",hour) + String.format("%1$02d",minute));
-//
-//        if(cursor.moveToFirst()){
-//            do{
-//                int time = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_TIME));
-//                if(now <= time)break;
-//                count++;
-//            }while (cursor.moveToNext());
-//
-//        }
-//        count = (count==0)?0:count-1;
-//        //開始位置指定 1行目の空白行の次の行から表示
-//        itemListView.setSelectionFromTop(count, 0);
-//    }
-
-//    /**
-//     * ロードがリセットされた時の処理
-//     * @param loader
-//     */
-//    public void onLoaderReset(Loader loader) {
-//        mAdapter.swapCursor(null);
-//    }
-
     /**
      * onCreate()時にレイアウト済みオブジェクトの取得
      */
     private void findViews() {
-//        itemListView = (ListView) findViewById(R.id.listview);
         trainNo = (Spinner) findViewById(R.id.Spinner);
-//        callbacks = (LoaderManager.LoaderCallbacks)findViewById(R.id.traintablelist);
-//        train_table = TrainTableFragment.newInstance("","");
         FragmentManager fragmentManager = getFragmentManager();
         train_table = (TrainTableFragment)fragmentManager.findFragmentById(R.id.traintablelist);
         callbacks =  (LoaderManager.LoaderCallbacks)train_table;
     }
 
-    public TrainTableFragment train_table;
     /**
      * スピナーで選択した際に呼び出し
      * @param parent アダプタを登録しているView(スピナー)オブジェクト
@@ -182,29 +119,30 @@ public class TrainTable extends Activity
      */
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (DEBUG) {
-//            Log.d(TAG,"view:" + (parent==trainNo));
             Log.d(TAG, "position:" + position);
         }
         if (parent == trainNo) {
             //Listに紐付けていたプロバイダURIの切替
-//            getLoaderManager().initLoader(position, null, callbacks);
             initLoader(position);
         }
     }
 
     /**
      * スピナーで選択が解除された時に呼び出し
-     * @param parent
+     * @param parent スピナー
      */
     public void onNothingSelected(AdapterView<?> parent) {
         if (DEBUG) {
             Log.d(TAG, "onNothingSelected :");
         }
         //初期化
-//        getLoaderManager().initLoader(0, null, (LoaderManager.LoaderCallbacks) this);
         initLoader(0);
     }
 
+    /**
+     * スピナーで選択したときのCursolLoaderの初期化
+     * @param position Loaderの初期化時の通知パラメータ
+     */
     private void initLoader(int position){
         getLoaderManager().initLoader(position, null, callbacks);
     }
@@ -241,78 +179,12 @@ public class TrainTable extends Activity
         spAdapter.add("休日25");
         spAdapter.add("休日26");
     }
-//    /**
-//     *
-//     * getLoaderManager().initLoader()で呼び出される
-//     * @param id 呼び出しID
-//     * @param args 呼び出し引数
-//     * @return プロバイダから取得したデータ
-//     */
-//    public Loader onCreateLoader(int id, Bundle args) {
-//        if (DEBUG) {
-//            Log.d(TAG, "id: " + id);
-//       }
-//        /** 取得データのソート */
-//        String orderBy = "TIMES ASC";
-//        //スピナーで選択したデータ毎にプロバイダの呼び出しURIを変更
-//        switch (id) {
-//            case 0:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
-//            case 1:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H2, null, null, null, orderBy);
-//            case 2:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H3, null, null, null, orderBy);
-//            case 3:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H4, null, null, null, orderBy);
-//            case 4:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H5, null, null, null, orderBy);
-//            case 5:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H6, null, null, null, orderBy);
-//            case 6:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H7, null, null, null, orderBy);
-//            case 7:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H11, null, null, null, orderBy);
-//            case 8:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H12, null, null, null, orderBy);
-//            case 9:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H21, null, null, null, orderBy);
-//            case 10:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H22, null, null, null, orderBy);
-//            case 11:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H25, null, null, null, orderBy);
-//            case 12:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H26, null, null, null, orderBy);
-//            case 13:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K1, null, null, null, orderBy);
-//            case 14:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K2, null, null, null, orderBy);
-//            case 15:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K3, null, null, null, orderBy);
-//            case 16:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K4, null, null, null, orderBy);
-//            case 17:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K5, null, null, null, orderBy);
-//            case 18:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K6, null, null, null, orderBy);
-//            case 19:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K11, null, null, null, orderBy);
-//            case 20:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K12, null, null, null, orderBy);
-//            case 21:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K21, null, null, null, orderBy);
-//            case 22:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K22, null, null, null, orderBy);
-//            case 23:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K25, null, null, null, orderBy);
-//            case 24:
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_K26, null, null, null, orderBy);
-//            default:
-//                if (DEBUG) {
-//                    Log.d(TAG, "id:" + id);
-//                }
-//                return new CursorLoader(this, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
-//        }
-//    }
+
+    /**
+     * オプションメニュー作成
+     * @param menu メニューオブジェクト
+     * @return イベント通知
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -320,6 +192,11 @@ public class TrainTable extends Activity
         return true;
     }
 
+    /**
+     * オプションメニューの選択
+     * @param item 選択されたアイテム
+     * @return イベント通知
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -335,10 +212,5 @@ public class TrainTable extends Activity
                 return true;
         }
         return false;
-    }
-
-    @Override
-    public void onFragmentInteraction(String id) {
-
     }
 }

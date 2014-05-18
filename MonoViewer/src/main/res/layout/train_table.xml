@@ -16,6 +16,5 @@
         android:id="@+id/traintablelist"
         android:name="jp.chiba.tackn.monoviewer.table.TrainTableFragment"/>
 
-
 </LinearLayout>
 

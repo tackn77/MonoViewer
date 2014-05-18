@@ -2,7 +2,6 @@ package jp.chiba.tackn.monoviewer.table;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -14,10 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -26,67 +22,28 @@ import java.util.Calendar;
 import jp.chiba.tackn.monoviewer.R;
 
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
-import jp.chiba.tackn.monoviewer.table.dummy.DummyContent;
 
 /**
- * A fragment representing a list of Items.
- * <p />
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p />
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
+ * 列車運行時刻表を表示するフラグメント
+ * @author Takumi Ito
+ * @since 2014/05/19
  */
-public class TrainTableFragment extends Fragment implements AbsListView.OnItemClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>{
+public class TrainTableFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>{
 
     /** デバッグフラグ */
     private static final boolean DEBUG = true;
     /** デバッグタグ */
     private static final String TAG = "TrainTableFragment";
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
-    private AbsListView mListView;
-
-//    /**
-//     * The Adapter which will be used to populate the ListView/GridView with
-//     * Views.
-//     */
-//    private ListAdapter mAdapter;
-
     /** プロバイダからのデータとListの仲立ち */
     private SimpleCursorAdapter mAdapter;
 
     /** 時刻表表示用リスト */
-//    private ListView itemListView;
     private AbsListView itemListView;
 
     /** 呼び出し元コンテキスト */
     private Context context;
-
-    // TODO: Rename and change types of parameters
-    public static TrainTableFragment newInstance(String param1, String param2) {
-        TrainTableFragment fragment = new TrainTableFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -98,26 +55,19 @@ public class TrainTableFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        //ビューの取得
-        findViews();
-
-
-//        // TODO: Change Adapter to display your content
-//        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        /**
+         *  レイアウトファイル読み込み
+         *  valuesフォルダで画面サイズによってレイアウトの変更が可能
+         *  現在は7インチポートレートまではシングル
+         *  7インチランドスケープ以上は2ラインで表示
+         */
         View view = inflater.inflate(R.layout.fragment_traintablefragment, container, false);
-//        itemListView = (ListView) view.findViewById(R.id.list);
         itemListView = (AbsListView) view.findViewById(android.R.id.list);
         //リスト用設定
         mAdapter = new TrainTblCursorAdapter(
@@ -131,43 +81,27 @@ public class TrainTableFragment extends Fragment implements AbsListView.OnItemCl
         itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
 
-        // Set the adapter
-//        mListView = (AbsListView) view.findViewById(android.R.id.list);
-//        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-//        mListView.setOnItemClickListener(this);
-
         return view;
     }
 
+    /**
+     * Activityに呼ばれた時
+     * @param activity 呼び出し元Activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
-        }
         context = activity.getApplicationContext();
     }
 
+    /**
+     * Activityとの接続が切れたとき
+     */
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
-    }
 
     /**
      * The default content for this Fragment has a TextView that is shown when
@@ -175,17 +109,11 @@ public class TrainTableFragment extends Fragment implements AbsListView.OnItemCl
      * to supply the text it should use.
      */
     public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
+        View emptyView = itemListView.getEmptyView();
 
         if (emptyText instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
         }
-    }
-
-    /**
-     * onCreate()時にレイアウト済みオブジェクトの取得
-     */
-    private void findViews() {
     }
 
     /**
@@ -291,6 +219,7 @@ public class TrainTableFragment extends Fragment implements AbsListView.OnItemCl
         //開始位置指定 1行目の空白行の次の行から表示
 //        itemListView.setSelectionFromTop(count, 0);
         itemListView.setSelection(count);
+        //TODO うまく動いているか、要確認
     }
 
     /**
@@ -300,20 +229,4 @@ public class TrainTableFragment extends Fragment implements AbsListView.OnItemCl
     public void onLoaderReset(Loader loader) {
         mAdapter.swapCursor(null);
     }
-
-    /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
-    }
-
 }

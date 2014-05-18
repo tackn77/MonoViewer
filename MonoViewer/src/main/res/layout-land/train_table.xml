@@ -17,11 +17,11 @@
         >
     </Spinner>
 
-    <ListView
-        android:id="@+id/listview"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:id="@+id/traintablelist"
+        android:name="jp.chiba.tackn.monoviewer.table.TrainTableFragment"/>
 
 </LinearLayout>
 
