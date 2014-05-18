@@ -6,4 +6,8 @@
         android:title="@string/back_home"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_disclaimer"
+        android:title="@string/disclaimer"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

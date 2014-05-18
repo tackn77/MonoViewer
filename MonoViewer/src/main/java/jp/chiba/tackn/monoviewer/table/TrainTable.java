@@ -24,6 +24,7 @@ import java.util.Calendar;
 import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
+import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -318,8 +319,12 @@ public class TrainTable extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_back_home:
-                Intent intent = new Intent(this,MainActivity.class);
-                startActivity(intent);
+                Intent home = new Intent(this,MainActivity.class);
+                startActivity(home);
+                break;
+            case R.id.action_disclaimer:
+                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
+                startActivity(disclaimer);
                 break;
             default:
                 return true;
