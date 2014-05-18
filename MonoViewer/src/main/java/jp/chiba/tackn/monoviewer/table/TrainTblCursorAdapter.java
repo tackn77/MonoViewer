@@ -96,11 +96,11 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
         /** 上り・下り */
         final int updown = cursor.getInt(cursor.getColumnIndex(SQLTblContract.COLUMN_UPDOWN));
 
-        int Service0 = (informationHolder.getService0().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService0()):0;
-        int Service1 = (informationHolder.getService1().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService1()):0;
-        int Service2 = (informationHolder.getService2().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService2()):0;
-        int Service3 = (informationHolder.getService3().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService3()):0;
-        int Service4 = (informationHolder.getService4().matches("[0-9]+"))?Integer.valueOf(informationHolder.getService4()):0;
+        int Service0 = (informationHolder.getService0().matches("^[0-9]+$"))?Integer.valueOf(informationHolder.getService0()):0;
+        int Service1 = (informationHolder.getService1().matches("^[0-9]+$"))?Integer.valueOf(informationHolder.getService1()):0;
+        int Service2 = (informationHolder.getService2().matches("^[0-9]+$"))?Integer.valueOf(informationHolder.getService2()):0;
+        int Service3 = (informationHolder.getService3().matches("^[0-9]+$"))?Integer.valueOf(informationHolder.getService3()):0;
+        int Service4 = (informationHolder.getService4().matches("^[0-9]+$"))?Integer.valueOf(informationHolder.getService4()):0;
 
         if(updown==0){
             if(Service0==tableNo){holder.icon.setImageResource(R.drawable.monochan_up);}

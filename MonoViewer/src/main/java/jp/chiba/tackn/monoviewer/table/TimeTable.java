@@ -11,12 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -29,6 +29,7 @@ import java.util.List;
 import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
+import jp.chiba.tackn.monoviewer.map.InformationHolder;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -503,6 +504,9 @@ public class TimeTable extends Activity
         /** layoutXMLの読込用Inflater */
         LayoutInflater inflater = getLayoutInflater();
 
+        /** 運行情報管理クラス */
+        InformationHolder informationHolder = InformationHolder.getInstance();
+
         /** コンストラクタ */
         public ListItem(String hour,List<TimeTableItem> items){
             //ListViewに貼り付けるViewの親となるLayout
@@ -523,6 +527,7 @@ public class TimeTable extends Activity
                 TextView txMinute = (TextView) v.findViewById(R.id.minute);
                 TextView txAnnotation = (TextView) v.findViewById(R.id.annotation);
                 TextView txTrainNo = (TextView) v.findViewById(R.id.tableno);
+                ImageView imageView = (ImageView) v.findViewById(R.id.train_no_iconeView);
 
                 //ひも付ける
                 txMinute.setText(item.minute);
@@ -535,6 +540,13 @@ public class TimeTable extends Activity
                 }else{
                     txTrainNo.setText(item.tableno);
                 }
+
+                if(informationHolder.getService0().equals(item.tableno)){imageView.setImageResource(R.drawable.monochan_s);}
+                else if(informationHolder.getService1().equals(item.tableno)){imageView.setImageResource(R.drawable.urbanflyer_s);}
+                else if(informationHolder.getService2().equals(item.tableno)){imageView.setImageResource(R.drawable.urbanflyer_s);}
+                else if(informationHolder.getService3().equals(item.tableno)){imageView.setImageResource(R.drawable.urbanflyer_s);}
+                else if(informationHolder.getService4().equals(item.tableno)){imageView.setImageResource(R.drawable.urbanflyer_s);}
+                else{imageView.setImageResource(R.drawable.blank);}
 
                 layout.addView(v);
 
