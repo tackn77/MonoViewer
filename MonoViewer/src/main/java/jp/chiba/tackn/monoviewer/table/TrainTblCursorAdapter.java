@@ -22,7 +22,7 @@ import jp.chiba.tackn.monoviewer.map.InformationHolder;
 public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
     /** デバッグフラグ */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     /** デバッグタグ */
     private static final String TAG = "TrainTblCursorAdapter";
     /** 運行情報管理クラス */
@@ -157,7 +157,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
                 intent.putExtra("updown",updown);
                 intent.putExtra("holiday",holiday);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
             }
