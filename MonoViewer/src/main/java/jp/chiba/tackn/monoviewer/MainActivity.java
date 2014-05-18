@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
-import jp.chiba.tackn.monoviewer.table.TimeTable;
 
 /**
  * 時刻表アプリの起動画面
@@ -60,7 +59,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(view==button) {
-            //時刻表を開く
+            //マップを開く
             Intent intent = new Intent(this, MapsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
