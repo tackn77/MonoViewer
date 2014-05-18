@@ -10,24 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import jp.chiba.tackn.monoviewer.map.InformationHolder;
 import jp.chiba.tackn.monoviewer.table.TrainTable;
 
@@ -48,11 +30,6 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
     private Context context;
     /** 呼び出し元Activity */
     private Activity mainActivity;
-
-    /** XML 扱うためのファクトリ */
-    private DocumentBuilderFactory dbFactory;
-    /** XML 扱うためのビルダー */
-    private DocumentBuilder xmlbuilder;
 
     /** 休日・平日フラグ */
     private String holiday;
