@@ -10,17 +10,11 @@
     >
     </Spinner>
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView" >
-
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
-    </HorizontalScrollView>
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/timetablelist"
+        android:name="jp.chiba.tackn.monoviewer.table.TimeTableFragment"/>
 
 </LinearLayout>
 
