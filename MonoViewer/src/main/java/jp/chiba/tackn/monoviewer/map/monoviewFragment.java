@@ -802,11 +802,6 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         /** 呼び出し元Activity */
         private Activity mainActivity;
 
-        /** XML 扱うためのファクトリ */
-        private DocumentBuilderFactory dbFactory;
-        /** XML 扱うためのビルダー */
-        private DocumentBuilder xmlbuilder;
-
         /** 休日・平日フラグ */
         private String holiday;
         /** モノちゃん号の運行情報 */
@@ -820,6 +815,9 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         /** アーバンフライ０ 7-8号の運行情報 */
         private String Service4;
 
+        /** 運行情報管理クラス */
+        InformationHolder informationHolder = InformationHolder.getInstance();
+
         public AsyncHttpRequest(Context context) {
 
         }
@@ -831,35 +829,25 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
          */
         @Override
         protected String doInBackground(Uri.Builder... builders) {
-            try {
-                dbFactory = DocumentBuilderFactory.newInstance();
-                xmlbuilder = dbFactory.newDocumentBuilder();
-                Document document = xmlbuilder.parse("http://monoview.herokuapp.com/today.xml");
-
-                XPathFactory factory = XPathFactory.newInstance();
-                XPath xpath = factory.newXPath();
-
-                holiday = xpath.evaluate("//holiday[1]/text()", document);
-                Service0 = xpath.evaluate("/tables/table[train ='0']/table/text()", document);
-                Service1 = xpath.evaluate("/tables/table[train ='1']/table/text()", document);
-                Service2 = xpath.evaluate("/tables/table[train ='2']/table/text()", document);
-                Service3 = xpath.evaluate("/tables/table[train ='3']/table/text()", document);
-                Service4 = xpath.evaluate("/tables/table[train ='4']/table/text()", document);
-
-            } catch (SAXException e) {
-                return "false";
-            } catch (IOException e) {
-                return "false";
-            } catch (ParserConfigurationException e) {
-                return "false";
-            } catch (XPathExpressionException e) {
-                return "false";
+            int n =0;
+            while (!informationHolder.isReady()){
+                try {
+                    Thread.sleep(1000);
+                    n++;
+                    if(n==60)break;
+                } catch (InterruptedException e) {
+                    Log.e(TAG,e.toString());
+                    return "false";
+                }
             }
+            holiday = informationHolder.getHoliday();
+            Service0 = informationHolder.getService0();
+            Service1 = informationHolder.getService1();
+            Service2 = informationHolder.getService2();
+            Service3 = informationHolder.getService3();
+            Service4 = informationHolder.getService4();
 
-            if (DEBUG) Log.d(TAG, "result: " + holiday);
-
-            return "true";
-
+            return informationHolder.isReady()?"ture":"false";
         }
 
         /**
@@ -888,7 +876,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     }
 
     /**
-     * マップ画面に定期的[10s]に画面更新をするためのハンドラ
+     * マップ画面に定期的0.5s毎に画面更新をするためのハンドラ
      */
     private class TrainHandler extends Handler {
         @Override
