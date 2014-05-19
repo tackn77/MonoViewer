@@ -106,147 +106,148 @@ public class TimeTableFragment extends Fragment
         String orderBy = "TIMES ASC";
 
         switch (id) {//スピナーで選択したデータ毎にプロバイダの呼び出しURIを変更
-            case 0:
+            case TimeTableContract.HS1U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS1U, null, null, null, orderBy);
-            case 1:
+            case TimeTableContract.HS2U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS2U, null, null, null, orderBy);
-            case 2:
+            case TimeTableContract.HS3U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS3U, null, null, null, orderBy);
-            case 3:
+            case TimeTableContract.HS4U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS4U, null, null, null, orderBy);
-            case 4:
+            case TimeTableContract.HS5U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS5U, null, null, null, orderBy);
-            case 5:
+            case TimeTableContract.HS6U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS6U, null, null, null, orderBy);
-            case 6:
+            case TimeTableContract.HS7U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS7U, null, null, null, orderBy);
-            case 7:
+            case TimeTableContract.HS8U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS8U, null, null, null, orderBy);
-            case 8:
+            case TimeTableContract.HS9U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS9U, null, null, null, orderBy);
-            case 9:
+            case TimeTableContract.HS10U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS10U, null, null, null, orderBy);
-            case 10:
+            case TimeTableContract.HS11U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS11U, null, null, null, orderBy);
-            case 11:
+            case TimeTableContract.HS12U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS12U, null, null, null, orderBy);
-            case 12:
+            case TimeTableContract.HS13U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS13U, null, null, null, orderBy);
-            case 13:
+            case TimeTableContract.HS14U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS14U, null, null, null, orderBy);
-            case 14:
+            case TimeTableContract.HS15U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS15U, null, null, null, orderBy);
-            case 15:
+            case TimeTableContract.HS16U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS16U, null, null, null, orderBy);
-            case 16:
+            case TimeTableContract.HS17U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS17U, null, null, null, orderBy);
-            case 17:
+            case TimeTableContract.HS2D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS2D, null, null, null, orderBy);
-            case 18:
+            case TimeTableContract.HS3D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS3D, null, null, null, orderBy);
-            case 19:
+            case TimeTableContract.HS4D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS4D, null, null, null, orderBy);
-            case 20:
+            case TimeTableContract.HS5D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS5D, null, null, null, orderBy);
-            case 21:
+            case TimeTableContract.HS6D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS6D, null, null, null, orderBy);
-            case 22:
+            case TimeTableContract.HS7D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS7D, null, null, null, orderBy);
-            case 23:
+            case TimeTableContract.HS8D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS8D, null, null, null, orderBy);
-            case 24:
+            case TimeTableContract.HS9D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS9D, null, null, null, orderBy);
-            case 25:
+            case TimeTableContract.HS10D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS10D, null, null, null, orderBy);
-            case 26:
+            case TimeTableContract.HS11D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS11D, null, null, null, orderBy);
-            case 27:
+            case TimeTableContract.HS12D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS12D, null, null, null, orderBy);
-            case 28:
+            case TimeTableContract.HS14D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS14D, null, null, null, orderBy);
-            case 29:
+            case TimeTableContract.HS15D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS15D, null, null, null, orderBy);
-            case 30:
+            case TimeTableContract.HS16D1:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS16D1, null, null, null, orderBy);
-            case 31:
+            case TimeTableContract.HS16D2:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS16D2, null, null, null, orderBy);
-            case 32:
+            case TimeTableContract.HS17D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS17D, null, null, null, orderBy);
-            case 33:
+            case TimeTableContract.HS18D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_HS18D, null, null, null, orderBy);
-            case 34:
+            case TimeTableContract.KS1U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS1U, null, null, null, orderBy);
-            case 35:
+            case TimeTableContract.KS2U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS2U, null, null, null, orderBy);
-            case 36:
+            case TimeTableContract.KS3U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS3U, null, null, null, orderBy);
-            case 37:
+            case TimeTableContract.KS4U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS4U, null, null, null, orderBy);
-            case 38:
+            case TimeTableContract.KS5U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS5U, null, null, null, orderBy);
-            case 39:
+            case TimeTableContract.KS6U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS6U, null, null, null, orderBy);
-            case 40:
+            case TimeTableContract.KS7U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS7U, null, null, null, orderBy);
-            case 41:
+            case TimeTableContract.KS8U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS8U, null, null, null, orderBy);
-            case 42:
+            case TimeTableContract.KS9U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS9U, null, null, null, orderBy);
-            case 43:
+            case TimeTableContract.KS10U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS10U, null, null, null, orderBy);
-            case 44:
+            case TimeTableContract.KS11U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS11U, null, null, null, orderBy);
-            case 45:
+            case TimeTableContract.KS12U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS12U, null, null, null, orderBy);
-            case 46:
+            case TimeTableContract.KS13U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS13U, null, null, null, orderBy);
-            case 47:
+            case TimeTableContract.KS14U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS14U, null, null, null, orderBy);
-            case 48:
+            case TimeTableContract.KS15U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS15U, null, null, null, orderBy);
-            case 49:
+            case TimeTableContract.KS16U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS16U, null, null, null, orderBy);
-            case 50:
+            case TimeTableContract.KS17U:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS17U, null, null, null, orderBy);
-            case 51:
+            case TimeTableContract.KS2D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS2D, null, null, null, orderBy);
-            case 52:
+            case TimeTableContract.KS3D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS3D, null, null, null, orderBy);
-            case 53:
+            case TimeTableContract.KS4D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS4D, null, null, null, orderBy);
-            case 54:
+            case TimeTableContract.KS5D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS5D, null, null, null, orderBy);
-            case 55:
+            case TimeTableContract.KS6D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS6D, null, null, null, orderBy);
-            case 56:
+            case TimeTableContract.KS7D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS7D, null, null, null, orderBy);
-            case 57:
+            case TimeTableContract.KS8D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS8D, null, null, null, orderBy);
-            case 58:
+            case TimeTableContract.KS9D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS9D, null, null, null, orderBy);
-            case 59:
+            case TimeTableContract.KS10D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS10D, null, null, null, orderBy);
-            case 60:
+            case TimeTableContract.KS11D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS11D, null, null, null, orderBy);
-            case 61:
+            case TimeTableContract.KS12D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS12D, null, null, null, orderBy);
-            case 62:
+            case TimeTableContract.KS14D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS14D, null, null, null, orderBy);
-            case 63:
+            case TimeTableContract.KS15D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS15D, null, null, null, orderBy);
-            case 64:
+            case TimeTableContract.KS16D1:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS16D1, null, null, null, orderBy);
-            case 65:
+            case TimeTableContract.KS16D2:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS16D2, null, null, null, orderBy);
-            case 66:
+            case TimeTableContract.KS17D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS17D, null, null, null, orderBy);
-            case 67:
+            case TimeTableContract.KS18D:
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS18D, null, null, null, orderBy);
             default:
                 if (DEBUG) {
                     Log.d(TAG, "id:" + id);
                 }
-                return new CursorLoader(context, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
+//                return new CursorLoader(context, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
+                return null;
         }
     }
 
@@ -265,7 +266,7 @@ public class TimeTableFragment extends Fragment
         //但し1行目の幅になってしまうので最大幅分に合わせるための1行目ダミーデータを入れる
         //いくつかパターン試したけれど現段階ではこの方式に落ち着く
         List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
-        for(int k=0;k<14;k++)damySpace.add(new TimeTableItem("　","　","　",2));
+        for(int k=0;k<15;k++)damySpace.add(new TimeTableItem("　","　","　",2));
         listItems.add(new ListItem("　",damySpace));
 
         //5時から開始
@@ -301,6 +302,7 @@ public class TimeTableFragment extends Fragment
         mAdapter.notifyDataSetChanged();
 
         Calendar calendar = Calendar.getInstance();
+        //noinspection ResourceType
         int hourIndex = calendar.get(Calendar.HOUR_OF_DAY);
         hourIndex = (hourIndex==0)?24:hourIndex;
         hourIndex = (hourIndex<5)?1:hourIndex - 5 + 1; //5時からだから-5で1行目がいらないから+1

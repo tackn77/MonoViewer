@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import jp.chiba.tackn.monoviewer.MainActivity;
@@ -33,6 +35,15 @@ public class TrainTable extends Activity
 
     /** 時刻表(TableNo.)選択用スピナー */
     private Spinner trainNo;
+    /** ラジオボタンのグループ */
+    private RadioGroup radioGroup;
+    /** 休日のラジオボタン */
+    private RadioButton holiday;
+    /** 平日のラジオボタン */
+    private RadioButton weekday;
+    /** スピナーの選択を保持 */
+    private int selectSpinner=0;
+
     /** FragmentのLoadManagerに通知 */
     private LoaderManager.LoaderCallbacks callbacks;
     /** LoaderManager.LoaderCallbacksの為 */
@@ -48,10 +59,18 @@ public class TrainTable extends Activity
         findViews();
 
         //スピナー用設定
-        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         setSpinnerAdapter(spAdapter);
         trainNo.setAdapter(spAdapter);
         trainNo.setOnItemSelectedListener(this);
+
+        //ラジオボタン用設定
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                initLoader(selectSpinner);
+//                trainNo.setSelection(selectSpinner);
+            }
+        });
 
 
         //外部から起動された場合のスピナーの選択処理
@@ -67,13 +86,22 @@ public class TrainTable extends Activity
             Log.d(TAG,"fromIntent holiday: " + fromIntent1);
         }
         int position =0 ;
-        for(int i=0;i<spAdapter.getCount();i++){
+        for(int i=0;i<13;i++){
             String adapter = spAdapter.getItem(i);
-            if(fromIntent1==0 &&  adapter.equals("休日"+fromIntent0) || fromIntent1==1 && adapter.equals("平日"+fromIntent0)){
+            if(adapter.equals(String.valueOf(fromIntent0))){
                 position=i;
             }
         }
+        if(fromIntent1==0){
+            holiday.setChecked(true);
+            weekday.setChecked(false);
+        }
+        if(fromIntent1==1){
+            holiday.setChecked(false);
+            weekday.setChecked(true);
+        }
         trainNo.setSelection(position);
+        if(DEBUG)Log.d(TAG,"position() " + position);
     }
 
 
@@ -105,6 +133,10 @@ public class TrainTable extends Activity
      */
     private void findViews() {
         trainNo = (Spinner) findViewById(R.id.Spinner);
+        radioGroup=(RadioGroup) findViewById(R.id.radiogroup);
+        holiday=(RadioButton)radioGroup.findViewById(R.id.holiday);
+        weekday=(RadioButton)radioGroup.findViewById(R.id.weekday);
+
         FragmentManager fragmentManager = getFragmentManager();
         train_table = (TrainTableFragment)fragmentManager.findFragmentById(R.id.traintablelist);
         callbacks =  (LoaderManager.LoaderCallbacks)train_table;
@@ -120,6 +152,15 @@ public class TrainTable extends Activity
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (DEBUG) {
             Log.d(TAG, "position:" + position);
+        }
+        selectSpinner = position;
+        //KA7は存在しない為
+        if(position==6){
+            weekday.setChecked(true);
+            holiday.setChecked(false);
+            holiday.setEnabled(false);
+        }else{
+            holiday.setEnabled(true);
         }
         if (parent == trainNo) {
             //Listに紐付けていたプロバイダURIの切替
@@ -144,7 +185,54 @@ public class TrainTable extends Activity
      * @param position Loaderの初期化時の通知パラメータ
      */
     private void initLoader(int position){
-        getLoaderManager().initLoader(position, null, callbacks);
+//        position = (radioGroup.getCheckedRadioButtonId()==R.id.weekday)?position:position+trainNo.getAdapter().getCount();
+        if(weekday.isChecked()){ //平日はスピナー通り
+            getLoaderManager().initLoader(position, null, callbacks);
+        }else { //休日のスピナーとのズレを正す
+            switch (position) {
+                case 0:
+                    getLoaderManager().initLoader(13, null, callbacks);
+                    break;
+                case 1:
+                    getLoaderManager().initLoader(14, null, callbacks);
+                    break;
+                case 2:
+                    getLoaderManager().initLoader(15, null, callbacks);
+                    break;
+                case 3:
+                    getLoaderManager().initLoader(16, null, callbacks);
+                    break;
+                case 4:
+                    getLoaderManager().initLoader(17, null, callbacks);
+                    break;
+                case 5:
+                    getLoaderManager().initLoader(18, null, callbacks);
+                    break;
+                case 6:
+                    break; //存在しない
+                case 7:
+                    getLoaderManager().initLoader(19, null, callbacks);
+                    break;
+                case 8:
+                    getLoaderManager().initLoader(20, null, callbacks);
+                    break;
+                case 9:
+                    getLoaderManager().initLoader(21, null, callbacks);
+                    break;
+                case 10:
+                    getLoaderManager().initLoader(22, null, callbacks);
+                    break;
+                case 11:
+                    getLoaderManager().initLoader(23, null, callbacks);
+                    break;
+                case 12:
+                    getLoaderManager().initLoader(24, null, callbacks);
+                    break;
+                default:
+                    if (DEBUG) Log.d(TAG, "position() " + position);
+                    break; //存在しない
+            }
+        }
     }
 
     /**
@@ -153,31 +241,19 @@ public class TrainTable extends Activity
      * @param spAdapter 車両選択用スピナー
      */
     private void setSpinnerAdapter(ArrayAdapter<String> spAdapter) {
-        spAdapter.add("平日1");
-        spAdapter.add("平日2");
-        spAdapter.add("平日3");
-        spAdapter.add("平日4");
-        spAdapter.add("平日5");
-        spAdapter.add("平日6");
-        spAdapter.add("平日7");
-        spAdapter.add("平日11");
-        spAdapter.add("平日12");
-        spAdapter.add("平日21");
-        spAdapter.add("平日22");
-        spAdapter.add("平日25");
-        spAdapter.add("平日26");
-        spAdapter.add("休日1");
-        spAdapter.add("休日2");
-        spAdapter.add("休日3");
-        spAdapter.add("休日4");
-        spAdapter.add("休日5");
-        spAdapter.add("休日6");
-        spAdapter.add("休日11");
-        spAdapter.add("休日12");
-        spAdapter.add("休日21");
-        spAdapter.add("休日22");
-        spAdapter.add("休日25");
-        spAdapter.add("休日26");
+        spAdapter.add("1");
+        spAdapter.add("2");
+        spAdapter.add("3");
+        spAdapter.add("4");
+        spAdapter.add("5");
+        spAdapter.add("6");
+        spAdapter.add("7");
+        spAdapter.add("11");
+        spAdapter.add("12");
+        spAdapter.add("21");
+        spAdapter.add("22");
+        spAdapter.add("25");
+        spAdapter.add("26");
     }
 
     /**
