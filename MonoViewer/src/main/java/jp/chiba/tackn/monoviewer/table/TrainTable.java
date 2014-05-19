@@ -29,7 +29,7 @@ public class TrainTable extends Activity
         implements AdapterView.OnItemSelectedListener{
 
     /** デバッグフラグ */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /** デバッグタグ */
     private static final String TAG = "TrainTable";
 

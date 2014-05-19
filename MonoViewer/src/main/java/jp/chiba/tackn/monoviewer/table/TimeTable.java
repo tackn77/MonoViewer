@@ -37,16 +37,24 @@ public class TimeTable extends Activity
     /** 時刻表(COLUMN_STATION)選択用スピナー */
     private Spinner spinner;
 
+    /** 休日・平日のラジオボタン用 */
     private RadioGroup holidayGroup;
+    /** 休日ラジオボタン */
     private RadioButton holiday;
+    /** 平日ラジオボタン */
     private RadioButton weekday;
 
+    /** 上り・下りのラジオボタン用 */
     private RadioGroup updown;
+    /** 上り */
     private RadioButton up;
+    /** 共通下り */
     private RadioButton down1;
+    /** 千葉駅用下り */
     private RadioButton down2;
-
+    /** スピナーの選択位置の保持用 */
     private int selectSpinner=0;
+
     /** FragmentのLoadManagerに通知 */
     private LoaderManager.LoaderCallbacks callbacks;
     /** LoaderManager.LoaderCallbacksの為 */
@@ -59,8 +67,10 @@ public class TimeTable extends Activity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_table);
+
         //要素の取得
         findViews();
+
         //ラジオボタン用設定
         holidayGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -72,7 +82,6 @@ public class TimeTable extends Activity
                 initLoader(selectSpinner);
             }
         });
-
 
         //外部から起動された時のスピナーの選択処理
         String fromIntent0 = "";
@@ -105,41 +114,10 @@ public class TimeTable extends Activity
             weekday.setChecked(true);
         }
 
+        //フラグチェック
+        checkflag(fromIntent0,fromIntent1);
 
-        if(fromIntent1==1){
-            if(fromIntent0.equals("千葉駅")){
-                setChibaStationDown(true);
-            }else{
-                setChibaStationDown(false);
-            }
-            if(fromIntent0.equals("千城台駅")){
-                setChishirodaiStationDown(true);
-            }else{
-                setChishirodaiStationDown(false);
-            }
-            if(fromIntent0.equals("県庁前駅")){
-                setKentyoumaeStationDown(true);
-            }else{
-                setKentyoumaeStationDown(false);
-            }
-            setChibaMinatoStationUp(false);
-            up.setChecked(false);
-            down1.setChecked(true);
-            down2.setChecked(false);
-        }else{
-            if(fromIntent0.equals("千葉みなと駅")){
-                setChibaMinatoStationUp(true);
-            }else{
-                setChibaMinatoStationUp(false);
-            }
-            up.setChecked(true);
-            down1.setChecked(false);
-            down2.setChecked(false);
-            setChibaStationDown(false);
-            setChishirodaiStationDown(false);
-            setKentyoumaeStationDown(false);
-        }
-
+        //選択位置検索
         int position =0;
         for(int i=0;i<spAdapter.getCount();i++) {
             String item = spAdapter.getItem(i);
@@ -148,57 +126,65 @@ public class TimeTable extends Activity
                 break;
             }
         }
+        //スピナー設定
         spinner.setSelection(position);
+    }
+
+    /** 端の駅で上り・下りのチェック */
+    private void checkflag(String station,int updown){
+        //不活性初期化
+        up.setEnabled(true);
+        down1.setEnabled(true);
+        down2.setEnabled(true);
+
+        //上り・下りチェック本体
+        if(updown==1){
+            up.setChecked(false);
+            down1.setChecked(true);
+            down2.setChecked(false);
+        }else{
+            up.setChecked(true);
+            down1.setChecked(false);
+            down2.setChecked(false);
+        }
+        //駅固有の設定
+        setChibaStationDown(station.equals("千葉駅"));
+        if(station.equals("千城台駅"))setChishirodaiStationDown();
+        if(station.equals("県庁前駅"))setKentyoumaeStationDown();
+        if(station.equals("千葉みなと駅"))setChibaMinatoStationUp();
     }
 
     /**
      * 千葉みなと駅は上りがないので切替
-     * @param enable 千葉みなと用にするかどうか
      */
-    private void setChibaMinatoStationUp(boolean enable) {
-        if(enable){
+    private void setChibaMinatoStationUp() {
             up.setChecked(false);
             up.setEnabled(false);
             down1.setChecked(true);
             down2.setChecked(false);
             down2.setEnabled(false);
-        }else{
-            up.setEnabled(true);
-        }
     }
 
     /**
-     * 千城台駅は下りがないので切替
-     * @param enable 千城台用にするかどうか
+     * 県庁前駅は下りがないので切替
      */
-    private void setKentyoumaeStationDown(boolean enable) {
-        if(enable){
+    private void setKentyoumaeStationDown() {
             up.setChecked(true);
             down1.setChecked(false);
             down1.setEnabled(false);
             down2.setChecked(false);
             down2.setEnabled(false);
-        }else{
-            down1.setEnabled(true);
-            down2.setEnabled(false);
-        }
     }
 
     /**
      * 千城台駅は下りがないので切替
-     * @param enable 千城台用にするかどうか
      */
-    private void setChishirodaiStationDown(boolean enable) {
-        if(enable){
+    private void setChishirodaiStationDown() {
             up.setChecked(true);
             down1.setChecked(false);
             down1.setEnabled(false);
             down2.setChecked(false);
             down2.setEnabled(false);
-        }else{
-            down1.setEnabled(true);
-            down2.setEnabled(false);
-        }
     }
 
     /**
@@ -258,7 +244,10 @@ public class TimeTable extends Activity
         }
         if (parent == spinner) {
             //Listに紐付けていたプロバイダURIの切替
+            String station = (String)spinner.getAdapter().getItem(position);
+            int way = up.isChecked()?0:1;
             selectSpinner=position;
+            checkflag(station,way);
             initLoader(position);
         }
     }
@@ -282,52 +271,50 @@ public class TimeTable extends Activity
      */
     private void initLoader(int position){
 
+        //平日チェック
         if(weekday.isChecked()){
             if(up.isChecked()){ //平日上りはスピナー通り
                 getLoaderManager().initLoader(position, null, callbacks);
             }else{
-                switch (position+16){
-                    case 30:
+                switch (position+18){
+                    case 33:
                         if(down1.isChecked()){
-                            getLoaderManager().initLoader(position+16, null, callbacks);
+                            getLoaderManager().initLoader(TimeTableContract.HS16D1, null, callbacks);
                         }else{
-                            getLoaderManager().initLoader(position+17, null, callbacks);
+                            getLoaderManager().initLoader(TimeTableContract.HS16D2, null, callbacks);
                         }
                         break;
-                    case 31:
-                        getLoaderManager().initLoader(position+17, null, callbacks);
+                    case 34:
+                        getLoaderManager().initLoader(TimeTableContract.HS17D, null, callbacks);
                         break;
-                    case 32:
-                        getLoaderManager().initLoader(position+17, null, callbacks);
-                        break;
-                    case 33:
-                        getLoaderManager().initLoader(position+17, null, callbacks);
+                    case 35:
+                        getLoaderManager().initLoader(TimeTableContract.HS18D, null, callbacks);
                         break;
                     default:
-                        getLoaderManager().initLoader(position+16, null, callbacks);
+                        getLoaderManager().initLoader(position+18, null, callbacks);
                         break;
                 }
             }
         }else { //休日のスピナーとのズレを正す
-            if(up.isChecked()){ //平日上りはスピナー通り
-                getLoaderManager().initLoader(position+34, null, callbacks);
+            if(up.isChecked()){ //休日上りはスピナー+100
+                getLoaderManager().initLoader(position+100, null, callbacks);
             }else{
-                switch (position+50){
-                    case 64:
+                switch (position+118){
+                    case 133:
                         if(down1.isChecked()){
-                            getLoaderManager().initLoader(position+50, null, callbacks);
+                            getLoaderManager().initLoader(TimeTableContract.KS16D1, null, callbacks);
                         }else{
-                            getLoaderManager().initLoader(position+51, null, callbacks);
+                            getLoaderManager().initLoader(TimeTableContract.KS16D2, null, callbacks);
                         }
                         break;
-                    case 66:
-                        getLoaderManager().initLoader(position+51, null, callbacks);
+                    case 134:
+                        getLoaderManager().initLoader(TimeTableContract.KS17D, null, callbacks);
                         break;
-                    case 67:
-                        getLoaderManager().initLoader(position+51, null, callbacks);
+                    case 135:
+                        getLoaderManager().initLoader(TimeTableContract.KS18D, null, callbacks);
                         break;
                     default:
-                        getLoaderManager().initLoader(position+51, null, callbacks);
+                        getLoaderManager().initLoader(position+118, null, callbacks);
                         break;
                 }
             }

@@ -32,7 +32,7 @@ public class TrainTableFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
     /** デバッグフラグ */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /** デバッグタグ */
     private static final String TAG = "TrainTableFragment";
 
