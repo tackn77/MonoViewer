@@ -3,35 +3,22 @@ package jp.chiba.tackn.monoviewer.table;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
-import jp.chiba.tackn.monoviewer.map.InformationHolder;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -50,6 +37,16 @@ public class TimeTable extends Activity
     /** 時刻表(COLUMN_STATION)選択用スピナー */
     private Spinner spinner;
 
+    private RadioGroup holidayGroup;
+    private RadioButton holiday;
+    private RadioButton weekday;
+
+    private RadioGroup updown;
+    private RadioButton up;
+    private RadioButton down1;
+    private RadioButton down2;
+
+    private int selectSpinner=0;
     /** FragmentのLoadManagerに通知 */
     private LoaderManager.LoaderCallbacks callbacks;
     /** LoaderManager.LoaderCallbacksの為 */
@@ -64,6 +61,18 @@ public class TimeTable extends Activity
         setContentView(R.layout.time_table);
         //要素の取得
         findViews();
+        //ラジオボタン用設定
+        holidayGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                initLoader(selectSpinner);
+            }
+        });
+        updown.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                initLoader(selectSpinner);
+            }
+        });
+
 
         //外部から起動された時のスピナーの選択処理
         String fromIntent0 = "";
@@ -87,21 +96,126 @@ public class TimeTable extends Activity
         spinner.setAdapter(spAdapter);
         spinner.setOnItemSelectedListener(this);
 
-        int position =0 ;
-        for(int i=0;i<spAdapter.getCount();i++){
+        //休日・平日の設定
+        if(fromIntent2==0){
+            holiday.setChecked(true);
+            weekday.setChecked(false);
+        }else{
+            holiday.setChecked(false);
+            weekday.setChecked(true);
+        }
+
+
+        if(fromIntent1==1){
+            if(fromIntent0.equals("千葉駅")){
+                setChibaStationDown(true);
+            }else{
+                setChibaStationDown(false);
+            }
+            if(fromIntent0.equals("千城台駅")){
+                setChishirodaiStationDown(true);
+            }else{
+                setChishirodaiStationDown(false);
+            }
+            if(fromIntent0.equals("県庁前駅")){
+                setKentyoumaeStationDown(true);
+            }else{
+                setKentyoumaeStationDown(false);
+            }
+            setChibaMinatoStationUp(false);
+            up.setChecked(false);
+            down1.setChecked(true);
+            down2.setChecked(false);
+        }else{
+            if(fromIntent0.equals("千葉みなと駅")){
+                setChibaMinatoStationUp(true);
+            }else{
+                setChibaMinatoStationUp(false);
+            }
+            up.setChecked(true);
+            down1.setChecked(false);
+            down2.setChecked(false);
+            setChibaStationDown(false);
+            setChishirodaiStationDown(false);
+            setKentyoumaeStationDown(false);
+        }
+
+        int position =0;
+        for(int i=0;i<spAdapter.getCount();i++) {
             String item = spAdapter.getItem(i);
-            if(fromIntent2==0 && item.startsWith("休日") || fromIntent2==1 && item.startsWith("平日")){
-                if(fromIntent1==1 && item.endsWith("下り") || fromIntent1==0 && item.endsWith("上り"))  {
-                    if(item.indexOf(fromIntent0)>0) {
-                        position = i;
-                        break;
-                    }
-                }
+            if (item.equals(fromIntent0)) {
+                position = i;
+                break;
             }
         }
         spinner.setSelection(position);
     }
 
+    /**
+     * 千葉みなと駅は上りがないので切替
+     * @param enable 千葉みなと用にするかどうか
+     */
+    private void setChibaMinatoStationUp(boolean enable) {
+        if(enable){
+            up.setChecked(false);
+            up.setEnabled(false);
+            down1.setChecked(true);
+            down2.setChecked(false);
+            down2.setEnabled(false);
+        }else{
+            up.setEnabled(true);
+        }
+    }
+
+    /**
+     * 千城台駅は下りがないので切替
+     * @param enable 千城台用にするかどうか
+     */
+    private void setKentyoumaeStationDown(boolean enable) {
+        if(enable){
+            up.setChecked(true);
+            down1.setChecked(false);
+            down1.setEnabled(false);
+            down2.setChecked(false);
+            down2.setEnabled(false);
+        }else{
+            down1.setEnabled(true);
+            down2.setEnabled(false);
+        }
+    }
+
+    /**
+     * 千城台駅は下りがないので切替
+     * @param enable 千城台用にするかどうか
+     */
+    private void setChishirodaiStationDown(boolean enable) {
+        if(enable){
+            up.setChecked(true);
+            down1.setChecked(false);
+            down1.setEnabled(false);
+            down2.setChecked(false);
+            down2.setEnabled(false);
+        }else{
+            down1.setEnabled(true);
+            down2.setEnabled(false);
+        }
+    }
+
+    /**
+     * 千葉駅だけ下りを2選択にする
+     * @param enable 千葉駅用にするかどうか
+     */
+    private void setChibaStationDown(boolean enable){
+        if(enable){
+            down2.setEnabled(true);
+            down1.setText("１号線下り");
+            down2.setText("２号線下り");
+        }else{
+            down2.setEnabled(false);
+            down1.setText("下り");
+            down2.setText("　　");
+        }
+    }
 
 
     /**
@@ -117,6 +231,13 @@ public class TimeTable extends Activity
      */
     private void findViews() {
         spinner = (Spinner) findViewById(R.id.Spinner);
+        holidayGroup = (RadioGroup) findViewById(R.id.holidayGroup);
+        holiday = (RadioButton) findViewById(R.id.holiday);
+        weekday = (RadioButton) findViewById(R.id.weekday);
+        updown = (RadioGroup) findViewById(R.id.updown);
+        up = (RadioButton) findViewById(R.id.up);
+        down1 = (RadioButton) findViewById(R.id.down1);
+        down2 = (RadioButton) findViewById(R.id.down2);
         FragmentManager fragmentManager = getFragmentManager();
         time_table = (TimeTableFragment)fragmentManager.findFragmentById(R.id.timetablelist);
         callbacks =  (LoaderManager.LoaderCallbacks)time_table;
@@ -137,7 +258,8 @@ public class TimeTable extends Activity
         }
         if (parent == spinner) {
             //Listに紐付けていたプロバイダURIの切替
-            getLoaderManager().initLoader(position, null, callbacks);
+            selectSpinner=position;
+            initLoader(position);
         }
     }
 
@@ -151,8 +273,68 @@ public class TimeTable extends Activity
             Log.d(TAG, "onNothingSelected :");
         }
         //初期化
-        getLoaderManager().initLoader(0, null, callbacks);
+        initLoader(0);
     }
+
+    /**
+     * スピナーで選択したときのCursolLoaderの初期化
+     * @param position Loaderの初期化時の通知パラメータ
+     */
+    private void initLoader(int position){
+
+        if(weekday.isChecked()){
+            if(up.isChecked()){ //平日上りはスピナー通り
+                getLoaderManager().initLoader(position, null, callbacks);
+            }else{
+                switch (position+16){
+                    case 30:
+                        if(down1.isChecked()){
+                            getLoaderManager().initLoader(position+16, null, callbacks);
+                        }else{
+                            getLoaderManager().initLoader(position+17, null, callbacks);
+                        }
+                        break;
+                    case 31:
+                        getLoaderManager().initLoader(position+17, null, callbacks);
+                        break;
+                    case 32:
+                        getLoaderManager().initLoader(position+17, null, callbacks);
+                        break;
+                    case 33:
+                        getLoaderManager().initLoader(position+17, null, callbacks);
+                        break;
+                    default:
+                        getLoaderManager().initLoader(position+16, null, callbacks);
+                        break;
+                }
+            }
+        }else { //休日のスピナーとのズレを正す
+            if(up.isChecked()){ //平日上りはスピナー通り
+                getLoaderManager().initLoader(position+34, null, callbacks);
+            }else{
+                switch (position+50){
+                    case 64:
+                        if(down1.isChecked()){
+                            getLoaderManager().initLoader(position+50, null, callbacks);
+                        }else{
+                            getLoaderManager().initLoader(position+51, null, callbacks);
+                        }
+                        break;
+                    case 66:
+                        getLoaderManager().initLoader(position+51, null, callbacks);
+                        break;
+                    case 67:
+                        getLoaderManager().initLoader(position+51, null, callbacks);
+                        break;
+                    default:
+                        getLoaderManager().initLoader(position+51, null, callbacks);
+                        break;
+                }
+            }
+        }
+    }
+
+
 
     /**
      * スピナーに値を登録
@@ -160,77 +342,24 @@ public class TimeTable extends Activity
      * @param spAdapter
      */
     private void setSpinnerAdapter(ArrayAdapter<String> spAdapter) {
-        spAdapter.add("平日 千城台駅 上り");
-        spAdapter.add("平日 千城台北駅 上り");
-        spAdapter.add("平日 小倉台駅 上り");
-        spAdapter.add("平日 桜木駅 上り");
-        spAdapter.add("平日 都賀駅 上り");
-        spAdapter.add("平日 みつわ台駅 上り");
-        spAdapter.add("平日 動物公園駅 上り");
-        spAdapter.add("平日 スポーツセンター駅 上り");
-        spAdapter.add("平日 穴川駅 上り");
-        spAdapter.add("平日 天台駅 上り");
-        spAdapter.add("平日 作草部駅 上り");
-        spAdapter.add("平日 千葉公園駅 上り");
-        spAdapter.add("平日 県庁前駅 上り");
-        spAdapter.add("平日 葭川公園駅 上り");
-        spAdapter.add("平日 栄町駅 上り");
-        spAdapter.add("平日 千葉駅 上り");
-        spAdapter.add("平日 市役所前駅 上り");
-
-        spAdapter.add("平日 千城台北駅 下り");
-        spAdapter.add("平日 小倉台駅 下り");
-        spAdapter.add("平日 桜木駅 下り");
-        spAdapter.add("平日 都賀駅 下り");
-        spAdapter.add("平日 みつわ台駅 下り");
-        spAdapter.add("平日 動物公園駅 下り");
-        spAdapter.add("平日 スポーツセンター駅 下り");
-        spAdapter.add("平日 穴川駅 下り");
-        spAdapter.add("平日 天台駅 下り");
-        spAdapter.add("平日 作草部駅 下り");
-        spAdapter.add("平日 千葉公園駅 下り");
-        spAdapter.add("平日 葭川公園駅 下り");
-        spAdapter.add("平日 栄町駅 下り");
-        spAdapter.add("平日 千葉駅1号線 下り");
-        spAdapter.add("平日 千葉駅2号線 下り");
-        spAdapter.add("平日 市役所前駅 下り");
-        spAdapter.add("平日 千葉みなと駅 下り");
-
-        spAdapter.add("休日 千城台駅 上り");
-        spAdapter.add("休日 千城台北駅 上り");
-        spAdapter.add("休日 小倉台駅 上り");
-        spAdapter.add("休日 桜木駅 上り");
-        spAdapter.add("休日 都賀駅 上り");
-        spAdapter.add("休日 みつわ台駅 上り");
-        spAdapter.add("休日 動物公園駅 上り");
-        spAdapter.add("休日 スポーツセンター駅 上り");
-        spAdapter.add("休日 穴川駅 上り");
-        spAdapter.add("休日 天台駅 上り");
-        spAdapter.add("休日 作草部駅 上り");
-        spAdapter.add("休日 千葉公園駅 上り");
-        spAdapter.add("休日 県庁前駅 上り");
-        spAdapter.add("休日 葭川公園駅 上り");
-        spAdapter.add("休日 栄町駅 上り");
-        spAdapter.add("休日 千葉駅 上り");
-        spAdapter.add("休日 市役所前駅 上り");
-
-        spAdapter.add("休日 千城台北駅 下り");
-        spAdapter.add("休日 小倉台駅 下り");
-        spAdapter.add("休日 桜木駅 下り");
-        spAdapter.add("休日 都賀駅 下り");
-        spAdapter.add("休日 みつわ台駅 下り");
-        spAdapter.add("休日 動物公園駅 下り");
-        spAdapter.add("休日 スポーツセンター駅 下り");
-        spAdapter.add("休日 穴川駅 下り");
-        spAdapter.add("休日 天台駅 下り");
-        spAdapter.add("休日 作草部駅 下り");
-        spAdapter.add("休日 千葉公園駅 下り");
-        spAdapter.add("休日 葭川公園駅 下り");
-        spAdapter.add("休日 栄町駅 下り");
-        spAdapter.add("休日 千葉駅1号線 下り");
-        spAdapter.add("休日 千葉駅2号線 下り");
-        spAdapter.add("休日 市役所前駅 下り");
-        spAdapter.add("休日 千葉みなと駅 下り");
+        spAdapter.add("千城台駅");
+        spAdapter.add("千城台北駅");
+        spAdapter.add("小倉台駅");
+        spAdapter.add("桜木駅");
+        spAdapter.add("都賀駅");
+        spAdapter.add("みつわ台駅");
+        spAdapter.add("動物公園駅");
+        spAdapter.add("スポーツセンター駅");
+        spAdapter.add("穴川駅");
+        spAdapter.add("天台駅");
+        spAdapter.add("作草部駅");
+        spAdapter.add("千葉公園駅");
+        spAdapter.add("県庁前駅");
+        spAdapter.add("葭川公園駅");
+        spAdapter.add("栄町駅");
+        spAdapter.add("千葉駅");
+        spAdapter.add("市役所前駅");
+        spAdapter.add("千葉みなと駅");
     }
 
     /**
