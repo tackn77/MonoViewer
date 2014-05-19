@@ -266,7 +266,7 @@ public class TimeTableFragment extends Fragment
         //但し1行目の幅になってしまうので最大幅分に合わせるための1行目ダミーデータを入れる
         //いくつかパターン試したけれど現段階ではこの方式に落ち着く
         List<TimeTableItem> damySpace = new ArrayList<TimeTableItem>();
-        for(int k=0;k<14;k++)damySpace.add(new TimeTableItem("　","　","　",2));
+        for(int k=0;k<15;k++)damySpace.add(new TimeTableItem("　","　","　",2));
         listItems.add(new ListItem("　",damySpace));
 
         //5時から開始
