@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.time;
 
 /**
  * 駅時刻表のswich文の補佐をする

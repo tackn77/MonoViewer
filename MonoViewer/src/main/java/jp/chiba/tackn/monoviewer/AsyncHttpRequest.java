@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import jp.chiba.tackn.monoviewer.map.InformationHolder;
-import jp.chiba.tackn.monoviewer.table.TrainTable;
+import jp.chiba.tackn.monoviewer.train.TrainTable;
 
 /**
  * heroku から運行情報を取得するAsyncTask

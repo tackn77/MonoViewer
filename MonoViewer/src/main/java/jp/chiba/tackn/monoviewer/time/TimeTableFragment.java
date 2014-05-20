@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.time;
 
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -24,8 +24,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.train.TrainTable;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
-import jp.chiba.tackn.monoviewer.map.InformationHolder;
+import jp.chiba.tackn.monoviewer.InformationHolder;
 
 
 /**

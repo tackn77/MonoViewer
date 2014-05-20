@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.time;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -17,8 +17,10 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import jp.chiba.tackn.monoviewer.MainActivity;
+import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
+import jp.chiba.tackn.monoviewer.map.MapsActivity;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -368,19 +370,6 @@ public class TimeTable extends Activity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.action_back_home:
-                Intent home = new Intent(this,MainActivity.class);
-                startActivity(home);
-                break;
-            case R.id.action_disclaimer:
-                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
-                startActivity(disclaimer);
-                break;
-            default:
-                return true;
-        }
-        return false;
+        return Menus.actionMenu(this,item);
     }
 }

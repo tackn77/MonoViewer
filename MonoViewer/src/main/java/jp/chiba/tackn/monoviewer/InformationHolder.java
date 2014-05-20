@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.map;
+package jp.chiba.tackn.monoviewer;
 
 import android.net.Uri;
 import android.os.AsyncTask;

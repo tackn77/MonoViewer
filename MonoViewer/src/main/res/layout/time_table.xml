@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/timetablelist"
-        android:name="jp.chiba.tackn.monoviewer.table.TimeTableFragment"/>
+        android:name="jp.chiba.tackn.monoviewer.time.TimeTableFragment"/>
 
 </LinearLayout>
 

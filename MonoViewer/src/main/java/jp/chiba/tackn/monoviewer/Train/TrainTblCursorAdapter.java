@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.train;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,8 @@ import android.widget.TextView;
 
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
-import jp.chiba.tackn.monoviewer.map.InformationHolder;
+import jp.chiba.tackn.monoviewer.InformationHolder;
+import jp.chiba.tackn.monoviewer.time.TimeTable;
 
 /**
  * TrainNoのリスト表示時にViewを提供する

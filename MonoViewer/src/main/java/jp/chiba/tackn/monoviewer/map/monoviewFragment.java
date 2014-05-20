@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,8 +39,8 @@ import java.util.regex.Pattern;
 
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
-import jp.chiba.tackn.monoviewer.table.TimeTable;
-import jp.chiba.tackn.monoviewer.table.TrainTable;
+import jp.chiba.tackn.monoviewer.time.TimeTable;
+import jp.chiba.tackn.monoviewer.train.TrainTable;
 
 /**
  * 列車の運行状況を見るためのMapFragment
@@ -49,21 +48,12 @@ import jp.chiba.tackn.monoviewer.table.TrainTable;
  * @author Takumi Ito
  * @since 2014/05/16
  */
-public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
+public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
         , LoaderManager.LoaderCallbacks<Cursor> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
+    /** デバッグ用タグ */
     private static final String TAG = "monoviewFragment";
+    /** デバッグ用フラグ */
     private static final boolean DEBUG =false;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     /** Mapオブジェクト */
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -76,43 +66,30 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /** CursorLoader用コールバック */
     private LoaderManager.LoaderCallbacks callbacks;
     /** 非同期処理で取得した休日フラグ */
-    private int intHoliday;
+    private static int intHoliday;
     /** モノちゃん号の運行情報 */
-    private int intService0;
+    static private int intService0;
     /** アーバンフライ０ 1-2号の運行情報 */
-    private int intService1;
+    static private int intService1;
     /** アーバンフライ０ 3-4号の運行情報 */
-    private int intService2;
+    static private int intService2;
     /** アーバンフライ０ 5-6号の運行情報 */
-    private int intService3;
+    static private int intService3;
     /** アーバンフライ０ 7-8号の運行情報 */
-    private int intService4;
+    static private int intService4;
     /** 現在時刻クエリ用セット用Date */
     java.util.Date Date = new Date();
     /** 時刻取得用カレンダ */
     Calendar calendar = Calendar.getInstance();
     /** 列車マーカーを保持するList */
     private final Map<NowTrainData,Marker> trainMakers = new HashMap<NowTrainData, Marker>();
+    /** 駅マーカー判定用正規表現 */
+    private static final Pattern patternStation = Pattern.compile("^[^駅]+駅$");
+    /** 列車マーカー判定用正規表現 */
+    private static final Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)");
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment monoview.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static monoviewFragment newInstance(String param1, String param2) {
-        monoviewFragment fragment = new monoviewFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    public monoviewFragment() {
+    public MonoViewFragment() {
         // Required empty public constructor
     }
 
@@ -125,17 +102,12 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         context = getActivity().getApplicationContext();
         //SyncTaskでherokuから情報取得
         Uri.Builder builder = new Uri.Builder();
-        AsyncHttpRequest task = new AsyncHttpRequest(context);
+        AsyncHttpRequest task = new AsyncHttpRequest(getActivity());
         task.execute(builder);
-
-        callbacks = (LoaderManager.LoaderCallbacks) this;
+        callbacks = this;
         setUpMapIfNeeded();
         setUpHandler();
     }
@@ -178,19 +150,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     }
 
     /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p/>
-     * If it isn't installed {@link com.google.android.gms.maps.SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-     * install/update the Google Play services APK on their device.
-     * <p/>
-     * A user can return to this FragmentActivity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-     * have been completely destroyed during this process (it is likely that it would only be
-     * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
-     * method in {@link #onResume()} to guarantee that it will be called.
+     * GoogleMapオブジェクトの取得
      */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -215,10 +175,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
+     * マップの初期設定
      */
     private void setUpMap() {
         // 千葉駅を表示
@@ -251,13 +208,6 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     /**
      * アタッチ時
      * リスナの登録
@@ -266,12 +216,6 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -281,14 +225,9 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
         trainHandler = null;
     }
 
-    /** 駅マーカー判定用正規表現 */
-    private static final Pattern patternStation = Pattern.compile("^[^駅]+駅$");
-    /** 列車マーカー判定用正規表現 */
-    private static final Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)");
 
     /**
      * マーカークリック時の動作
@@ -330,89 +269,25 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /**
      * CursorLoaderの切り替え処理
      * getLoaderManager().restartLoaderで呼ばれる
-     * @param i ID
+     * @param id ID
      * @param bundle 引数
      * @return ローダー
      */
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         /** 取得データのソート */
         String orderBy = "TABLE_NO ASC,TIMES ASC";
 
-        switch (i) {
-            case 0:
+        switch (id) {
+            case 0: //休日
                 return new CursorLoader(context, SQLTblContract.CONTENT_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY, null, null, null, orderBy);
-            case 1:
+            case 1: //平日
                 return new CursorLoader(context, SQLTblContract.CONTENT_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND, null, null, null, orderBy);
             default:
                 if (DEBUG) {
-                    Log.d(TAG, "id:" + i);
+                    Log.d(TAG, "id:" + id);
                 }
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
-        }
-    }
-
-    /**
-     * CursorLoaderの結果取得後の処理で配列として利用
-     * 現在時刻の列車についての情報
-     */
-    private class NowTrainData {
-        public String Station;
-        public int UpDown;
-        public int Table_No;
-        public int Hour;
-        public int Minute;
-        public NowTrainData after;
-
-        public NowTrainData(String Station, int UpDown, int Hour, int Minute, int Table_No,NowTrainData after) {
-            this.Station = Station;
-            this.UpDown = UpDown;
-            this.Table_No = Table_No;
-            this.Hour = Hour;
-            this.Minute = Minute;
-            this.after = after;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o.getClass() != NowTrainData.class) return false;
-            NowTrainData comparison = (NowTrainData) o;
-            boolean check = true;
-
-            check = check && this.Station.equals(comparison.Station);
-            check = check && this.UpDown == comparison.UpDown;
-            check = check && this.Table_No == comparison.Table_No;
-            check = check && this.Hour == comparison.Hour;
-            check = check && this.Minute == comparison.Minute;
-            if(this.after!=null){
-                if(comparison.after!=null){
-                    return check && this.after.equals(comparison.after);
-                } else {
-                    return false;
-                }
-            }else{
-                if(comparison.after==null){
-                    return check;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        private static final int hashValue = 31;
-
-        @Override
-        public int hashCode() {
-
-            int result = 17;
-
-            result = this.Station == null ? hashValue * result + 0 : hashValue * result + this.Station.hashCode();
-            result = hashValue * result + this.UpDown;
-            result = hashValue * result + this.Table_No;
-            result = hashValue * result + this.Hour;
-            result = hashValue * result + this.Minute;
-            result = this.after == null ? hashValue * result + 0 : hashValue * result + this.after.hashCode();
-            return result;
         }
     }
 
@@ -426,13 +301,13 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         /** 作業変数 tableNoの一時保持用 */
-        int table_no = 0;
+        int table_no;
         /** 作業変数 tableNoの比較用 */
-        int new_table_no = 0;
+        int new_table_no;
         /** 取得結果のデータ配列保持用 */
         List<NowTrainData> group = new ArrayList<NowTrainData>();
         /** 作業変数 列車データの一時保存用 */
-        NowTrainData old = null;
+        NowTrainData old;
 
         /** 現在時刻 */
         long nowLong = System.currentTimeMillis();
@@ -492,14 +367,9 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 //                if(DEBUG)Log.d(TAG,old.UpDown + " " + old.Table_No + "/" + old.Hour + ":" + old.Minute + " " + old.Station);
             } while (cursor.moveToNext());
             //最後の１つ
-            if(work!=null){
-                group.add(work);
-            }else{
-                if(DEBUG)Log.d(TAG,"最後の一つ " + table_no);
-            }
+            if(work!=null)group.add(work);
         }
 
-//        });
         if(DEBUG)for(NowTrainData cur:group){
             if(cur!=null && cur.after!=null){
                 Log.d(TAG,cur.UpDown + " " + cur.Table_No +  "/" + cur.Hour + ":" + cur.Minute + "-" +cur.after.Hour +":" + cur.after.Minute + " " + cur.Station +" - " + cur.after.Station);
@@ -508,7 +378,7 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
             }
         }
 
-//        if(DEBUG)Log.d(TAG,"group.size() " + group.size());
+        if(DEBUG)Log.d(TAG,"group.size() " + group.size());
 
         // 既に検索対象から外れたマーカーを削除する
         if(DEBUG)Log.d(TAG,"trainMakers.size() :" + trainMakers.size());
@@ -732,11 +602,17 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
         Date toDate = new Date();
 
         //ミリタイムを取得
+        //noinspection deprecation
         fromDate.setHours(train.Hour);
+        //noinspection deprecation
         fromDate.setMinutes(train.Minute);
+        //noinspection deprecation
         fromDate.setSeconds(0);
+        //noinspection deprecation
         toDate.setHours(train.after.Hour);
+        //noinspection deprecation
         toDate.setMinutes(train.after.Minute);
+        //noinspection deprecation
         toDate.setSeconds(0);
 
         Long fromLong = fromDate.getTime();
@@ -761,108 +637,19 @@ public class monoviewFragment extends Fragment implements GoogleMap.OnInfoWindow
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
+    /** 今日の休日平日フラグのセット */
+    static void setHoliday(int holiday){intHoliday=holiday;}
+    /** モノちゃん号の運行情報のセット */
+    static void setService0(int service){intService0=service;}
+    /** アーバンフライ０ 1-2号の運行情報のセット */
+    static void setService1(int service){intService1=service;}
+    /** アーバンフライ０ 3-4号の運行情報のセット */
+    static void setService2(int service){intService2=service;}
+    /** アーバンフライ０ 5-6号の運行情報のセット */
+    static void setService3(int service){intService3=service;}
+    /** アーバンフライ０ 7-8号の運行情報のセット */
+    static void setService4(int service){intService4=service;}
 
-    /**
-     * herokuで公開している運行情報を取得するための非同期タスク
-     */
-    private class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
-
-        /** デバッグ用タグ */
-        private static final String TAG = "AsyncHttpRequest";
-        /** デバッグ用フラグ */
-        private static final boolean DEBUG = false;
-
-        /** 呼び出し元コンテキスト */
-        private Context context;
-        /** 呼び出し元Activity */
-        private Activity mainActivity;
-
-        /** 休日・平日フラグ */
-        private String holiday;
-        /** モノちゃん号の運行情報 */
-        private String Service0;
-        /** アーバンフライ０ 1-2号の運行情報 */
-        private String Service1;
-        /** アーバンフライ０ 3-4号の運行情報 */
-        private String Service2;
-        /** アーバンフライ０ 5-6号の運行情報 */
-        private String Service3;
-        /** アーバンフライ０ 7-8号の運行情報 */
-        private String Service4;
-
-        /** 運行情報管理クラス */
-        InformationHolder informationHolder = InformationHolder.getInstance();
-
-        public AsyncHttpRequest(Context context) {
-
-        }
-
-        /**
-         * 非同期処理本体
-         * @param builders ハンドラ
-         * @return onPostExecuteへ伝える引数
-         */
-        @Override
-        protected String doInBackground(Uri.Builder... builders) {
-            int n =0;
-            while (!informationHolder.isReady()){
-                try {
-                    Thread.sleep(1000);
-                    n++;
-                    if(n==60)break;
-                } catch (InterruptedException e) {
-                    Log.e(TAG,e.toString());
-                    return "false";
-                }
-            }
-            holiday = informationHolder.getHoliday();
-            Service0 = informationHolder.getService0();
-            Service1 = informationHolder.getService1();
-            Service2 = informationHolder.getService2();
-            Service3 = informationHolder.getService3();
-            Service4 = informationHolder.getService4();
-
-            return informationHolder.isReady()?"ture":"false";
-        }
-
-        /**
-         * 非同期処理の結果を処理
-         * @param result 非同期処理の結果の引数　成否判定
-         */
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.equals("false")) intHoliday = 0;
-            //休日・平日判定
-            if (holiday.equals("true")) {
-                intHoliday = 0;
-            } else if (holiday.equals("false")) {
-                intHoliday = 1;
-            } else {
-                //取得失敗
-                intHoliday = 1;
-            }
-            intService0 = Service0.matches("[0-9]+")?Integer.valueOf(Service0):-1;
-            intService1 = Service1.matches("[0-9]+")?Integer.valueOf(Service1):-1;
-            intService2 = Service2.matches("[0-9]+")?Integer.valueOf(Service2):-1;
-            intService3 = Service3.matches("[0-9]+")?Integer.valueOf(Service3):-1;
-            intService4 = Service4.matches("[0-9]+")?Integer.valueOf(Service4):-1;
-
-        }
-    }
 
     /**
      * マップ画面に定期的0.5s毎に画面更新をするためのハンドラ
