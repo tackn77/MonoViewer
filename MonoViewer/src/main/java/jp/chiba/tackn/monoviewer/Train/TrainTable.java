@@ -1,9 +1,8 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.train;
 
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,9 +15,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
+import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
+import jp.chiba.tackn.monoviewer.map.Station;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -92,11 +91,11 @@ public class TrainTable extends Activity
                 position=i;
             }
         }
-        if(fromIntent1==0){
+        if(fromIntent1==Station.HOLIDAY){
             holiday.setChecked(true);
             weekday.setChecked(false);
         }
-        if(fromIntent1==1){
+        if(fromIntent1==Station.WEEKDAY){
             holiday.setChecked(false);
             weekday.setChecked(true);
         }
@@ -139,7 +138,7 @@ public class TrainTable extends Activity
 
         FragmentManager fragmentManager = getFragmentManager();
         train_table = (TrainTableFragment)fragmentManager.findFragmentById(R.id.traintablelist);
-        callbacks =  (LoaderManager.LoaderCallbacks)train_table;
+        callbacks =  train_table;//LoaderManager.LoaderCallbacks
     }
 
     /**
@@ -191,42 +190,42 @@ public class TrainTable extends Activity
         }else { //休日のスピナーとのズレを正す
             switch (position) {
                 case 0:
-                    getLoaderManager().initLoader(13, null, callbacks);
+                    getLoaderManager().restartLoader(13, null, callbacks);
                     break;
                 case 1:
-                    getLoaderManager().initLoader(14, null, callbacks);
+                    getLoaderManager().restartLoader(14, null, callbacks);
                     break;
                 case 2:
-                    getLoaderManager().initLoader(15, null, callbacks);
+                    getLoaderManager().restartLoader(15, null, callbacks);
                     break;
                 case 3:
-                    getLoaderManager().initLoader(16, null, callbacks);
+                    getLoaderManager().restartLoader(16, null, callbacks);
                     break;
                 case 4:
-                    getLoaderManager().initLoader(17, null, callbacks);
+                    getLoaderManager().restartLoader(17, null, callbacks);
                     break;
                 case 5:
-                    getLoaderManager().initLoader(18, null, callbacks);
+                    getLoaderManager().restartLoader(18, null, callbacks);
                     break;
                 case 6:
                     break; //存在しない
                 case 7:
-                    getLoaderManager().initLoader(19, null, callbacks);
+                    getLoaderManager().restartLoader(19, null, callbacks);
                     break;
                 case 8:
-                    getLoaderManager().initLoader(20, null, callbacks);
+                    getLoaderManager().restartLoader(20, null, callbacks);
                     break;
                 case 9:
-                    getLoaderManager().initLoader(21, null, callbacks);
+                    getLoaderManager().restartLoader(21, null, callbacks);
                     break;
                 case 10:
-                    getLoaderManager().initLoader(22, null, callbacks);
+                    getLoaderManager().restartLoader(22, null, callbacks);
                     break;
                 case 11:
-                    getLoaderManager().initLoader(23, null, callbacks);
+                    getLoaderManager().restartLoader(23, null, callbacks);
                     break;
                 case 12:
-                    getLoaderManager().initLoader(24, null, callbacks);
+                    getLoaderManager().restartLoader(24, null, callbacks);
                     break;
                 default:
                     if (DEBUG) Log.d(TAG, "position() " + position);
@@ -275,18 +274,6 @@ public class TrainTable extends Activity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_back_home:
-                Intent home = new Intent(this,MainActivity.class);
-                startActivity(home);
-                break;
-            case R.id.action_disclaimer:
-                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
-                startActivity(disclaimer);
-                break;
-            default:
-                return true;
-        }
-        return false;
+        return Menus.actionMenu(this,item);
     }
 }

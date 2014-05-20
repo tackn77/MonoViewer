@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import jp.chiba.tackn.monoviewer.map.Station;
+
 /**
  * 時刻表DBの検索を提供するProvider
  * @author Takumi Ito
@@ -226,7 +228,7 @@ public class SQLTblProvider extends ContentProvider {
     private static final int TRAIN_TIMETABLE_ITEM = 95;
 
     /** 現在走行中の列車一覧 */
-    private static final int NOW_INFOMATION_WEEKEND =96;
+    private static final int NOW_INFOMATION_WEEKDAY =96;
 
     /** 現在走行中の列車一覧 */
     private static final int NOW_INFOMATION_HOLIDAY =97;
@@ -342,7 +344,7 @@ public class SQLTblProvider extends ContentProvider {
         mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_HOLIDAY_STATION_18D,STATION_K18D);
 
         mUriMatcher.addURI(SQLTblContract.AUTHORITY,  "Item/#", TRAIN_TIMETABLE_ITEM);
-        mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND, NOW_INFOMATION_WEEKEND);
+        mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_NOW_TRAIN_SERVICE_INFOMATION_WEEKEND, NOW_INFOMATION_WEEKDAY);
         mUriMatcher.addURI(SQLTblContract.AUTHORITY, SQLTblContract.PATH_NOW_TRAIN_SERVICE_INFOMATION_HOLIDAY, NOW_INFOMATION_HOLIDAY);
 
         // ProjectionMapの定義
@@ -388,13 +390,14 @@ public class SQLTblProvider extends ContentProvider {
 
         //現在時刻を挟んで前後5分間取得
         long nowLong = System.currentTimeMillis();
-        long beforeLong = nowLong - (5 * 60 * 1000);
-        long afterLong  = nowLong + (5 * 60 * 1000);
+        long between = 10 * 60 * 1000;
+        long beforeLong = nowLong - between/2;
+        long afterLong  = nowLong + between/2;
 
-        Date.setTime(nowLong);
-        calendar.setTime(Date);
-        int nowHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
-        int nowMinute = calendar.get(Calendar.MINUTE);
+//        Date.setTime(nowLong);
+//        calendar.setTime(Date);
+//        int nowHour = (calendar.get(Calendar.HOUR_OF_DAY)==0)?24:calendar.get(Calendar.HOUR_OF_DAY);
+//        int nowMinute = calendar.get(Calendar.MINUTE);
 
         Date.setTime(beforeLong);
         calendar.setTime(Date);
@@ -414,287 +417,287 @@ public class SQLTblProvider extends ContentProvider {
 
         switch (mUriMatcher.match(uri)) {
             case TRAIN_H1:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=1");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=1 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H2:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=2");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=2 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H3:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=3");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=3 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H4:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=4");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=4 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H5:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=5");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=5 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H6:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=6");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=6 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H7:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=7");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=7 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H11:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=11");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=11 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H12:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=12");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=12 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H21:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=21");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=21 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H22:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=22");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=22 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H25:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=25");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=25 AND NOT DESTINATION=''");
                 break;
             case TRAIN_H26:
-                qb.appendWhere("HOLIDAY=1 AND TABLE_NO=26");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND TABLE_NO=26 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K1:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=1");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=1 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K2:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=2");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=2 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K3:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=3");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=3 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K4:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=4");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=4 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K5:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=5");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=5 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K6:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=6");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=6 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K11:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=11");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=11 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K12:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=12");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=12 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K21:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=21");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=21 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K22:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=22");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=22 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K25:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=25");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=25 AND NOT DESTINATION=''");
                 break;
             case TRAIN_K26:
-                qb.appendWhere("HOLIDAY=0 AND TABLE_NO=26");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND TABLE_NO=26 AND NOT DESTINATION=''");
                 break;
 
             case STATION_H1U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千城台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H2U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千城台北駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H3U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='小倉台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H4U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='桜木駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H5U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='都賀駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H6U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='みつわ台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H7U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='動物公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H8U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='スポーツセンター駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H9U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='穴川駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H10U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='天台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H11U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='作草部駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H12U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H13U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='県庁前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='県庁前駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H14U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='葭川公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H15U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='栄町駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H16U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_H17U:
-                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='市役所前駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
 
             case STATION_H2D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千城台北駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千城台北駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H3D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='小倉台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='小倉台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H4D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='桜木駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='桜木駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H5D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='都賀駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='都賀駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H6D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='みつわ台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='みつわ台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H7D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='動物公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='動物公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H8D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='スポーツセンター駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='スポーツセンター駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H9D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='穴川駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='穴川駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H10D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='天台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='天台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H11D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='作草部駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='作草部駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H12D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H14D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='葭川公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='葭川公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H15D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='栄町駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='栄町駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H16D1:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=1 AND DESTINATION='県庁前方面'");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.DOWN + " AND DESTINATION='県庁前方面'");
                 break;
             case STATION_H16D2:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION='県庁前方面' AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION='県庁前方面' AND NOT DESTINATION=''");
                 break;
             case STATION_H17D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='市役所前駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='市役所前駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_H18D:
-                qb.appendWhere("HOLIDAY=1 AND STATION='千葉みなと駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.WEEKDAY + " AND STATION='千葉みなと駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
 
             case STATION_K1U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千城台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K2U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千城台北駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K3U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='小倉台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K4U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='桜木駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K5U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='都賀駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K6U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='みつわ台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K7U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='動物公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K8U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='スポーツセンター駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K9U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='穴川駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K10U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='天台駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K11U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='作草部駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K12U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K13U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='県庁前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='県庁前駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K14U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='葭川公園駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K15U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='栄町駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K16U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
             case STATION_K17U:
-                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=0 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='市役所前駅' AND UPDOWN=" + Station.UP + " AND NOT DESTINATION=''");
                 break;
 
             case STATION_K2D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千城台北駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千城台北駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K3D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='小倉台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='小倉台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K4D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='桜木駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='桜木駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K5D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='都賀駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='都賀駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K6D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='みつわ台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='みつわ台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K7D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='動物公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='動物公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K8D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='スポーツセンター駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='スポーツセンター駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K9D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='穴川駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='穴川駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K10D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='天台駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='天台駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K11D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='作草部駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='作草部駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K12D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K14D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='葭川公園駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='葭川公園駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K15D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='栄町駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='栄町駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K16D1:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=1 AND DESTINATION ='県庁前方面'");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.DOWN + " AND DESTINATION ='県庁前方面'");
                 break;
             case STATION_K16D2:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉駅' AND UPDOWN=1 AND NOT DESTINATION = '県庁前方面' AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION = '県庁前方面' AND NOT DESTINATION=''");
                 break;
             case STATION_K17D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='市役所前駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='市役所前駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
             case STATION_K18D:
-                qb.appendWhere("HOLIDAY=0 AND STATION='千葉みなと駅' AND UPDOWN=1 AND NOT DESTINATION=''");
+                qb.appendWhere("HOLIDAY=" + Station.HOLIDAY + " AND STATION='千葉みなと駅' AND UPDOWN=" + Station.DOWN + " AND NOT DESTINATION=''");
                 break;
 
             case TRAIN_TIMETABLE_ITEM:
@@ -703,16 +706,16 @@ public class SQLTblProvider extends ContentProvider {
                 if(DEBUG)Log.d(TAG,"uri.getPathSegments().get(1)" + uri.getPathSegments().get(1));
                 break;
 
-            case NOW_INFOMATION_WEEKEND:
+            case NOW_INFOMATION_WEEKDAY:
                 qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
                         + " AND " + getQueryTimes(afterHour,afterMinute)
-                        + " AND HOLIDAY = " + 1);
+                        + " AND HOLIDAY = " + Station.WEEKDAY);
                 break;
 
             case NOW_INFOMATION_HOLIDAY:
                 qb.appendWhere("TIMES BETWEEN " + getQueryTimes(beforeHour,beforeMinute)
                         + " AND " + getQueryTimes(afterHour,afterMinute)
-                        + " AND HOLIDAY = " + 0);
+                        + " AND HOLIDAY = " + Station.HOLIDAY);
                 break;
 
             default:

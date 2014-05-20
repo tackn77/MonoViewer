@@ -1,13 +1,12 @@
 package jp.chiba.tackn.monoviewer.man;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
+import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 
 public class DisclaimerActivity extends Activity {
@@ -37,18 +36,6 @@ public class DisclaimerActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_back_home:
-                Intent home = new Intent(this,MainActivity.class);
-                startActivity(home);
-                break;
-            case R.id.action_disclaimer:
-                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
-//                startActivity(disclaimer);
-                break;
-            default:
-                return true;
-        }
-        return false;
+        return Menus.actionMenu(this,item);
     }
 }

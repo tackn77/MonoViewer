@@ -149,6 +149,7 @@ public class SQLTblOpenHelper extends SQLiteOpenHelper {
             // 開いていいるDBをいったん閉じる
             if (db.isOpen()) db.close();
             //DBファイルを削除
+            //noinspection ResultOfMethodCallIgnored
             databasePath.delete();
             //初回コピー時と同じ手順を行う
             onCreate(db);
@@ -165,7 +166,7 @@ public class SQLTblOpenHelper extends SQLiteOpenHelper {
     private static int copy(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024 * 4];
         int count = 0;
-        int n = 0;
+        int n;
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
             count += n;

@@ -1,17 +1,14 @@
 package jp.chiba.tackn.monoviewer.map;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
+import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
 
-public class MapsActivity extends Activity implements monoviewFragment.OnFragmentInteractionListener {
+public class MapsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +24,7 @@ public class MapsActivity extends Activity implements monoviewFragment.OnFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_back_home:
-                Intent intent = new Intent(this,MainActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.action_disclaimer:
-                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
-                startActivity(disclaimer);
-                break;
-            default:
-                return true;
-        }
-        return false;
+        return Menus.actionMenu(this,item);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

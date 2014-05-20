@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.train;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -55,8 +55,19 @@ public class TrainTableFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        mAdapter = new TrainTblCursorAdapter(
+                getActivity(),
+                R.layout.list_item_train_no,
+                null,
+                new String[]{SQLTblContract.COLUMN_TIME, SQLTblContract.COLUMN_STATION},
+                new int[]{R.id.train_no_minute, R.id.train_no_station},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,15 +80,6 @@ public class TrainTableFragment extends Fragment
          */
         View view = inflater.inflate(R.layout.fragment_traintablefragment, container, false);
         itemListView = (AbsListView) view.findViewById(android.R.id.list);
-        //リスト用設定
-        mAdapter = new TrainTblCursorAdapter(
-                context,
-                R.layout.list_item_train_no,
-                null,
-                new String[]{SQLTblContract.COLUMN_TIME, SQLTblContract.COLUMN_STATION},
-                new int[]{R.id.train_no_minute, R.id.train_no_station},
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
         itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
 
@@ -217,9 +219,7 @@ public class TrainTableFragment extends Fragment
         }
         count = (count==0)?0:count-1;
         //開始位置指定 1行目の空白行の次の行から表示
-//        itemListView.setSelectionFromTop(count, 0);
         itemListView.setSelection(count);
-        //TODO うまく動いているか、要確認
     }
 
     /**

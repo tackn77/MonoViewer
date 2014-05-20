@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
 
 /**
@@ -57,7 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     /**
      * ボタンを押したときの動作
-     * @param view
+     * @param view クリックされたオブジェクト
      */
     @Override
     public void onClick(View view) {
@@ -77,18 +76,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_back_home:
-                Intent home = new Intent(this,MainActivity.class);
-//                startActivity(home);
-                break;
-            case R.id.action_disclaimer:
-                Intent disclaimer = new Intent(this,DisclaimerActivity.class);
-                startActivity(disclaimer);
-                break;
-            default:
-                return true;
-        }
-        return false;
+        return Menus.actionMenu(this,item);
     }
 }

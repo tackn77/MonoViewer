@@ -1,4 +1,4 @@
-package jp.chiba.tackn.monoviewer.table;
+package jp.chiba.tackn.monoviewer.time;
 
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -24,8 +24,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.map.Station;
+import jp.chiba.tackn.monoviewer.train.TrainTable;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
-import jp.chiba.tackn.monoviewer.map.InformationHolder;
+import jp.chiba.tackn.monoviewer.InformationHolder;
 
 
 /**
@@ -39,7 +41,7 @@ public class TimeTableFragment extends Fragment
     /** デバッグフラグ*/
     private static final boolean DEBUG = false;
     /** デバッグタグ */
-    private static final String TAG = "TimeTable";
+    private static final String TAG = "TimeTableFragment";
 
     private Context context;
     /** プロバイダからのデータとListの仲立ち */
@@ -97,7 +99,7 @@ public class TimeTableFragment extends Fragment
      * @param args 呼び出し引数
      * @return プロバイダから取得したデータ
      */
-    public Loader onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (DEBUG) {
             Log.d(TAG, "id: " + id);
 //            Log.d(TAG, "Bundle: " + (args==null));
@@ -244,7 +246,7 @@ public class TimeTableFragment extends Fragment
                 return new CursorLoader(context, SQLTblContract.CONTENT_URI_KS18D, null, null, null, orderBy);
             default:
                 if (DEBUG) {
-                    Log.d(TAG, "id:" + id);
+                    Log.d(TAG, "Unknown id: " + id);
                 }
 //                return new CursorLoader(context, SQLTblContract.CONTENT_URI_H1, null, null, null, orderBy);
                 return null;
@@ -300,7 +302,6 @@ public class TimeTableFragment extends Fragment
         }
         //更新完了通知
         mAdapter.notifyDataSetChanged();
-
         Calendar calendar = Calendar.getInstance();
         //noinspection ResourceType
         int hourIndex = calendar.get(Calendar.HOUR_OF_DAY);
@@ -308,7 +309,6 @@ public class TimeTableFragment extends Fragment
         hourIndex = (hourIndex<5)?1:hourIndex - 5 + 1; //5時からだから-5で1行目がいらないから+1
         //開始位置指定 1行目の空白行の次の行から表示
         itemListView.setSelectionFromTop(hourIndex,0);
-
     }
 
     @Override
@@ -372,9 +372,9 @@ public class TimeTableFragment extends Fragment
                 txMinute.setText(item.minute);
                 txAnnotation.setText(item.annotation);
 
-                if(item.isHoliday==0){
+                if(item.isHoliday== Station.HOLIDAY){
                     txTrainNo.setText("KA\n" + item.tableno);
-                }else if (item.isHoliday==1){
+                }else if (item.isHoliday==Station.WEEKDAY){
                     txTrainNo.setText("HA\n" + item.tableno);
                 }else{
                     txTrainNo.setText(item.tableno);
@@ -390,7 +390,7 @@ public class TimeTableFragment extends Fragment
                 layout.addView(v);
 
                 //Listが縮まないように一行目に入れている空白以外
-                if(item.minute!="　") {
+                if(!item.minute.equals("　")) {
                     //各分の表示に列車ダイヤの起動をひも付ける
 //                    final Context context = context;
                     final Intent intent = new Intent(context, TrainTable.class);
