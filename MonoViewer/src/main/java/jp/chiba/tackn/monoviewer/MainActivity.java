@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
 
 /**
@@ -57,7 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     /**
      * ボタンを押したときの動作
-     * @param view
+     * @param view クリックされたオブジェクト
      */
     @Override
     public void onClick(View view) {

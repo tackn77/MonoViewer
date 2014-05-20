@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import jp.chiba.tackn.monoviewer.map.Station;
 import jp.chiba.tackn.monoviewer.train.TrainTable;
 
 /**
@@ -112,10 +113,10 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
         //休日・平日判定
         if(holiday.equals("true")){
             Holiday.setText("休日");
-            intHoliday=0;
+            intHoliday=Station.HOLIDAY;
         }else if(holiday.equals("false")){
             Holiday.setText("平日");
-            intHoliday=1;
+            intHoliday=Station.WEEKDAY;
         }else{
             //取得失敗
             Holiday.setText("失敗");

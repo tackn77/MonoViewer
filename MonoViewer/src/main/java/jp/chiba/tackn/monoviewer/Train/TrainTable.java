@@ -3,7 +3,6 @@ package jp.chiba.tackn.monoviewer.train;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +15,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
-import jp.chiba.tackn.monoviewer.map.MapsActivity;
+import jp.chiba.tackn.monoviewer.map.Station;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -94,11 +91,11 @@ public class TrainTable extends Activity
                 position=i;
             }
         }
-        if(fromIntent1==0){
+        if(fromIntent1==Station.HOLIDAY){
             holiday.setChecked(true);
             weekday.setChecked(false);
         }
-        if(fromIntent1==1){
+        if(fromIntent1==Station.WEEKDAY){
             holiday.setChecked(false);
             weekday.setChecked(true);
         }
@@ -141,7 +138,7 @@ public class TrainTable extends Activity
 
         FragmentManager fragmentManager = getFragmentManager();
         train_table = (TrainTableFragment)fragmentManager.findFragmentById(R.id.traintablelist);
-        callbacks =  (LoaderManager.LoaderCallbacks)train_table;
+        callbacks =  train_table;//LoaderManager.LoaderCallbacks
     }
 
     /**

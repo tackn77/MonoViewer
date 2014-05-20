@@ -1,16 +1,13 @@
 package jp.chiba.tackn.monoviewer.man;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.map.MapsActivity;
 
 public class DisclaimerActivity extends Activity {
 

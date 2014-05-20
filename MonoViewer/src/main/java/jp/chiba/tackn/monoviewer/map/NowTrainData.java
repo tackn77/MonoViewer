@@ -48,25 +48,17 @@ class NowTrainData {
     public boolean equals(Object o) {
         if (o.getClass() != NowTrainData.class) return false;
         NowTrainData comparison = (NowTrainData) o;
-        boolean check = true;
+        boolean check;
 
-        check = check && this.Station.equals(comparison.Station);
+        check =          this.Station.equals(comparison.Station);
         check = check && this.UpDown == comparison.UpDown;
         check = check && this.Table_No == comparison.Table_No;
         check = check && this.Hour == comparison.Hour;
         check = check && this.Minute == comparison.Minute;
         if (this.after != null) {
-            if (comparison.after != null) {
-                return check && this.after.equals(comparison.after);
-            } else {
-                return false;
-            }
+                return comparison.after != null && check && this.after.equals(comparison.after);
         } else {
-            if (comparison.after == null) {
-                return check;
-            } else {
-                return false;
-            }
+                return comparison.after == null && check;
         }
     }
 
@@ -85,12 +77,12 @@ class NowTrainData {
 
         int result = 17;
 
-        result = this.Station == null ? hashValue * result + 0 : hashValue * result + this.Station.hashCode();
+        result = this.Station == null ? hashValue * result : hashValue * result + this.Station.hashCode();
         result = hashValue * result + this.UpDown;
         result = hashValue * result + this.Table_No;
         result = hashValue * result + this.Hour;
         result = hashValue * result + this.Minute;
-        result = this.after == null ? hashValue * result + 0 : hashValue * result + this.after.hashCode();
+        result = this.after == null ? hashValue * result : hashValue * result + this.after.hashCode();
         return result;
     }
 }

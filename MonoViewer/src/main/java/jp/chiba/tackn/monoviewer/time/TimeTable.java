@@ -3,8 +3,6 @@ package jp.chiba.tackn.monoviewer.time;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
-import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,11 +14,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
-import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
-import jp.chiba.tackn.monoviewer.map.MapsActivity;
+import jp.chiba.tackn.monoviewer.map.Station;
 
 /**
  * SQLiteに格納済みの時刻表データの表示を行う
@@ -108,7 +104,7 @@ public class TimeTable extends Activity
         spinner.setOnItemSelectedListener(this);
 
         //休日・平日の設定
-        if(fromIntent2==0){
+        if(fromIntent2== Station.HOLIDAY){
             holiday.setChecked(true);
             weekday.setChecked(false);
         }else{
@@ -128,6 +124,23 @@ public class TimeTable extends Activity
                 break;
             }
         }
+
+        //千葉駅対応
+        if(fromIntent0.equals("千葉駅1号線")){
+            position= 15;
+            down1.setEnabled(true);
+            down2.setEnabled(true);
+            down1.setChecked(true);
+            down2.setChecked(false);
+        }
+        if(fromIntent0.equals("千葉駅2号線")){
+            position= 15;
+            down1.setEnabled(true);
+            down2.setEnabled(true);
+            down1.setChecked(false);
+            down2.setChecked(true);
+        }
+
         //スピナー設定
         spinner.setSelection(position);
     }
@@ -140,7 +153,11 @@ public class TimeTable extends Activity
         down2.setEnabled(true);
 
         //上り・下りチェック本体
-        if(updown==1){
+        if(updown==Station.DOWN2) {
+            up.setChecked(false);
+            down1.setChecked(false);
+            down2.setChecked(true);
+        }else if(updown==Station.DOWN){
             up.setChecked(false);
             down1.setChecked(true);
             down2.setChecked(false);
@@ -205,15 +222,6 @@ public class TimeTable extends Activity
         }
     }
 
-
-    /**
-     * ロードがリセットされた時の処理
-     *
-     * @param loader ローダー
-     */
-    public void onLoaderReset(Loader loader) {
-    }
-
     /**
      * onCreate()時にレイアウト済みオブジェクトの取得
      */
@@ -228,7 +236,7 @@ public class TimeTable extends Activity
         down2 = (RadioButton) findViewById(R.id.down2);
         FragmentManager fragmentManager = getFragmentManager();
         time_table = (TimeTableFragment)fragmentManager.findFragmentById(R.id.timetablelist);
-        callbacks =  (LoaderManager.LoaderCallbacks)time_table;
+        callbacks =  time_table;//LoaderManager.LoaderCallbacks
     }
 
     /**
@@ -247,7 +255,14 @@ public class TimeTable extends Activity
         if (parent == spinner) {
             //Listに紐付けていたプロバイダURIの切替
             String station = (String)spinner.getAdapter().getItem(position);
-            int way = up.isChecked()?0:1;
+            int way;
+            if(down1.isChecked()){
+                way = Station.DOWN;
+            }else if(down2.isChecked()){
+                way = Station.DOWN2;
+            }else{
+                way = Station.UP;
+            }
             selectSpinner=position;
             checkflag(station,way);
             initLoader(position);

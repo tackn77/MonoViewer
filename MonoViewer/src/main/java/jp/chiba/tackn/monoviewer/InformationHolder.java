@@ -28,12 +28,7 @@ public class InformationHolder extends AsyncTask<Uri.Builder, Void, String> {
     /** デバッグ用タグ */
     private static final String TAG = "TodayInformation";
     /** デバッグ用フラグ */
-    private static final boolean DEBUG = true;
-
-    /** XML 扱うためのファクトリ */
-    private DocumentBuilderFactory dbFactory;
-    /** XML 扱うためのビルダー */
-    private DocumentBuilder xmlbuilder;
+    private static final boolean DEBUG = false;
 
     /** 休日・平日フラグ */
     private String holiday;
@@ -63,7 +58,7 @@ public class InformationHolder extends AsyncTask<Uri.Builder, Void, String> {
     Calendar nowCalendar = Calendar.getInstance();
 
     /** シングルトンコンストラクタ */
-    private void TodayInformation(){
+    private InformationHolder(){
         this.isReady=false;
     }
 
@@ -87,8 +82,10 @@ public class InformationHolder extends AsyncTask<Uri.Builder, Void, String> {
     protected String doInBackground(Uri.Builder... builders) {
 
         try {
-            dbFactory = DocumentBuilderFactory.newInstance();
-            xmlbuilder = dbFactory.newDocumentBuilder();
+            /* XML 扱うためのファクトリ */
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            /* XML 扱うためのビルダー */
+            DocumentBuilder xmlbuilder = dbFactory.newDocumentBuilder();
             Document document = xmlbuilder.parse("http://monoview.herokuapp.com/today.xml");
 
             XPathFactory factory = XPathFactory.newInstance();
@@ -111,7 +108,7 @@ public class InformationHolder extends AsyncTask<Uri.Builder, Void, String> {
             return "false";
         }
 
-        if(DEBUG) Log.d(TAG, "result: " + holiday);
+        if(DEBUG) Log.d(TAG, "result(holiday): " + holiday);
 
         return "true";
     }

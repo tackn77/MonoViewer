@@ -1,7 +1,5 @@
 package jp.chiba.tackn.monoviewer.map;
 
-import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,11 +17,6 @@ class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
     /** デバッグ用フラグ */
     private static final boolean DEBUG = false;
 
-    /** 呼び出し元コンテキスト */
-    private Context context;
-    /** 呼び出し元Activity */
-    private Activity mainActivity;
-
     /** 休日・平日フラグ */
     private String holiday;
     /** モノちゃん号の運行情報 */
@@ -39,10 +32,6 @@ class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
 
     /** 運行情報管理クラス */
     InformationHolder informationHolder = InformationHolder.getInstance();
-
-    public AsyncHttpRequest(Context context) {
-
-    }
 
     /**
      * 非同期処理本体
@@ -78,15 +67,15 @@ class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
      */
     @Override
     protected void onPostExecute(String result) {
-        if (result.equals("false")) MonoViewFragment.setHoliday(1);
+        if (result.equals("false")) MonoViewFragment.setHoliday(Station.WEEKDAY);
         //休日・平日判定
         if (holiday.equals("true")) {
-            MonoViewFragment.setHoliday(0);
+            MonoViewFragment.setHoliday(Station.HOLIDAY);
         } else if (holiday.equals("false")) {
-            MonoViewFragment.setHoliday(1);
+            MonoViewFragment.setHoliday(Station.WEEKDAY);
         } else {
             //取得失敗
-            MonoViewFragment.setHoliday(1);
+            MonoViewFragment.setHoliday(Station.WEEKDAY);
         }
         MonoViewFragment.setService0(Service0.matches("[0-9]+") ? Integer.valueOf(Service0) : -1);
         MonoViewFragment.setService1(Service1.matches("[0-9]+") ? Integer.valueOf(Service1) : -1);
