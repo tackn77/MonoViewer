@@ -1,0 +1,87 @@
+h1 {color:#CC0000;}
+h2 {padding:20px 0px 0px 0px;}
+h3 {
+    color:#008080;
+    text-align:center;
+}
+p {
+    color:#333333;
+}
+body {
+    background:#333;
+}
+em {
+    color: darkolivegreen;
+}
+
+#container {
+    background: #fff;
+    margin:5px 7px;
+    border:2px solid #999;
+    padding: 10px;
+}
+
+#pageheader{
+    margin:0px;
+    padding: 0px;
+}
+
+#summary {
+    margin:0px;
+    padding: 0px;
+}
+
+#usecase {
+    margin:0px;
+    padding: 0px;
+}
+
+#manual {
+    margin:0px;
+    padding: 0px;
+}
+
+.column {
+    margin:50px 0px;
+    padding: 0px;
+}
+.img {
+    margin:0px;
+    padding: 0px;
+    width: 50%;
+    float: right;
+}
+.icon{
+    margin: 0px;
+    padding: 0px;
+    float:left;
+    height: 24px;
+    width: 24px;
+    
+    margin-right: 5px;
+}
+
+.paragraph {
+    margin:0px;
+    padding: 0px;
+}
+.clearfloat{
+    clear: right;
+}
+
+#develop {
+    margin:0px;
+    padding: 0px;
+}
+#contact{
+    margin:0px;
+    padding: 0px;
+}
+
+address {
+    margin:0px;
+    padding: 0px;
+    color: #fff;
+    background: #280;
+    text-align:center;
+}

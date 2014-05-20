@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".train.TrainTable"
+            android:name="jp.chiba.tackn.monoviewer.train.TrainTable"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -46,8 +46,12 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".man.DisclaimerActivity"
+            android:name="jp.chiba.tackn.monoviewer.man.DisclaimerActivity"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="jp.chiba.tackn.monoviewer.man.ManualActivity"
+            android:label="@string/title_activity_manual" >
         </activity>
     </application>
 
