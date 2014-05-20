@@ -23,7 +23,7 @@ import jp.chiba.tackn.monoviewer.time.TimeTable;
 public class TrainTblCursorAdapter extends SimpleCursorAdapter {
 
     /** デバッグフラグ */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /** デバッグタグ */
     private static final String TAG = "TrainTblCursorAdapter";
     /** 運行情報管理クラス */
@@ -85,9 +85,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
      * @param cursor 紐づけ元のデータ
      */
     @Override
-    public void bindView(View view, final Context context,final Cursor cursor) {
+    public void bindView(@SuppressWarnings("NullableProblems") View view, final Context context, @SuppressWarnings("NullableProblems") final Cursor cursor) {
         super.bindView(view,context,cursor);
-
         /** newView から受取 */
         final ViewHolder holder = (ViewHolder)view.getTag();
 
@@ -135,6 +134,7 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
         final String destination = cursor.getString(cursor.getColumnIndex(SQLTblContract.COLUMN_DESTINATION));
 
         //カラムがクリックされたら駅の時刻表を起動
+        //noinspection ConstantConditions
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
