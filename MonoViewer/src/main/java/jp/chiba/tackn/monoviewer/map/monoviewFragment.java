@@ -177,14 +177,6 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
      * マップの初期設定
      */
     private void setUpMap() {
-        // 千葉駅を表示
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBA));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
-        mMap.setOnInfoWindowClickListener(this);
-
-        // 現在位置表示の有効化
-        mMap.setMyLocationEnabled(true);
-
         //駅に時刻表のリンクしたマーカーを設置
         mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
@@ -204,6 +196,14 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
         mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
+        // 千葉駅を表示
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBA));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
+        mMap.setOnInfoWindowClickListener(this);
+
+        // 現在位置表示の有効化
+        mMap.setMyLocationEnabled(true);
+
 
     }
 

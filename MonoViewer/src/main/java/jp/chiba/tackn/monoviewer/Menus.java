@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 
 import jp.chiba.tackn.monoviewer.man.DisclaimerActivity;
+import jp.chiba.tackn.monoviewer.man.ManualActivity;
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
 import jp.chiba.tackn.monoviewer.time.TimeTable;
 import jp.chiba.tackn.monoviewer.train.TrainTable;
@@ -37,6 +38,10 @@ public class Menus {
             case R.id.action_disclaimer:
                 Intent disclaimer = new Intent(context,DisclaimerActivity.class);
                 context.startActivity(disclaimer);
+                break;
+            case R.id.action_manual:
+                Intent manual = new Intent(context, ManualActivity.class);
+                context.startActivity(manual);
                 break;
             default:
                 return true;

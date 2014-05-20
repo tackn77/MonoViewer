@@ -11,5 +11,6 @@
     <string name="map">地図</string>
     <string name="train">列車運行時刻表</string>
     <string name="time">駅時刻表</string>
+    <string name="manual">説明書</string>
 
 </resources>

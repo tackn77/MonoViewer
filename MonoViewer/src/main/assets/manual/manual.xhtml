@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="ja-jp" lang="ja-jp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>マニュアル</title>
+    <link href="./view.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="container">
+    <div id="pageheader">
+        <h1>アプリマニュアル</h1>
+    </div>
+    <div id="summary">
+        <h2>モノちゃんびゅーわについて</h2>
+
+        <p>モノちゃんびゅーわ（以下、本アプリ）は<a href="http://chiba-monorail.co.jp/">千葉都市モノレール株式会社</a>がwebで公開している時刻表データ、運行情報データを元に独自に解析を行い今どこに千葉モノレールが走行しているのかを表示するものです。
+        </p>
+    </div>
+    <div id="usecase">
+        <h3>本アプリの想定シーン</h3>
+        <ol>
+            <li>モノちゃん号の写真を撮りたいのだけれど後どれくらい待てば良いのだろう？<br/>
+                と、スマートフォンで千葉都市モノレールのWebサイトからPDFをダウンロードして見るよりは分かりやすい
+            </li>
+            <li>駅の時刻表を確認する次いでに新型車両に乗れるかも同時に確認が出来る</li>
+            <li>今現在千葉モノレールは何台くらい走っているのだろうという問いに答えられる</li>
+            <li>今現在千葉モノレールは何処を走っているのだろうという問いに答えられる</li>
+
+        </ol>
+    </div>
+    <div id="manual">
+
+
+        <h2>使い方</h2>
+        <div class="column">
+            <h3>本日の運行状況</h3>
+
+            <div class="paragraph">
+
+                <p>アプリを起動するとこの画面からはじまります。</p>
+
+                <p>千葉都市モノレールが公開している当日のモノちゃん号と新型車両の運行予定を検索できます。</p>
+
+                <p>※問い合わせには少し時間がかかります。</p>
+                <ul class="clearfloat">
+                    <li>車両名をクリックすると運行予定の<em>列車運行時刻表</em>が表示されます。</li>
+                    <li>画面下部の<em>地図を開く</em>をクリックすると運行中の千葉モノレールがGoogleMap上に表示されます。</li>
+                    <li>オプションメニューからその他の画面も直接開くことが出来ます。</li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="column">
+            <h3>列車運行時刻表</h3>
+
+            <div class="paragraph">
+
+                <p>千葉都市モノレールが事前に公開している、車両がどの駅を何時に発車するのかを検索します。</p>
+                <p>特定の車両を追跡する際に便利な表示となります。</p>
+                <p>走行予定の車両アイコンを左側に表示しているので一目でどの車両が予定されているか分かります。</p>
+                <p>アイコンの右に添えられているアイコンは<em>上り</em>と<em>下り</em>を表しています。</p>
+                <ul class="clearfloat">
+                    <li>駅名をクリックするとその<em>駅時刻表</em>を検索出来ます。</li>
+                    <li>左上のスピナーを開いて任意の車両の<em>運行予定表</em>を検索出来ます。</li>
+                    <li>右上のラジオボタンを選択することで<em>休日・平日</em>の運行予定表が検索出来ます。</li>
+                    <li>オプションメニューからその他の画面も直接開くことが出来ます。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h3>駅時刻表</h3>
+
+            <div class="paragraph">
+                <p>駅で表示されている標準時刻表を検索できます。</p>
+                <p>左側に灰色で示しているのが時間</p>
+                <p>右側に続くのが分</p>
+                <p>分の上に表示されている注記は<em>標準時刻表</em>に準拠しています。</p>
+                <p>右側に表示されているのは車両情報で、HA1やKA1というのが運行情報のIDとなります。</p>
+                <p>右上に表示されているのがモノちゃん号及び新型車両の判定となります。</p>
+
+                <ul class="clearfloat">
+                    <li>時刻をクリックするとその時刻に通過する<em>列車運行時刻表</em>を検索出来ます。</li>
+                    <li>左上のスピナーを開いて任意の<em>駅時刻表</em>を検索出来ます。</li>
+                    <li>右上のラジオボタンを選択することで<em>休日・平日</em>/<em>上り・下り</em>の時刻表が検索出来ます。</li>
+                    <li>オプションメニューからその他の画面も直接開くことが出来ます。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h3>マップ表示</h3>
+
+            <div class="paragraph">
+                <p>現在走行中の千葉モノレールを疑似リアルタイムに閲覧出来ます。</p>
+                <p><em>列車アイコン</em>は0.5s毎に予測現在位置を移動します。</p>
+                <p>アイコン右側に表示されている青と緑のアイコンは上りと下りを表しています。</p>
+                <ul class="clearfloat">
+                    <li>駅アイコンや列車アイコンをクリックするとバルーンが表示されます。</li>
+                    <li>バルーンを更にクリックすると<em>駅時刻表</em>や<em>列車運行時刻表</em>を検索することが出来ます。</li>
+                    <li>右上のボタンを選択することで現在位置を検索することが出来ます。</li>
+                    <li>GoogleMapに制限は設けていませんのでドラッグ等の動作で任意の地点を表示することが出来ます。</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column">
+            <h3>アイコンの説明</h3>
+            <div class="icon">
+                <img src="./ic_up.png" alt="上り" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>上り列車を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+            <div class="icon">
+                <img src="./ic_down.png" alt="下り" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>下り列車を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+            <div class="icon">
+                <img src="./station.png" alt="駅" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>千葉都市モノレールの駅を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+            <div class="icon">
+                <img src="./monochan.png" alt="モノちゃん号" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>モノちゃん号を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+            <div class="icon">
+                <img src="./urbanflyer.png" alt="アーバンフライ０型" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>アーバンフライ０型を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+            <div class="icon">
+                <img src="./mono.png" alt="千葉モノレール" width="100%" height="100%"/>
+            </div>
+            <div class="paragraph">
+                <p>通常列車を表すアイコン</p>
+            </div>
+            <div style="clear: both"/>
+        </div>
+    </div>
+
+    <div id="develop">
+        <h2>開発環境</h2>
+        <ul>
+            <li>Google Android Studio 0.5.8</li>
+            <li>Oracle NetBeans IDE 7.4</li>
+            <li>Microsoft Windows 8.1 Pro 64bit</li>
+            <li>SHARP AQUOS PAD SH08E</li>
+        </ul>
+    </div>
+    <div id="contact">
+        <h2>お問い合わせ先</h2>
+
+        <p>Twitter: <a href="https://twitter.com/tackn">Tackn</a></p>
+    </div>
+    <address>Copyright (c) 2014. Tackn All rights reserved.</address>
+
+</div>
+</body>
+</html>

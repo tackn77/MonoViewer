@@ -18,6 +18,10 @@
         android:title="@string/time"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_manual"
+        android:title="@string/manual"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
     <item android:id="@+id/action_disclaimer"
         android:title="@string/disclaimer"
         android:orderInCategory="100"
