@@ -17,7 +17,7 @@ public class ManualActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
         findViews();
-        webView.loadUrl("file:///android_asset/manual/manual.xhtml");
+        webView.loadUrl("file:///android_asset/html/manual/manual.xhtml");
     }
     /**
      * 要素の取得
