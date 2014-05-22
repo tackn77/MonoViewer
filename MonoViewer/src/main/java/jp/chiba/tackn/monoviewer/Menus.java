@@ -43,6 +43,10 @@ public class Menus {
                 Intent manual = new Intent(context, ManualActivity.class);
                 context.startActivity(manual);
                 break;
+            case R.id.action_exit:
+                Intent exit = new Intent(context, ExitActivity.class);
+                context.startActivity(exit);
+                break;
             default:
                 return true;
         }

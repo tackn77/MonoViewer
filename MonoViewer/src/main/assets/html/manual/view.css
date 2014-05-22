@@ -46,10 +46,11 @@ em {
     padding: 0px;
 }
 .img {
-    margin:0px;
+    margin:10px;
     padding: 0px;
-    width: 50%;
-    float: right;
+    width: 150px;
+    height: 245px;
+    float: left;
 }
 .icon{
     margin: 0px;
@@ -66,7 +67,7 @@ em {
     padding: 0px;
 }
 .clearfloat{
-    clear: right;
+    clear: both;
 }
 
 #develop {

@@ -12,5 +12,6 @@
     <string name="train">列車運行時刻表</string>
     <string name="time">駅時刻表</string>
     <string name="manual">説明書</string>
+    <string name="exit">終了</string>
 
 </resources>
