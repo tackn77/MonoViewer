@@ -87,7 +87,8 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final Pattern patternStation = Pattern.compile("^[^駅]+駅$");
     /** 列車マーカー判定用正規表現 */
     private static final Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)");
-
+    /** Google Mapの中心座標 */
+    private static LatLng mapCenter = Station.STATION_CHIBA;
 
     public MonoViewFragment() {
         // Required empty public constructor
@@ -136,6 +137,30 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         super.onResume();
         setUpMapIfNeeded();
         setUpHandler();
+    }
+
+    /**
+     * 環境保存
+     * @param outState 保存するBundle
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapCenter = mMap.getCameraPosition().target;
+        outState.putDouble("centerLat",mapCenter.latitude);
+        outState.putDouble("centerLong",mapCenter.longitude);
+    }
+
+    /**
+     * 環境復帰
+     * @param savedInstanceState 保存されたBundle
+     */
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState!=null){
+            mapCenter = new LatLng(savedInstanceState.getDouble("centerLat"),savedInstanceState.getDouble("centerLong"));
+        }
     }
 
     /**
@@ -198,7 +223,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
         // 千葉駅を表示
         mMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBA));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapCenter));
         mMap.setOnInfoWindowClickListener(this);
 
         // 現在位置表示の有効化
@@ -614,8 +639,8 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         //noinspection deprecation
         toDate.setSeconds(0);
 
-        Long fromLong = fromDate.getTime();
-        Long toLong = toDate.getTime() - 20 * 1000; //乗降のために20s早めに付くと仮定
+        Long fromLong = fromDate.getTime() + 30 * 1000; //乗降の為に30s遅く出発すると仮定
+        Long toLong = toDate.getTime() + 10 * 1000; //乗降のために10s遅くに付くと仮定
 
         //現時点でKML線路長のどの割合かを計算
         int index = (int) ((((double)System.currentTimeMillis() - (double)fromLong) / ((double)toLong - (double)fromLong)) * (double)(array.size()-1));
