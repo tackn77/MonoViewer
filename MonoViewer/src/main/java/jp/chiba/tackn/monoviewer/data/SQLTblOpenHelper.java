@@ -77,7 +77,21 @@ public class SQLTblOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        SQLiteDatabase db = super.getWritableDatabase();
+
+        if (createDatabase) {
+            try {
+                if (DEBUG) Log.d(TAG, "copyDatabase before");
+                db = copyDatabase(db);
+                if (DEBUG)Log.d(TAG, "copyDatabase after");
+            } catch (IOException e) {
+                //Log.wtf(TAG, e);
+                return null;
+            }
+        }
+
+        return db;
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
     /**
      * DBオブジェクトの取得

@@ -14,13 +14,13 @@
         android:src="@drawable/ic_up"/>
 
     <TextView
-        android:layout_width="40sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="09"
         android:id="@+id/train_no_hour"
         android:layout_gravity="center_vertical"
         android:textIsSelectable="false"
-        android:textSize="36dp"
+        android:textSize="25sp"
         android:phoneNumber="true" />
     <TextView
         android:layout_width="wrap_content"
@@ -28,21 +28,21 @@
         android:text=":"
         android:id="@+id/train_no_delimiter"
         android:layout_gravity="center_vertical"
-        android:textSize="36dp" />
+        android:textSize="25dp" />
     <TextView
-        android:layout_width="40sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00"
         android:id="@+id/train_no_minute"
         android:layout_gravity="center_vertical"
-        android:textSize="36dp" />
+        android:textSize="25dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="動物公園駅"
         android:id="@+id/train_no_station"
         android:layout_gravity="center_vertical"
-        android:textSize="36dp"
+        android:textSize="25dp"
         android:paddingLeft="10sp" />
 
 </LinearLayout>
