@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 
@@ -26,7 +28,17 @@ public class ManualActivity extends Activity {
         webView = (WebView) findViewById(R.id.manual);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
