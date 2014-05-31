@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
 
 /**
@@ -52,6 +54,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     private void findViews() {
         button = (Button) findViewById(R.id.button);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
     /**

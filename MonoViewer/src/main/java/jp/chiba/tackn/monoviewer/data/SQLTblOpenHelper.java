@@ -126,7 +126,7 @@ public class SQLTblOpenHelper extends SQLiteOpenHelper {
      */
     private SQLiteDatabase copyDatabase(SQLiteDatabase db) throws IOException {
         // 開いていいるDBをいったん閉じる
-        db.close();
+        if(db.isOpen())db.close();
 
         // assetsフォルダからコピー
         InputStream input = context.getAssets().open(SRC_DATABASE_NAME);

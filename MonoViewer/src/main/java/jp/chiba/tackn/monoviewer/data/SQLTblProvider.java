@@ -722,7 +722,7 @@ public class SQLTblProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI" + uri);
         }
         /** 検索するSQLite3 のdbオブジェクト */
-        SQLiteDatabase db = mHelper.getReadableDatabase();
+        SQLiteDatabase db = mHelper.getWritableDatabase();
         /** 検索結果のカーソル */
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 

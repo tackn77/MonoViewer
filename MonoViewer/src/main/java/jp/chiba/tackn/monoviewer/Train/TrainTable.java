@@ -15,6 +15,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.map.Station;
@@ -254,7 +256,17 @@ public class TrainTable extends Activity
         spAdapter.add("25");
         spAdapter.add("26");
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
     /**
      * オプションメニュー作成
      * @param menu メニューオブジェクト
