@@ -3,3 +3,4 @@
 /.idea/workspace.xml
 .DS_Store
 /MonoViewer/src/main/assets/manual/nbproject/private/
+build/
