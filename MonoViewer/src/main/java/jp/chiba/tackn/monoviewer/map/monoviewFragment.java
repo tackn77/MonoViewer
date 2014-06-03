@@ -78,9 +78,9 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /** アーバンフライ０ 7-8号の運行情報 */
     static private int intService4;
     /** 現在時刻クエリ用セット用Date */
-    java.util.Date Date = new Date();
+    private java.util.Date Date = new Date();
     /** 時刻取得用カレンダ */
-    Calendar calendar = Calendar.getInstance();
+    private Calendar calendar = Calendar.getInstance();
     /** 列車マーカーを保持するList */
     private final Map<NowTrainData,Marker> trainMakers = new HashMap<NowTrainData, Marker>();
     /** 駅マーカー判定用正規表現 */
@@ -110,7 +110,11 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         task.execute(builder);
         callbacks = this;
         setUpMapIfNeeded();
-        setUpHandler();    }
+        setUpHandler();
+        if(savedInstanceState!=null){
+            mapCenter = new LatLng(savedInstanceState.getDouble("centerLat"),savedInstanceState.getDouble("centerLong"));
+        }
+    }
 
     /**
      * Viewの作成
@@ -151,17 +155,17 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         outState.putDouble("centerLong",mapCenter.longitude);
     }
 
-    /**
-     * 環境復帰
-     * @param savedInstanceState 保存されたBundle
-     */
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState!=null){
-            mapCenter = new LatLng(savedInstanceState.getDouble("centerLat"),savedInstanceState.getDouble("centerLong"));
-        }
-    }
+//    /**
+//     * 環境復帰
+//     * @param savedInstanceState 保存されたBundle
+//     */
+//    @Override
+//    public void onViewStateRestored(Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        if(savedInstanceState!=null){
+//            mapCenter = new LatLng(savedInstanceState.getDouble("centerLat"),savedInstanceState.getDouble("centerLong"));
+//        }
+//    }
 
     /**
      * 定期実行用のハンドラのセットアップ
@@ -685,7 +689,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         public void handleMessage(Message msg) {
             if (trainHandler != null){
                 getLoaderManager().restartLoader(intHoliday, null, callbacks);
-                trainHandler.sleep(500); //0.5s
+                trainHandler.sleep(1000); //1s
             }
         }
 

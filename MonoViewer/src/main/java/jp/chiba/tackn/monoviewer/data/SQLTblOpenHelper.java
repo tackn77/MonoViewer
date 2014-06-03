@@ -17,7 +17,7 @@ import java.io.OutputStream;
  * @author Takumi Ito
  * @since 2014/05/12.
  */
-public class SQLTblOpenHelper extends SQLiteOpenHelper {
+class SQLTblOpenHelper extends SQLiteOpenHelper {
     /**
      * デバッグフラグ
      */

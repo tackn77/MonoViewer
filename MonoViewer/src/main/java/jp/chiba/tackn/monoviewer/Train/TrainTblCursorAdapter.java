@@ -27,7 +27,7 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     /** デバッグタグ */
     private static final String TAG = "TrainTblCursorAdapter";
     /** 運行情報管理クラス */
-    InformationHolder informationHolder = InformationHolder.getInstance();
+    private InformationHolder informationHolder = InformationHolder.getInstance();
 
     /**
      * ListViewのカラムの要素を保存するクラス

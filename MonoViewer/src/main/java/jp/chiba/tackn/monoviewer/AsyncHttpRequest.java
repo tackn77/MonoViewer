@@ -19,7 +19,7 @@ import jp.chiba.tackn.monoviewer.train.TrainTable;
  * @author Takumi Ito
  * @since 2014/05/14.
  */
-public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
+class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
 
     /** デバッグ用タグ */
     private static final String TAG = "AsyncHttpRequest";
@@ -45,10 +45,10 @@ public class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
     private String Service4;
 
     /** 休日・平日フラグ */
-    static int intHoliday;
+    private static int intHoliday;
 
     /** 運行情報管理クラス */
-    InformationHolder informationHolder = InformationHolder.getInstance();
+    private InformationHolder informationHolder = InformationHolder.getInstance();
 
     /**
      * コンストラクタ

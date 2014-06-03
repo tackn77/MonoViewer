@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:text="本日の運行状況"
+        android:text="@string/TodayTrain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="モノちゃん号"
+        android:text="@string/mono_chan"
         android:id="@+id/trainNo0"
         android:layout_marginTop="40dp"
         android:textSize="20sp"
@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="アーバンフライ0型 0001-0002号"
+        android:text="@string/urbanflyer001_002"
         android:id="@+id/trainNo1"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo0"
@@ -39,7 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="アーバンフライ0型 0003-0004号"
+        android:text="@string/urbanflyer003_004"
         android:id="@+id/trainNo2"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo1"
@@ -49,7 +49,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="アーバンフライ0型 0005-0006号"
+        android:text="@string/urbanflyer005_006"
         android:id="@+id/trainNo3"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo2"
@@ -59,7 +59,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="アーバンフライ0型 0007-0008号"
+        android:text="@string/urbanflyer007_008"
         android:id="@+id/trainNo4"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo3"
@@ -69,7 +69,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/HOLIDAY"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -81,7 +81,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/Service0"
         android:layout_alignRight="@+id/HOLIDAY"
         android:layout_alignEnd="@+id/HOLIDAY"
@@ -92,7 +92,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/Service1"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -103,7 +103,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/Service2"
         android:layout_alignRight="@+id/Service1"
         android:layout_alignEnd="@+id/Service1"
@@ -114,7 +114,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/Service3"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -125,7 +125,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取得中"
+        android:text="@string/loading"
         android:id="@+id/Service4"
         android:layout_alignRight="@+id/Service3"
         android:layout_alignEnd="@+id/Service3"
@@ -136,7 +136,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="列車ダイヤ"
+        android:text="@string/TrainDiagram"
         android:id="@+id/textView13"
         android:layout_above="@+id/Service0"
         android:layout_alignRight="@+id/HOLIDAY"
@@ -146,7 +146,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="地図を開く"
+        android:text="@string/OpenMap"
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

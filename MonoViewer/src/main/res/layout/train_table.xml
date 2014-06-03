@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID:"
+            android:text="@string/train_no_id"
             android:id="@+id/textView"
             android:textIsSelectable="false"
             android:textSize="20sp"
@@ -41,21 +41,17 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="休日"
+                    android:text="@string/holiday"
                     android:id="@+id/holiday"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/weekday" />
+                    />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="平日"
+                    android:text="@string/weekday"
                     android:id="@+id/weekday"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
                     android:checked="true" />
         </RadioGroup>
     </RelativeLayout>
