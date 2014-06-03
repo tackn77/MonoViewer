@@ -178,7 +178,7 @@ public class TrainTable extends Activity
             Log.d(TAG, "onNothingSelected :");
         }
         //初期化
-        initLoader(0);
+//        initLoader(0);
     }
 
     /**
