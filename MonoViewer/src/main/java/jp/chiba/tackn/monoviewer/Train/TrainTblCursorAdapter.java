@@ -49,7 +49,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
      * @param flags CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER フラグ
      */
     public TrainTblCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
-        super(context, layout, c, from, to, flags);
+//        super(context, layout, c, from, to, flags);
+        super(context, layout, c, from, to);
     }
 
     /**

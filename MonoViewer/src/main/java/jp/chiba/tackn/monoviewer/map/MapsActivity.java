@@ -1,7 +1,7 @@
 package jp.chiba.tackn.monoviewer.map;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,7 +10,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 
-public class MapsActivity extends Activity {
+public class MapsActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

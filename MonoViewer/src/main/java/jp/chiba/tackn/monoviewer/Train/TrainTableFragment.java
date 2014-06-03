@@ -1,19 +1,20 @@
 package jp.chiba.tackn.monoviewer.train;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class TrainTableFragment extends Fragment
     private SimpleCursorAdapter mAdapter;
 
     /** 時刻表表示用リスト */
-    private AbsListView itemListView;
+    private ListView itemListView;
 
     /** 呼び出し元コンテキスト */
     private Context context;
@@ -79,7 +80,7 @@ public class TrainTableFragment extends Fragment
          *  7インチランドスケープ以上は2ラインで表示
          */
         View view = inflater.inflate(R.layout.fragment_traintablefragment, container, false);
-        itemListView = (AbsListView) view.findViewById(android.R.id.list);
+        itemListView = (ListView) view.findViewById(android.R.id.list);
         itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
 
@@ -200,7 +201,7 @@ public class TrainTableFragment extends Fragment
      */
     public void onLoadFinished(Loader loader, Cursor cursor) {
 
-        mAdapter.swapCursor(cursor);
+        mAdapter.changeCursor(cursor);
 
         int count = 0;
         Calendar calendar = Calendar.getInstance();
@@ -227,6 +228,7 @@ public class TrainTableFragment extends Fragment
      * @param loader
      */
     public void onLoaderReset(Loader loader) {
-        mAdapter.swapCursor(null);
+        mAdapter.changeCursor(null);
+
     }
 }

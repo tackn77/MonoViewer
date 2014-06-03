@@ -1,10 +1,10 @@
 package jp.chiba.tackn.monoviewer.train;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.LoaderManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +26,7 @@ import jp.chiba.tackn.monoviewer.map.Station;
  * @author Takumi Ito
  * @since 2014/05/12.
  */
-public class TrainTable extends Activity
+public class TrainTable extends FragmentActivity
         implements AdapterView.OnItemSelectedListener{
 
     /** デバッグフラグ */
@@ -138,7 +138,7 @@ public class TrainTable extends Activity
         holiday=(RadioButton)radioGroup.findViewById(R.id.holiday);
         weekday=(RadioButton)radioGroup.findViewById(R.id.weekday);
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         train_table = (TrainTableFragment)fragmentManager.findFragmentById(R.id.traintablelist);
         callbacks =  train_table;//LoaderManager.LoaderCallbacks
     }
@@ -188,46 +188,46 @@ public class TrainTable extends Activity
     private void initLoader(int position){
 //        position = (radioGroup.getCheckedRadioButtonId()==R.id.weekday)?position:position+trainNo.getAdapter().getCount();
         if(weekday.isChecked()){ //平日はスピナー通り
-            getLoaderManager().initLoader(position, null, callbacks);
+            getSupportLoaderManager().restartLoader(position,null,callbacks);
         }else { //休日のスピナーとのズレを正す
             switch (position) {
                 case 0:
-                    getLoaderManager().restartLoader(13, null, callbacks);
+                    getSupportLoaderManager().restartLoader(13,null,callbacks);
                     break;
                 case 1:
-                    getLoaderManager().restartLoader(14, null, callbacks);
+                    getSupportLoaderManager().restartLoader(14,null,callbacks);
                     break;
                 case 2:
-                    getLoaderManager().restartLoader(15, null, callbacks);
+                    getSupportLoaderManager().restartLoader(15,null,callbacks);
                     break;
                 case 3:
-                    getLoaderManager().restartLoader(16, null, callbacks);
+                    getSupportLoaderManager().restartLoader(16,null,callbacks);
                     break;
                 case 4:
-                    getLoaderManager().restartLoader(17, null, callbacks);
+                    getSupportLoaderManager().restartLoader(17,null,callbacks);
                     break;
                 case 5:
-                    getLoaderManager().restartLoader(18, null, callbacks);
+                    getSupportLoaderManager().restartLoader(18,null,callbacks);
                     break;
                 case 6:
                     break; //存在しない
                 case 7:
-                    getLoaderManager().restartLoader(19, null, callbacks);
+                    getSupportLoaderManager().restartLoader(19,null,callbacks);
                     break;
                 case 8:
-                    getLoaderManager().restartLoader(20, null, callbacks);
+                    getSupportLoaderManager().restartLoader(20,null,callbacks);
                     break;
                 case 9:
-                    getLoaderManager().restartLoader(21, null, callbacks);
+                    getSupportLoaderManager().restartLoader(21,null,callbacks);
                     break;
                 case 10:
-                    getLoaderManager().restartLoader(22, null, callbacks);
+                    getSupportLoaderManager().restartLoader(22,null,callbacks);
                     break;
                 case 11:
-                    getLoaderManager().restartLoader(23, null, callbacks);
+                    getSupportLoaderManager().restartLoader(23,null,callbacks);
                     break;
                 case 12:
-                    getLoaderManager().restartLoader(24, null, callbacks);
+                    getSupportLoaderManager().restartLoader(24,null,callbacks);
                     break;
                 default:
                     if (DEBUG) Log.d(TAG, "position() " + position);

@@ -1,9 +1,9 @@
 package jp.chiba.tackn.monoviewer.time;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.LoaderManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +25,7 @@ import jp.chiba.tackn.monoviewer.map.Station;
  *
  * @author Takumi Ito
  */
-public class TimeTable extends Activity
+public class TimeTable extends FragmentActivity
         implements AdapterView.OnItemSelectedListener{
 
 
@@ -236,7 +236,7 @@ public class TimeTable extends Activity
         up = (RadioButton) findViewById(R.id.up);
         down1 = (RadioButton) findViewById(R.id.down1);
         down2 = (RadioButton) findViewById(R.id.down2);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         time_table = (TimeTableFragment)fragmentManager.findFragmentById(R.id.timetablelist);
         callbacks =  time_table;//LoaderManager.LoaderCallbacks
     }
@@ -303,47 +303,47 @@ public class TimeTable extends Activity
         //平日チェック
         if(weekday.isChecked()){
             if(up.isChecked()){ //平日上りはスピナー通り
-                getLoaderManager().initLoader(position, null, callbacks);
+                getSupportLoaderManager().initLoader(position, null, callbacks);
             }else{
                 switch (position+18){
                     case 33:
                         if(down1.isChecked()){
-                            getLoaderManager().initLoader(TimeTableContract.HS16D1, null, callbacks);
+                            getSupportLoaderManager().initLoader(TimeTableContract.HS16D1, null, callbacks);
                         }else{
-                            getLoaderManager().initLoader(TimeTableContract.HS16D2, null, callbacks);
+                            getSupportLoaderManager().initLoader(TimeTableContract.HS16D2, null, callbacks);
                         }
                         break;
                     case 34:
-                        getLoaderManager().initLoader(TimeTableContract.HS17D, null, callbacks);
+                        getSupportLoaderManager().initLoader(TimeTableContract.HS17D, null, callbacks);
                         break;
                     case 35:
-                        getLoaderManager().initLoader(TimeTableContract.HS18D, null, callbacks);
+                        getSupportLoaderManager().initLoader(TimeTableContract.HS18D, null, callbacks);
                         break;
                     default:
-                        getLoaderManager().initLoader(position+18, null, callbacks);
+                        getSupportLoaderManager().initLoader(position + 18, null, callbacks);
                         break;
                 }
             }
         }else { //休日のスピナーとのズレを正す
             if(up.isChecked()){ //休日上りはスピナー+100
-                getLoaderManager().initLoader(position+100, null, callbacks);
+                getSupportLoaderManager().initLoader(position + 100, null, callbacks);
             }else{
                 switch (position+118){
                     case 133:
                         if(down1.isChecked()){
-                            getLoaderManager().initLoader(TimeTableContract.KS16D1, null, callbacks);
+                            getSupportLoaderManager().initLoader(TimeTableContract.KS16D1, null, callbacks);
                         }else{
-                            getLoaderManager().initLoader(TimeTableContract.KS16D2, null, callbacks);
+                            getSupportLoaderManager().initLoader(TimeTableContract.KS16D2, null, callbacks);
                         }
                         break;
                     case 134:
-                        getLoaderManager().initLoader(TimeTableContract.KS17D, null, callbacks);
+                        getSupportLoaderManager().initLoader(TimeTableContract.KS17D, null, callbacks);
                         break;
                     case 135:
-                        getLoaderManager().initLoader(TimeTableContract.KS18D, null, callbacks);
+                        getSupportLoaderManager().initLoader(TimeTableContract.KS18D, null, callbacks);
                         break;
                     default:
-                        getLoaderManager().initLoader(position+118, null, callbacks);
+                        getSupportLoaderManager().initLoader(position + 118, null, callbacks);
                         break;
                 }
             }

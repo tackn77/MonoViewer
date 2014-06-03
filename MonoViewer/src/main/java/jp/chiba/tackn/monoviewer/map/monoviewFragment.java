@@ -1,18 +1,18 @@
 package jp.chiba.tackn.monoviewer.map;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -58,7 +59,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /** Mapオブジェクト */
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     /** MapFragment */
-    private MapFragment mapFragment;
+    private SupportMapFragment mapFragment;
     /** 呼び出し元Activityのcontext */
     private Context context;
     /** 定期実行用ハンドラ */
@@ -185,7 +186,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         if (mMap == null) {
             // 新しいフラグメントとトランザクションを作成する
             if (mapFragment == null) {
-                mapFragment = MapFragment.newInstance();
+                mapFragment = SupportMapFragment.newInstance();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.maps_fragment_container, mapFragment);
                 transaction.commit();
