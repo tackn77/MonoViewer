@@ -21,6 +21,7 @@ import java.util.Calendar;
 
 import jp.chiba.tackn.monoviewer.R;
 
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
 /**
@@ -75,8 +76,6 @@ public class TrainTableFragment extends Fragment
         /**
          *  レイアウトファイル読み込み
          *  valuesフォルダで画面サイズによってレイアウトの変更が可能
-         *  現在は7インチポートレートまではシングル
-         *  7インチランドスケープ以上は2ラインで表示
          */
         View view = inflater.inflate(R.layout.fragment_traintablefragment, container, false);
         itemListView = (AbsListView) view.findViewById(android.R.id.list);

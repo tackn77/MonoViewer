@@ -10,10 +10,13 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.TabletHolder;
 
 public class ManualActivity extends Activity {
 
     private WebView webView;
+    /** タブレットモードの保持 */
+    private TabletHolder tabletHolder = TabletHolder.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +44,12 @@ public class ManualActivity extends Activity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu);
+        if(tabletHolder.isTablet()){
+            getMenuInflater().inflate(R.menu.tablet,menu);
+        }else{
+            getMenuInflater().inflate(R.menu.main,menu);
+        }
         return true;
     }
 

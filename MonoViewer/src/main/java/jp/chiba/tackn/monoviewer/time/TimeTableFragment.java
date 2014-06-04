@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.map.Station;
 import jp.chiba.tackn.monoviewer.train.TrainTable;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
@@ -52,6 +54,8 @@ public class TimeTableFragment extends Fragment
 
     /** Listに登録する情報 */
     private List<ListItem> listItems = new ArrayList<ListItem>();
+    /** タブレットモードの保持 */
+    private TabletHolder tabletHolder = TabletHolder.getInstance();
 
     public TimeTableFragment() {
         // Required empty public constructor
@@ -393,7 +397,6 @@ public class TimeTableFragment extends Fragment
                 if(!item.minute.equals("　")) {
                     //各分の表示に列車ダイヤの起動をひも付ける
 //                    final Context context = context;
-                    final Intent intent = new Intent(context, TrainTable.class);
 
                     final int horiday = item.isHoliday;
                     final int tableNo = Integer.valueOf(item.tableno);
@@ -402,6 +405,12 @@ public class TimeTableFragment extends Fragment
                     v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Intent intent;
+                            if(tabletHolder.isTablet()){
+                                intent = new Intent(context, MainActivity.class);
+                            }else{
+                                intent = new Intent(context, TrainTable.class);
+                            }
                             intent.putExtra("TableNo", tableNo);
                             intent.putExtra("holiday", horiday);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
