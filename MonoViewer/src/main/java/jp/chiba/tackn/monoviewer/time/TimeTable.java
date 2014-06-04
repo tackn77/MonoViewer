@@ -218,8 +218,8 @@ public class TimeTable extends Activity
     private void setChibaStationDown(boolean enable){
         if(enable){
             down2.setEnabled(true);
-            down1.setText("１号線下り");
-            down2.setText("２号線下り");
+            down1.setText("下１");
+            down2.setText("下２");
         }else{
             down2.setEnabled(false);
             down1.setText("下り");

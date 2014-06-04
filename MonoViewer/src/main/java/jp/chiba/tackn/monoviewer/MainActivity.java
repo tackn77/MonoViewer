@@ -123,6 +123,8 @@ public class MainActivity extends Activity
                 weekday.setChecked(true);
             }
             trainNo.setSelection(position);
+        }else{
+            button.setOnClickListener(this);
         }
     }
 
