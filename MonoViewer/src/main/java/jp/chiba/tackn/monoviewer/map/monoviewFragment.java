@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -37,7 +38,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 import jp.chiba.tackn.monoviewer.time.TimeTable;
 import jp.chiba.tackn.monoviewer.train.TrainTable;
@@ -49,6 +52,7 @@ import jp.chiba.tackn.monoviewer.train.TrainTable;
  * @since 2014/05/16
  */
 public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
+        , GoogleMap.OnCameraChangeListener
         , LoaderManager.LoaderCallbacks<Cursor> {
     /** デバッグ用タグ */
     private static final String TAG = "monoviewFragment";
@@ -89,6 +93,8 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static final Pattern patternTrain = Pattern.compile("^(上り|下り) [^ ]+ ([0-9]+):([0-9]+) ([0-9]+)");
     /** Google Mapの中心座標 */
     private static LatLng mapCenter = Station.STATION_CHIBA;
+    /** タブレットモードの保持 */
+    private TabletHolder tabletHolder = TabletHolder.getInstance();
 
     public MonoViewFragment() {
         // Required empty public constructor
@@ -192,6 +198,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
             }
 
             mMap = mapFragment.getMap();
+            tabletHolder.setMap(mMap);
 
             if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mapFragment " + mapFragment);
             if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mMap " + mMap);
@@ -233,6 +240,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         // 現在位置表示の有効化
         mMap.setMyLocationEnabled(true);
 
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
     }
 
@@ -286,7 +294,12 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }else if(matcherTrain.find()){
             int tableNo = Integer.parseInt(matcherTrain.group(4));
 
-            Intent intent = new Intent(context, TrainTable.class);
+            Intent intent;
+            if(tabletHolder.isTablet()){
+                intent = new Intent(context, MainActivity.class);
+            }else{
+                intent = new Intent(context, TrainTable.class);
+            }
             intent.putExtra("TableNo", tableNo);
             intent.putExtra("holiday", intHoliday);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -680,6 +693,11 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /** アーバンフライ０ 7-8号の運行情報のセット */
     static void setService4(int service){intService4=service;}
 
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        float zoom = cameraPosition.zoom;
+    }
+
 
     /**
      * マップ画面に定期的0.5s毎に画面更新をするためのハンドラ
@@ -700,6 +718,4 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
             sendMessageDelayed(obtainMessage(0), delayMills);
         }
     }
-
-
 }

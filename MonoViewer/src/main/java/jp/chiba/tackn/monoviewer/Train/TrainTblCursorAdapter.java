@@ -10,9 +10,14 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 import jp.chiba.tackn.monoviewer.InformationHolder;
+import jp.chiba.tackn.monoviewer.map.Station;
 import jp.chiba.tackn.monoviewer.time.TimeTable;
 
 /**
@@ -28,6 +33,8 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
     private static final String TAG = "TrainTblCursorAdapter";
     /** 運行情報管理クラス */
     private InformationHolder informationHolder = InformationHolder.getInstance();
+    /** タブレットモードの保持 */
+    private TabletHolder tabletHolder = TabletHolder.getInstance();
 
     /**
      * ListViewのカラムの要素を保存するクラス
@@ -145,22 +152,42 @@ public class TrainTblCursorAdapter extends SimpleCursorAdapter {
                     Log.d(TAG,"holiday: " + holiday);
                 }
 
+                if(tabletHolder.isTablet()) {
+                    if(station.equals("千城台駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_TISHIRODAI));
+                    if(station.equals("千城台北駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_TISHIRODAIKITA));
+                    if(station.equals("小倉台駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_OGURADAI));
+                    if(station.equals("桜木駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_SAKURAGI));
+                    if(station.equals("都賀駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_TUGA));
+                    if(station.equals("みつわ台駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_MITUWADAI));
+                    if(station.equals("動物公園駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_DOUBUTUKOUEN));
+                    if(station.equals("スポーツセンター駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_SPORTSCENTER));
+                    if(station.equals("穴川駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_ANAGAWA));
+                    if(station.equals("天台駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_TENDAI));
+                    if(station.equals("作草部駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_SAKUSABE));
+                    if(station.equals("千葉公園駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBAKOUEN));
+                    if(station.equals("県庁前駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_KENTYOMAE));
+                    if(station.equals("葭川公園駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_YOSHIKAWAKOUEN));
+                    if(station.equals("栄町駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_SAKAETYOU));
+                    if(station.equals("千葉駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBA));
+                    if(station.equals("市役所前駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_SHIYAKUSYOMAE));
+                    if(station.equals("千葉みなと駅"))tabletHolder.getMap().animateCamera(CameraUpdateFactory.newLatLng(Station.STATION_CHIBAMINATO));
+                }else{
+                    Intent intent = new Intent(context,TimeTable.class);
 
-                Intent intent = new Intent(context,TimeTable.class);
+                    if(station.equals("千葉駅")&&destination.indexOf("県庁前")>0){
+                        intent.putExtra("station", "千葉駅1号線");
+                    }else if(station.equals("千葉駅")&&destination.indexOf("千城台")>0){
+                        intent.putExtra("station", "千葉駅2号線");
+                    }else {
+                        intent.putExtra("station", station);
+                    }
 
-                if(station.equals("千葉駅")&&destination.indexOf("県庁前")>0){
-                    intent.putExtra("station", "千葉駅1号線");
-                }else if(station.equals("千葉駅")&&destination.indexOf("千城台")>0){
-                    intent.putExtra("station", "千葉駅2号線");
-                }else {
-                    intent.putExtra("station", station);
-                }
-
-                intent.putExtra("updown",updown);
-                intent.putExtra("holiday",holiday);
+                    intent.putExtra("updown",updown);
+                    intent.putExtra("holiday",holiday);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
 
             }
         });
