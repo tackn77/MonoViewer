@@ -95,6 +95,8 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private static LatLng mapCenter = Station.STATION_CHIBA;
     /** タブレットモードの保持 */
     private TabletHolder tabletHolder = TabletHolder.getInstance();
+    /** モノレールのインフォウィンドウをクリック時のリスナ */
+    private OnFragmentInteractionListener mListener;
 
     public MonoViewFragment() {
         // Required empty public constructor
@@ -252,6 +254,12 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     /**
@@ -261,6 +269,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
         trainHandler = null;
     }
 
@@ -294,16 +303,18 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         }else if(matcherTrain.find()){
             int tableNo = Integer.parseInt(matcherTrain.group(4));
 
-            Intent intent;
             if(tabletHolder.isTablet()){
-                intent = new Intent(context, MainActivity.class);
+                if (mListener != null) {
+                    mListener.onFragmentInteraction(tableNo,intHoliday);
+                }
             }else{
+                Intent intent;
                 intent = new Intent(context, TrainTable.class);
+                intent.putExtra("TableNo", tableNo);
+                intent.putExtra("holiday", intHoliday);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
-            intent.putExtra("TableNo", tableNo);
-            intent.putExtra("holiday", intHoliday);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
         }
     }
 
@@ -693,11 +704,17 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     /** アーバンフライ０ 7-8号の運行情報のセット */
     static void setService4(int service){intService4=service;}
 
+    /**
+     * 列車のインフォWindowをクリック時の動作をActivityへ伝える
+     */
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(int TrainNo,int intHoliday);
+    }
+
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         float zoom = cameraPosition.zoom;
     }
-
 
     /**
      * マップ画面に定期的0.5s毎に画面更新をするためのハンドラ
@@ -718,4 +735,5 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
             sendMessageDelayed(obtainMessage(0), delayMills);
         }
     }
+
 }

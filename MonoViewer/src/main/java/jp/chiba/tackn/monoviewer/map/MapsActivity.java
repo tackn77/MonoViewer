@@ -10,7 +10,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
 
-public class MapsActivity extends Activity {
+public class MapsActivity extends Activity implements MonoViewFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,4 +41,8 @@ public class MapsActivity extends Activity {
         return Menus.actionMenu(this,item);
     }
 
+    @Override
+    public void onFragmentInteraction(int TrainNo, int intHoliday) {
+
+    }
 }
