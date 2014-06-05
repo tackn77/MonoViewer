@@ -18,6 +18,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import jp.chiba.tackn.monoviewer.Menus;
 import jp.chiba.tackn.monoviewer.R;
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.map.Station;
 
 /**
@@ -59,6 +60,8 @@ public class TimeTable extends Activity
     private LoaderManager.LoaderCallbacks callbacks;
     /** LoaderManager.LoaderCallbacksの為 */
     public TimeTableFragment time_table;
+    /** タブレットモードの保持 */
+    private TabletHolder tabletHolder = TabletHolder.getInstance();
 
     /**
      * Called when the activity is first created.
@@ -215,8 +218,8 @@ public class TimeTable extends Activity
     private void setChibaStationDown(boolean enable){
         if(enable){
             down2.setEnabled(true);
-            down1.setText("１号線下り");
-            down2.setText("２号線下り");
+            down1.setText("下１");
+            down2.setText("下２");
         }else{
             down2.setEnabled(false);
             down1.setText("下り");
@@ -291,7 +294,7 @@ public class TimeTable extends Activity
             Log.d(TAG, "onNothingSelected :");
         }
         //初期化
-        initLoader(0);
+//        initLoader(0);
     }
 
     /**
@@ -386,7 +389,11 @@ public class TimeTable extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main,menu);
+        if(tabletHolder.isTablet()){
+            getMenuInflater().inflate(R.menu.tablet,menu);
+        }else{
+            getMenuInflater().inflate(R.menu.main,menu);
+        }
         return true;
     }
 

@@ -31,7 +31,7 @@ class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
     private String Service4;
 
     /** 運行情報管理クラス */
-    InformationHolder informationHolder = InformationHolder.getInstance();
+    private InformationHolder informationHolder = InformationHolder.getInstance();
 
     /**
      * 非同期処理本体

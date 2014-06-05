@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="jp.chiba.tackn.monoviewer.MainActivity" >
+    <item android:id="@+id/action_back_home"
+        android:title="@string/back_home"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_time"
+        android:title="@string/time"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_manual"
+        android:title="@string/manual"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_disclaimer"
+        android:title="@string/disclaimer"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_exit"
+        android:title="@string/exit"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,237 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="670dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="285dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            tools:context=".MainActivity">
+
+            <TextView
+                android:text="@string/TodayTrain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mono_chan"
+                android:id="@+id/trainNo0"
+                android:layout_marginTop="40dp"
+                android:textSize="20sp"
+                android:layout_below="@+id/textView2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/urbanflyer001_002"
+                android:id="@+id/trainNo1"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/trainNo0"
+                android:layout_alignParentLeft="true"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/urbanflyer003_004"
+                android:id="@+id/trainNo2"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/trainNo1"
+                android:layout_alignParentLeft="true"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/urbanflyer005_006"
+                android:id="@+id/trainNo3"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/trainNo2"
+                android:layout_alignParentLeft="true"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/urbanflyer007_008"
+                android:id="@+id/trainNo4"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/trainNo3"
+                android:layout_alignParentLeft="true"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/HOLIDAY"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/textView2"
+                android:textSize="25sp"
+                android:layout_alignParentBottom="false"
+                android:layout_alignTop="@+id/textView2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/Service0"
+                android:layout_alignRight="@+id/HOLIDAY"
+                android:layout_alignEnd="@+id/HOLIDAY"
+                android:layout_above="@+id/trainNo1"
+                android:layout_alignTop="@+id/trainNo0"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/Service1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/trainNo2"
+                android:layout_below="@+id/Service0"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/Service2"
+                android:layout_alignRight="@+id/Service1"
+                android:layout_alignEnd="@+id/Service1"
+                android:layout_alignBottom="@+id/trainNo2"
+                android:layout_below="@+id/Service1"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/Service3"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/trainNo4"
+                android:layout_below="@+id/Service2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading"
+                android:id="@+id/Service4"
+                android:layout_alignRight="@+id/Service3"
+                android:layout_alignEnd="@+id/Service3"
+                android:layout_alignBottom="@+id/trainNo4"
+                android:layout_below="@+id/Service3"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/TrainDiagram"
+                android:id="@+id/textView13"
+                android:layout_above="@+id/Service0"
+                android:layout_alignRight="@+id/HOLIDAY"
+                android:layout_alignEnd="@+id/HOLIDAY"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/train_no_id"
+                    android:id="@+id/textView"
+                    android:textIsSelectable="false"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true" />
+
+                <Spinner
+                    android:id="@+id/Spinner"
+                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/textView">
+                </Spinner>
+                <RadioGroup android:id="@+id/radiogroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/Spinner"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="false"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
+
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/holiday"
+                        android:id="@+id/holiday"
+                        android:layout_gravity="center_vertical|right"
+                        />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/weekday"
+                        android:id="@+id/weekday"
+                        android:layout_gravity="center_vertical|right"
+                        android:checked="true" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/traintablelist"
+                android:layout_weight="1"
+                android:name="jp.chiba.tackn.monoviewer.train.TrainTableFragment"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/monoview"
+            android:name="jp.chiba.tackn.monoviewer.map.MonoViewFragment"/>
+        </RelativeLayout>
+</LinearLayout>

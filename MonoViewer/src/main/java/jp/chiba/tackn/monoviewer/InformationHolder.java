@@ -53,9 +53,9 @@ public class InformationHolder extends AsyncTask<Uri.Builder, Void, String> {
     /** 取得時間のチェック用Calendar */
     private Calendar updateCalendar = Calendar.getInstance();
     /** 現在時刻取得用 */
-    Date nowDate = new Date();
+    private Date nowDate = new Date();
     /** 現在時刻取得用 */
-    Calendar nowCalendar = Calendar.getInstance();
+    private Calendar nowCalendar = Calendar.getInstance();
 
     /** シングルトンコンストラクタ */
     private InformationHolder(){

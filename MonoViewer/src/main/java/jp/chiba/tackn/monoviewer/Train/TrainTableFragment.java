@@ -21,6 +21,7 @@ import java.util.Calendar;
 
 import jp.chiba.tackn.monoviewer.R;
 
+import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
 
 /**
@@ -56,14 +57,27 @@ public class TrainTableFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        mAdapter = new TrainTblCursorAdapter(
-                getActivity(),
-                R.layout.list_item_train_no,
-                null,
-                new String[]{SQLTblContract.COLUMN_TIME, SQLTblContract.COLUMN_STATION},
-                new int[]{R.id.train_no_minute, R.id.train_no_station},
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+    }
+
+    private void setUpMapIfNeeded() {
+        if(mAdapter==null){
+            mAdapter = new TrainTblCursorAdapter(
+                    getActivity(),
+                    R.layout.list_item_train_no,
+                    null,
+                    new String[]{SQLTblContract.COLUMN_TIME, SQLTblContract.COLUMN_STATION},
+                    new int[]{R.id.train_no_minute, R.id.train_no_station},
+                    CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+            itemListView.setAdapter(mAdapter);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -75,12 +89,9 @@ public class TrainTableFragment extends Fragment
         /**
          *  レイアウトファイル読み込み
          *  valuesフォルダで画面サイズによってレイアウトの変更が可能
-         *  現在は7インチポートレートまではシングル
-         *  7インチランドスケープ以上は2ラインで表示
          */
         View view = inflater.inflate(R.layout.fragment_traintablefragment, container, false);
         itemListView = (AbsListView) view.findViewById(android.R.id.list);
-        itemListView.setAdapter(mAdapter);
         itemListView.setFastScrollEnabled(true);
 
         return view;

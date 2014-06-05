@@ -237,9 +237,9 @@ public class SQLTblProvider extends ContentProvider {
     private static HashMap<String,String> mProjectionMap;
 
     /** 現在時刻クエリ用セット用Date */
-    Date Date = new Date();
+    private Date Date = new Date();
     /** 時刻取得用カレンダ */
-    Calendar calendar = Calendar.getInstance();
+    private Calendar calendar = Calendar.getInstance();
 
     static {
         // UriMatcherの定義

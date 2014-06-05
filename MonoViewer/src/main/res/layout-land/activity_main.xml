@@ -33,7 +33,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo0"
-        android:text="@string/urbanflyer001_002"
+        android:text="@string/urbanflyer001_002w"
         android:textSize="20sp" />
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo1"
-        android:text="@string/urbanflyer003_004"
+        android:text="@string/urbanflyer003_004w"
         android:textSize="20sp" />
 
     <TextView
@@ -53,7 +53,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo2"
-        android:text="@string/urbanflyer005_006"
+        android:text="@string/urbanflyer005_006w"
         android:textSize="20sp" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/trainNo3"
-        android:text="@string/urbanflyer007_008"
+        android:text="@string/urbanflyer007_008w"
         android:textSize="20sp" />
 
     <TextView

@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:text="@string/whitespace"
         android:id="@+id/start"
         android:textSize="36sp"
         android:layout_gravity="center_horizontal" />
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="※動"
+            android:text="@string/annotation"
             android:id="@+id/annotation"
             android:gravity="center"
             android:textSize="10sp" />
@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="05"
+            android:text="@string/minute"
             android:id="@+id/minute"
             android:textSize="23sp"
             android:gravity="center" />
@@ -51,14 +51,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/train_no_iconeView"
             android:layout_gravity="center_horizontal|top"
-            android:src="@drawable/blank"/>
+            android:src="@drawable/blank"
+            android:contentDescription="@string/whitespace"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HA\n11"
+            android:text="@string/tableno"
             android:id="@+id/tableno"
             android:layout_gravity="bottom"
-            android:password="false"
             android:textSize="8sp" />
     </LinearLayout>
 </LinearLayout>
