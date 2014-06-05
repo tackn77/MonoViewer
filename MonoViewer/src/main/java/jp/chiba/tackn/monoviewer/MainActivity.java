@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,12 +17,14 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.maps.GoogleMap;
 
+import java.io.IOException;
+
+import jp.chiba.tackn.monoviewer.data.SQLTblCopy;
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
-import jp.chiba.tackn.monoviewer.map.MonoViewFragment;
 import jp.chiba.tackn.monoviewer.map.Station;
 import jp.chiba.tackn.monoviewer.train.TrainTableFragment;
 
@@ -68,6 +71,17 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try { // 初回assetsフォルダからDBのコピーを行う
+            SQLTblCopy.copyDatabase(this);
+        } catch (IOException e) {
+            Toast.makeText(this,
+                    "データベースの初期化に失敗しました\n" +
+                    "アプリを再起動して下さい。"
+                    ,Toast.LENGTH_LONG).show();
+        }
+
+
         setContentView(R.layout.activity_main);
 
         //要素の取得
