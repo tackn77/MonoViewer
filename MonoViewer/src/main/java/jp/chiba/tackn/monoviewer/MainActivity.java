@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +24,7 @@ import java.io.IOException;
 
 import jp.chiba.tackn.monoviewer.data.SQLTblCopy;
 import jp.chiba.tackn.monoviewer.map.MapsActivity;
+import jp.chiba.tackn.monoviewer.map.MonoViewFragment;
 import jp.chiba.tackn.monoviewer.map.Station;
 import jp.chiba.tackn.monoviewer.train.TrainTableFragment;
 
@@ -37,7 +37,8 @@ import jp.chiba.tackn.monoviewer.train.TrainTableFragment;
  */
 public class MainActivity extends Activity
         implements View.OnClickListener
-                    ,AdapterView.OnItemSelectedListener{
+                    ,AdapterView.OnItemSelectedListener
+                    ,MonoViewFragment.OnFragmentInteractionListener{
 
     /** デバッグ用タグ */
     private static final String TAG = "MainActivity";
@@ -67,7 +68,8 @@ public class MainActivity extends Activity
     private AsyncHttpRequest task;
     /** タブレットモードの保持 */
     private TabletHolder tabletHolder = TabletHolder.getInstance();
-
+    /** タブレットモード時のスピナー */
+    ArrayAdapter<String> spAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +99,7 @@ public class MainActivity extends Activity
 
         if(tabletHolder.isTablet()){
             //スピナー用設定
-            final ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+            spAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
             setSpinnerAdapter(spAdapter);
             trainNo.setAdapter(spAdapter);
             trainNo.setOnItemSelectedListener(this);
@@ -121,25 +123,34 @@ public class MainActivity extends Activity
                 Log.d(TAG,"fromIntent holiday: " + fromIntent1);
             }
 
-            int position =0 ;
-            for(int i=0;i<13;i++){
-                String adapter = spAdapter.getItem(i);
-                if(adapter.equals(String.valueOf(fromIntent0))){
-                    position=i;
-                }
-            }
-            if(fromIntent1== Station.HOLIDAY){
-                holiday.setChecked(true);
-                weekday.setChecked(false);
-            }
-            if(fromIntent1==Station.WEEKDAY){
-                holiday.setChecked(false);
-                weekday.setChecked(true);
-            }
-            trainNo.setSelection(position);
+            setSpinner(fromIntent0, fromIntent1);
         }else{
             button.setOnClickListener(this);
         }
+    }
+
+    /**
+     * 外部から呼び出された際にスピナーの設定
+     * @param trainNo 列車ID
+     * @param intHoliday 休日フラグ
+     */
+    private void setSpinner(int trainNo, int intHoliday) {
+        int position =0 ;
+        for(int i=0;i<13;i++){
+            String adapter = spAdapter.getItem(i);
+            if(adapter.equals(String.valueOf(trainNo))){
+                position=i;
+            }
+        }
+        if(intHoliday== Station.HOLIDAY){
+            holiday.setChecked(true);
+            weekday.setChecked(false);
+        }
+        if(intHoliday==Station.WEEKDAY){
+            holiday.setChecked(false);
+            weekday.setChecked(true);
+        }
+        this.trainNo.setSelection(position);
     }
 
     /**
@@ -240,5 +251,15 @@ public class MainActivity extends Activity
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    /**
+     * MonoViewFragmentで列車ウィンドウがクリックされた時にスピナーの設定
+     * @param trainNo 呼び出された列車No.
+     * @param intHoliday 休日フラグ
+     */
+    @Override
+    public void onFragmentInteraction(int trainNo, int intHoliday) {
+        setSpinner(trainNo, intHoliday);
     }
 }
