@@ -9,6 +9,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +40,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.chiba.tackn.monoviewer.MainActivity;
 import jp.chiba.tackn.monoviewer.R;
 import jp.chiba.tackn.monoviewer.TabletHolder;
 import jp.chiba.tackn.monoviewer.data.SQLTblContract;
@@ -55,7 +56,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         , GoogleMap.OnCameraChangeListener
         , LoaderManager.LoaderCallbacks<Cursor> {
     /** デバッグ用タグ */
-    private static final String TAG = "monoviewFragment";
+    private static final String TAG = "MonoViewFragment";
     /** デバッグ用フラグ */
     private static final boolean DEBUG =false;
 
@@ -97,6 +98,14 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
     private TabletHolder tabletHolder = TabletHolder.getInstance();
     /** モノレールのインフォウィンドウをクリック時のリスナ */
     private OnFragmentInteractionListener mListener;
+    /** モノレールの駅のマーカーを保持 */
+    private List<Marker> stationMarker = new ArrayList<Marker>();
+    /** マーカーのリソースファイル読み込みサンプリングレート */
+    private int SampleRate = 1;
+    /** Zoom変更対応のマーカーのリライトフラグ */
+    private boolean markerRewrite = false;
+    /** Zoom変更時検出用変更前値 */
+    private float oldZoom;
 
     public MonoViewFragment() {
         // Required empty public constructor
@@ -163,18 +172,6 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         outState.putDouble("centerLong",mapCenter.longitude);
     }
 
-//    /**
-//     * 環境復帰
-//     * @param savedInstanceState 保存されたBundle
-//     */
-//    @Override
-//    public void onViewStateRestored(Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        if(savedInstanceState!=null){
-//            mapCenter = new LatLng(savedInstanceState.getDouble("centerLat"),savedInstanceState.getDouble("centerLong"));
-//        }
-//    }
-
     /**
      * 定期実行用のハンドラのセットアップ
      */
@@ -216,28 +213,29 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
      */
     private void setUpMap() {
         //駅に時刻表のリンクしたマーカーを設置
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
-        mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f,0.5f));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAIKITA).title("千城台北駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_OGURADAI).title("小倉台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKURAGI).title("桜木駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_TUGA).title("都賀駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_MITUWADAI).title("みつわ台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_DOUBUTUKOUEN).title("動物公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_SPORTSCENTER).title("スポーツセンター駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_ANAGAWA).title("穴川駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_TENDAI).title("天台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKUSABE).title("作草部駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAKOUEN).title("千葉公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_KENTYOMAE).title("県庁前駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_YOSHIKAWAKOUEN).title("葭川公園駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_SAKAETYOU).title("栄町駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBA).title("千葉駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_SHIYAKUSYOMAE).title("市役所前駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
+        stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_CHIBAMINATO).title("千葉みなと駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
         // 千葉駅を表示
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(14f));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15.5f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mapCenter));
         mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnCameraChangeListener(this);
 
         // 現在位置表示の有効化
         mMap.setMyLocationEnabled(true);
@@ -457,6 +455,11 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
             for (NowTrainData cur:group) {
                 if (mMap != null) {
                     Marker move = trainMakers.get(cur);
+                    if(markerRewrite && move!=null) { //カメラのZoomが変更された時マーカ再作成
+                        trainMakers.remove(cur);
+                        move.remove();
+                        move=null;
+                    }
                     if(move!=null) {
                         move.setPosition(getPositon(cur));
                     }else{
@@ -470,20 +473,33 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
                         if (cur.Table_No == intService4) Train = " アーバンフライ0型 007-008号";
                         if (cur.UpDown == 0) {
                             markerOptions.title("上り " + cur.Station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No + Train);
-                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_up));}
-                            else if (cur.Table_No == intService1){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService2){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService3){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else if (cur.Table_No == intService4){markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_up));}
-                            else {markerOptions.anchor(0f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_up));}
-                        } else {
+                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.monochan_up, SampleRate))));}
+                            else if (cur.Table_No == intService1){markerOptions.anchor(0f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_up, SampleRate))));}
+                            else if (cur.Table_No == intService2){markerOptions.anchor(0f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_up, SampleRate))));}
+                            else if (cur.Table_No == intService3){markerOptions.anchor(0f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_up, SampleRate))));}
+                            else if (cur.Table_No == intService4){markerOptions.anchor(0f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_up, SampleRate))));}
+                            else {markerOptions.anchor(0f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.mono_up, SampleRate))));}
+
+                    } else {
                             markerOptions.title("下り " + cur.Station + " " + cur.Hour + ":" + cur.Minute + " " + cur.Table_No + Train);
-                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(BitmapDescriptorFactory.fromResource(R.drawable.monochan_down));}
-                            else if (cur.Table_No == intService1){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService2){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService3){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else if (cur.Table_No == intService4){markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.urbanflyer_down));}
-                            else {markerOptions.anchor(1f,0.5f).icon(BitmapDescriptorFactory.fromResource(R.drawable.mono_down));}
+                            if (cur.Table_No == intService0){markerOptions.anchor(0.5f,0.7f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.monochan_down, SampleRate))));}
+                            else if (cur.Table_No == intService1){markerOptions.anchor(1f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_down, SampleRate))));}
+                            else if (cur.Table_No == intService2){markerOptions.anchor(1f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_down, SampleRate))));}
+                            else if (cur.Table_No == intService3){markerOptions.anchor(1f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_down, SampleRate))));}
+                            else if (cur.Table_No == intService4){markerOptions.anchor(1f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.urbanflyer_down, SampleRate))));}
+                            else {markerOptions.anchor(1f,0.5f).icon(
+                                    BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.mono_down, SampleRate))));}
                         }
                         if (getPositon(cur) != null) {
                             markerOptions.position(getPositon(cur));
@@ -493,6 +509,8 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
                     }
                 }
             }
+            //マーカーの再描写が終わったのでフラグを初期化
+            markerRewrite=false;
         }
     }
 
@@ -711,13 +729,51 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         public void onFragmentInteraction(int TrainNo,int intHoliday);
     }
 
+    /**
+     * カメラが移動したらアイコンサイズ変更
+     * Zoomのみ評価。
+     * @param cameraPosition カメラポジション
+     */
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         float zoom = cameraPosition.zoom;
+        if (DEBUG) Log.i(TAG, "zoom:" + zoom);
+        if (DEBUG) Log.i(TAG, "SampleRate:" + SampleRate);
+
+        if(oldZoom!=zoom){
+            oldZoom = zoom;
+            markerRewrite = true;
+            if      (15.5f <= zoom) {
+                SampleRate =1;
+            }else if(13f   <= zoom && zoom < 15.5f) {
+                SampleRate = 2;
+            }else if(11f   <= zoom && zoom < 13f) {
+                SampleRate = 4;
+            }else {
+                SampleRate = 8;
+            }
+            for (Marker marker : stationMarker) {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(readBitmap(context, R.drawable.station, SampleRate))));
+            }
+        }
     }
 
     /**
-     * マップ画面に定期的0.5s毎に画面更新をするためのハンドラ
+     * リソースファイルからBitmapを生成
+     * リソースの縮小機能付き
+     * @param context アプリのコンテキスト
+     * @param resID リソースID
+     * @param SampleSize 読込サンプリングレート(2の倍数)
+     * @return サンプリング(縮小)済みBitmap画像
+     */
+    private static Bitmap readBitmap(Context context,int resID,int SampleSize){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize =  SampleSize;
+        return BitmapFactory.decodeResource(context.getResources(),resID,options);
+    }
+
+    /**
+     * マップ画面に定期的1s毎に画面更新をするためのハンドラ
      */
     private class TrainHandler extends Handler {
         @Override
