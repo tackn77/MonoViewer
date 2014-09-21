@@ -13,7 +13,7 @@
         </option>
       </GradleProjectSettings>
     </option>
-    <option name="serviceDirectoryPath" value="$PROJECT_DIR$/../../../.gradle" />
+    <option name="serviceDirectoryPath" value="$USER_HOME$/.gradle" />
   </component>
 </project>
 
