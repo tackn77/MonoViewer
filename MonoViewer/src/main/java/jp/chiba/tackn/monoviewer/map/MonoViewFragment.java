@@ -1,5 +1,6 @@
 package jp.chiba.tackn.monoviewer.map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,7 +56,7 @@ import jp.chiba.tackn.monoviewer.train.TrainTable;
  */
 public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
         , GoogleMap.OnCameraChangeListener
-        , LoaderManager.LoaderCallbacks<Cursor> {
+        , LoaderManager.LoaderCallbacks<Cursor>, OnMapReadyCallback {
     /** デバッグ用タグ */
     private static final String TAG = "MonoViewFragment";
     /** デバッグ用フラグ */
@@ -196,21 +198,27 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
                 transaction.commit();
             }
 
-            mMap = mapFragment.getMap();
-            tabletHolder.setMap(mMap);
+            mapFragment.getMapAsync(this);
+        }
+    }
 
-            if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mapFragment " + mapFragment);
-            if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mMap " + mMap);
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mMap = map;
+        tabletHolder.setMap(mMap);
 
-            if (mMap != null) {
-                setUpMap();
-            }
+        if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mapFragment " + mapFragment);
+        if (DEBUG) Log.d(TAG, "setUpMapIfNeeded()$mMap " + mMap);
+
+        if (mMap != null) {
+            setUpMap();
         }
     }
 
     /**
      * マップの初期設定
      */
+    @SuppressLint("MissingPermission")
     private void setUpMap() {
         //駅に時刻表のリンクしたマーカーを設置
         stationMarker.add(mMap.addMarker(new MarkerOptions().position(Station.STATION_TISHIRODAI).title("千城台駅").icon(BitmapDescriptorFactory.fromResource(R.drawable.station)).anchor(0.5f, 0.5f)));
@@ -238,7 +246,7 @@ public class MonoViewFragment extends Fragment implements GoogleMap.OnInfoWindow
         mMap.setOnCameraChangeListener(this);
 
         // 現在位置表示の有効化
-        mMap.setMyLocationEnabled(true);
+//        mMap.setMyLocationEnabled(true);
 
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 

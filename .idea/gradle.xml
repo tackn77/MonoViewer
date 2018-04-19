@@ -11,9 +11,8 @@
             <option value="$PROJECT_DIR$/MonoViewer" />
           </set>
         </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
-    <option name="serviceDirectoryPath" value="$USER_HOME$/.gradle" />
   </component>
 </project>
-

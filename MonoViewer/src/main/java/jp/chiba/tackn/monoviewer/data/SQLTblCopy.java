@@ -18,6 +18,7 @@ import java.io.OutputStream;
 public class SQLTblCopy {
     /**
      * デバッグフラグ
+     *
      */
     private static final boolean DEBUG = true;
     /**
